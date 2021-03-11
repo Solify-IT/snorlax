@@ -1,6 +1,9 @@
 {
-  "name": "backend",
-  "version": "1.0.0",
+  "name": "snorlax-backend",
+  "version": "0.0.1",
+  "description": "Backend service for Snorlax project",
   "main": "index.js",
+  "repository": "https://github.com/Solify-IT/snorlax",
+  "author": "solify-it",
   "license": "MIT"
 }
