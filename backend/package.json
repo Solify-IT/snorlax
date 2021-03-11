@@ -5,5 +5,10 @@
   "main": "index.js",
   "repository": "https://github.com/Solify-IT/snorlax",
   "author": "solify-it",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.4.1",
+    "eslint-config-airbnb-typescript": "^12.3.1",
+    "eslint-plugin-import": "^2.22.0"
+  }
 }
