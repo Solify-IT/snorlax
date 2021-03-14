@@ -2,23 +2,22 @@
   "name": "snorlax-backend",
   "version": "0.0.1",
   "description": "Backend service for Snorlax project",
-  "main": "index.js",
+  "main": "src/index.js",
   "repository": "https://github.com/Solify-IT/snorlax",
   "author": "solify-it",
   "license": "MIT",
+  "scripts": {
+    "lint": "eslint . --ext .ts",
+    "start": "ts-node-dev --respawn --transpile-only ./src/index.ts",
+    "typecheck": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^4.4.1",
     "eslint": "^7.21.0",
     "eslint-config-airbnb-typescript": "^12.3.1",
     "eslint-plugin-import": "^2.22.0",
+    "ts-node-dev": "^1.1.6",
     "typescript": "^4.2.3"
-  },
-  "scripts": {
-    "lint": "npx eslint . --ext .ts",
-    "prebuild": "tslint -c tslint.json -p tsconfig.json --fix",
-    "build": "tsc",
-    "prestart": "npm run build",
-    "start": "node .",
-    "test": "echo \"Error: no test specified\" && exit 1"
   }
 }
