@@ -13,7 +13,7 @@ export default class BookInteractor {
   }
 
   async getAll(): Promise<Book[]> {
-    const [books, error] = await wrapError<Book[]>(this.bookRepository.findAll());
+    const [books, error] = await wrapError(this.bookRepository.findAll());
 
     if (error) {
       throw error;
