@@ -19,4 +19,19 @@ export default class BookController {
 
     context.response.status(200).json(books);
   }
+
+  // GET /books/:isbn
+
+  async getBookByISBN(context: IContext): Promise<void> {
+    const { isbn } = context.request.params;
+    const [book, error] = await wrapError(
+      this.bookInteractor.getByISBN(isbn),
+    );
+
+    if (error) {
+      context.next(error);
+    }
+
+    context.response.status(200).json(book);
+  }
 }

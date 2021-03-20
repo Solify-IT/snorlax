@@ -11,5 +11,13 @@ export default class Router {
         ),
       );
     });
+
+    app.get('/books/:isbn', async (request, response, next) => {
+      await wrapError(
+        controller.books.getBookByISBN(
+          { request, response, next },
+        ),
+      );
+    });
   }
 }

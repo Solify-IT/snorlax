@@ -27,8 +27,26 @@ export default class Datastore implements IDatastore {
   };
 
   constructor() {
-    const getByISBN = (isbn: string): Promise<Book> => {
-      throw new Error('Method not implemented.');
+    const getByISBN = async (isbn: string): Promise<Book> => {
+      const [result, error] = await wrapError(
+        axios.get<{ items: any[] }>(
+          `https://www.googleapis.com/books/v1/volumes?q=${isbn}+isbn`,
+        ),
+      );
+
+      if (error) {
+        throw error;
+      }
+
+      const book: Book = {
+        id: result.data.items[0].id,
+        author: result.data.items[0].volumeInfo.authors[0],
+        price: 0,
+        title: result.data.items[0].volumeInfo.title,
+        isbn: result.data.items[0].volumeInfo.industryIdentifiers[0].identifier,
+      };
+
+      return book;
     };
 
     const query = async (): Promise<Book[]> => {

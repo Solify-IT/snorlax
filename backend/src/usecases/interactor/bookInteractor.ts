@@ -21,4 +21,16 @@ export default class BookInteractor {
 
     return this.bookPresenter.findAll(books);
   }
+
+  async getByISBN(isbn: string): Promise<Book> {
+    const [book, error] = await wrapError(
+      this.bookRepository.findByISBN(isbn),
+    );
+
+    if (error) {
+      throw error;
+    }
+
+    return this.bookPresenter.findByISBN(book);
+  }
 }

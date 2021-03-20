@@ -10,6 +10,18 @@ export default class BookRepository implements IBookRepository {
     this.datastore = datastore;
   }
 
+  async findByISBN(isbn: string): Promise<Book> {
+    const [book, error] = await wrapError(
+      this.datastore.books.getByISBN(isbn),
+    );
+
+    if (error) {
+      throw error;
+    }
+
+    return book;
+  }
+
   async findAll(): Promise<Book[]> {
     const [books, error] = await wrapError(
       this.datastore.books.query(),
