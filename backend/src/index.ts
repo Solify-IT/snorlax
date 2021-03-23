@@ -23,9 +23,9 @@ const setupRoutes = () => {
   new Router(app, registry.newAppController());
 };
 
-app.listen(8080, async () => {
+app.listen(process.env.PORT, async () => {
   // eslint-disable-next-line no-console
-  console.log('Backend running on port 8080');
+  console.log(`Backend running on port ${process.env.PORT}`);
   setupServer();
   setupRoutes();
 });
