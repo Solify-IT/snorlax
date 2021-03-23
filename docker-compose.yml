@@ -1,0 +1,74 @@
+version: '3.7'
+
+services:
+  postgres:
+    container_name: postgres
+    image: postgres
+    env_file: postgres/.env
+    restart: always
+    ports:
+      - 5432:5432
+    volumes:
+      - ./postgres/.env:/app/.env:cached
+      - ./postgres/data:/var/lib/postgresql/data/
+    labels:
+      mx.com.solify.snorlax: "postgres"
+  backend:
+    container_name: backend
+    build:
+      context: ./backend
+      labels:
+        mx.com.solify.snorlax: "backend"
+    volumes:
+      - ./backend/src:/app/src:cached
+      - ./backend/.env:/app/.env:cached
+      - ./backend/tsconfig.json:/app/tsconfig.json:cached
+    ports:
+      - 3001:3001
+    depends_on:
+      - postgres
+    command: sh -c "/wait && yarn run dev"
+    environment:
+      - WAIT_HOSTS=postgres:5432
+      - WAIT_HOSTS_TIMEOUT=300
+      - WAIT_SLEEP_INTERVAL=30
+      - WAIT_HOST_CONNECT_TIMEOUT=30
+    env_file: backend/.env
+    restart: always
+    labels:
+      mx.com.solify.snorlax: "backend"
+  frontend:
+    container_name: frontend
+    stdin_open: true
+    build:
+      context: ./frontend
+      labels:
+        mx.com.solify.snorlax: "frontend"
+    volumes:
+      - ./frontend/src:/app/src:cached
+      - ./frontend/.env:/app/.env:cached
+      - ./frontend/tsconfig.json:/app/tsconfig.json:cached
+    ports:
+      - 3000:3000
+    env_file: frontend/.env
+    restart: always
+    labels:
+      mx.com.solify.snorlax: "frontend"
+  ingress:
+    container_name: ingress
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    depends_on:
+      - frontend
+      - backend
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3001"]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+    volumes:
+      - ./ingress:/etc/nginx:ro,cached
+    restart: always
+    labels:
+      mx.com.solify.snorlax: "ingress"
