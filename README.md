@@ -21,7 +21,7 @@ cd snorlax
 ```sh
 cp backend/.env.example backend/.env
 cp frontend/.env.example frontend/.env
-co postgres/.env.example postgres/.env
+cp postgres/.env.example postgres/.env
 ```
 
 4. Levanta el proyecto
