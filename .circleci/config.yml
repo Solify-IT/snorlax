@@ -53,10 +53,10 @@ jobs:
           name: typecheck
           working_directory: ./backend
           command: yarn typecheck
-      # - run:
-      #     name: test
-      #     working_directory: ./backend
-      #     command: yarn test
+      - run:
+          name: test
+          working_directory: ./backend
+          command: yarn test
       # - run:
       #     name: build
       #     working_directory: ./backend
