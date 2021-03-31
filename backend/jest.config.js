@@ -1,6 +1,8 @@
 module.exports = {
   clearMocks: true,
-  roots: ['<rootDir>/src'],
+  roots: ['<rootDir>'],
+  modulePaths: ['<rootDir>'],
+  moduleDirectories: ["node_modules"],
   testEnvironment: 'node',
   preset: 'ts-jest'
 };
