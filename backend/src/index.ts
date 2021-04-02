@@ -10,14 +10,21 @@ import { wrapError } from './@types';
 
 const app: express.Application = express();
 const logger = winston.createLogger({
-  format: winston.format.combine(
-    winston.format.timestamp(),
-    winston.format.json(),
-  ),
   transports: [
-    new winston.transports.Console(),
+    new winston.transports.Console({
+      format: winston.format.combine(
+        winston.format.colorize(),
+        winston.format.timestamp(),
+        winston.format.simple(),
+      ),
+    }),
     new winston.transports.File({
-      filename: 'logs/error/error.log', level: 'error',
+      filename: 'logs/error/error.log',
+      level: 'error',
+      format: winston.format.combine(
+        winston.format.timestamp(),
+        winston.format.json(),
+      ),
     }),
   ],
 });
