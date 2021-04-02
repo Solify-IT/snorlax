@@ -7,7 +7,7 @@ jest.mock('axios');
 describe('GoogleBooksService', () => {
   const mockedAxios = axios as jest.Mocked<typeof axios>;
 
-  test('get method', async () => {
+  test('getOneByISBN should be successful with correct data', async () => {
     const expectedBook = ExternalBookFactory.build();
     const axiosResp = {
       data: {
@@ -26,7 +26,28 @@ describe('GoogleBooksService', () => {
 
     const result = await new GoogleBooksService().getOneByISBN(expectedBook.isbn);
 
-    console.log({ result, expectedBook });
     expect(result).toEqual(expectedBook);
+  });
+
+  test('getOneByISBN should return null if isbn different than expected', async () => {
+    const mockedBook = ExternalBookFactory.build();
+    const axiosResp = {
+      data: {
+        items: [
+          {
+            volumeInfo: {
+              authors: mockedBook.authors,
+              title: mockedBook.title,
+              industryIdentifiers: [{ identifier: 'unexpected' }],
+            },
+          },
+        ],
+      },
+    };
+    mockedAxios.get.mockResolvedValue(axiosResp);
+
+    const result = await new GoogleBooksService().getOneByISBN(mockedBook.isbn);
+
+    expect(result).toEqual(null);
   });
 });
