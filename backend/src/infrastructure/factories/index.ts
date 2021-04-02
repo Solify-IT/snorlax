@@ -1,4 +1,4 @@
 /* eslint-disable import/prefer-default-export */
-import BookFactory from './bookFactory';
+import BookFactory, { ExternalBookFactory, LocalBookFactory } from './bookFactory';
 
-export { BookFactory };
+export { BookFactory, ExternalBookFactory, LocalBookFactory };

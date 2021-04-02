@@ -3,6 +3,7 @@ module.exports = {
   roots: ['<rootDir>'],
   modulePaths: ['<rootDir>'],
   moduleDirectories: ["node_modules"],
+  modulePathIgnorePatterns: ["<rootDir>/dist/"],
   testEnvironment: 'node',
   preset: 'ts-jest'
 };

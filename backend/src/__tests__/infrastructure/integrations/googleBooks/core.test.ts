@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { GoogleBooksService } from 'src/infrastructure/integrations';
-import { BookFactory } from 'src/infrastructure/factories';
+import { ExternalBookFactory } from 'src/infrastructure/factories';
 
 jest.mock('axios');
 
@@ -8,14 +8,13 @@ describe('GoogleBooksService', () => {
   const mockedAxios = axios as jest.Mocked<typeof axios>;
 
   test('get method', async () => {
-    const expectedBook = BookFactory.build({ price: 0 });
+    const expectedBook = ExternalBookFactory.build();
     const axiosResp = {
       data: {
         items: [
           {
-            id: expectedBook.id,
             volumeInfo: {
-              authors: [expectedBook.author],
+              authors: expectedBook.authors,
               title: expectedBook.title,
               industryIdentifiers: [{ identifier: expectedBook.isbn }],
             },
@@ -27,6 +26,7 @@ describe('GoogleBooksService', () => {
 
     const result = await new GoogleBooksService().getOneByISBN(expectedBook.isbn);
 
+    console.log({ result, expectedBook });
     expect(result).toEqual(expectedBook);
   });
 });

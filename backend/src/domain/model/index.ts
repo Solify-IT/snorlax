@@ -1,4 +1,4 @@
 /* eslint-disable import/prefer-default-export */
-import { Book } from './book';
+import { Book, LocalBook, ExternalBook } from './book';
 
-export { Book };
+export { Book, LocalBook, ExternalBook };

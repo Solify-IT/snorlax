@@ -1,3 +1,5 @@
+export type Maybe<T> = T | null;
+
 export type WithError<T> = Promise<[T | null, Error]>;
 
 export async function wrapError<T>(

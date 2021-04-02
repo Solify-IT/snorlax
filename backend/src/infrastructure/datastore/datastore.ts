@@ -40,7 +40,7 @@ export default class Datastore implements IDatastore {
 
       const book: Book = {
         id: result.data.items[0].id,
-        author: result.data.items[0].volumeInfo.authors[0],
+        authors: result.data.items[0].volumeInfo.authors,
         price: 0,
         title: result.data.items[0].volumeInfo.title,
         isbn: result.data.items[0].volumeInfo.industryIdentifiers[0].identifier,
@@ -65,7 +65,7 @@ export default class Datastore implements IDatastore {
       result.data.items.forEach((book) => {
         books.push({
           id: book.id,
-          author: book.volumeInfo.authors[0],
+          authors: book.volumeInfo.authors,
           price: 0,
           title: book.volumeInfo.title,
           isbn: book.volumeInfo.industryIdentifiers[0].identifier,

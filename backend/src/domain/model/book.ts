@@ -1,7 +1,14 @@
-export type Book = {
+export type LocalBook = {
   id: string,
   isbn: string,
   price: number,
-  author: string,
-  title: string,
+  generos?: string[],
 };
+
+export type ExternalBook = {
+  authors: string[],
+  title: string,
+  isbn?: string,
+};
+
+export type Book = LocalBook & ExternalBook;
