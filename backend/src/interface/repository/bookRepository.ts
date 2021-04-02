@@ -1,4 +1,4 @@
-import { wrapError } from 'src/@types';
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Book } from 'src/domain/model';
 import { IBookRepository } from 'src/usecases';
 import IDatastore from './datastore';
@@ -10,27 +10,11 @@ export default class BookRepository implements IBookRepository {
     this.datastore = datastore;
   }
 
-  async findByISBN(isbn: string): Promise<Book> {
-    const [book, error] = await wrapError(
-      this.datastore.books.getByISBN(isbn),
-    );
-
-    if (error) {
-      throw error;
-    }
-
-    return book;
+  findAll(): Promise<Book[]> {
+    throw new Error('Method not implemented.');
   }
 
-  async findAll(): Promise<Book[]> {
-    const [books, error] = await wrapError(
-      this.datastore.books.query(),
-    );
-
-    if (error) {
-      throw error;
-    }
-
-    return books;
+  findByISBN(isbn: string): Promise<Book> {
+    throw new Error('Method not implemented.');
   }
 }
