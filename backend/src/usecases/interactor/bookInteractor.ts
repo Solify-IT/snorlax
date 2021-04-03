@@ -2,6 +2,7 @@ import { wrapError } from 'src/@types';
 import { Book, LocalBook } from 'src/domain/model';
 import { IBookPresenter, IBookRepository } from '..';
 import { UnknownError } from '../errors';
+import InvalidDataError from '../errors/invalidDataError';
 import { ILogger } from '../interfaces/logger';
 
 export default class BookInteractor {
@@ -65,10 +66,12 @@ export default class BookInteractor {
     bookData: Omit<LocalBook & { isLoan: boolean }, 'id'>,
   ): Promise<LocalBook['id']> {
     if (bookData.price < 0) {
+      const message = 'The book can not have a negative price.';
       this.logger.error(
-        'The book can not have a negative price.',
+        message,
         { bookData, logger: 'bookInteractor' },
       );
+      throw new InvalidDataError(message);
     }
 
     const [result, error] = await wrapError(
