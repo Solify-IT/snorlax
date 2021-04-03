@@ -16,9 +16,9 @@ export interface IRequest {
     [param: string]: string,
     [captureGroup: number]: string
   };
-  get(name: string): string;
+  get(name: string): string | undefined;
   param(name: string, defaultValue?: any): string;
-  is(type: string | string[]): string | false;
+  is(type: string | string[]): string | false | null;
   body: any;
 }
 

@@ -1,6 +1,6 @@
 import faker from 'faker';
 import { Sync, each } from 'factory.ts';
-import { Book, LocalBook, ExternalBook } from 'src/domain/model';
+import { LocalBook, ExternalBook } from 'src/domain/model';
 
 export const LocalBookFactory = Sync.makeFactory<LocalBook>({
   id: each(() => faker.datatype.uuid()),
@@ -18,8 +18,6 @@ export const ExternalBookFactory = Sync.makeFactory<ExternalBook>({
   ),
 });
 
-const BookFactory = Sync.makeFactory<Book>(null)
-  .combine(LocalBookFactory)
-  .combine(ExternalBookFactory);
+const BookFactory = LocalBookFactory.combine(ExternalBookFactory);
 
 export default BookFactory;

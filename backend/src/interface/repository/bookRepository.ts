@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Book } from 'src/domain/model';
+import { Book, LocalBook } from 'src/domain/model';
 import { IBookRepository } from 'src/usecases';
 import IDatastore from './datastore';
 
@@ -8,6 +8,10 @@ export default class BookRepository implements IBookRepository {
 
   constructor(datastore: IDatastore) {
     this.datastore = datastore;
+  }
+
+  registerBook(bookData: Omit<LocalBook, 'id'>): Promise<string> {
+    throw new Error('Method not implemented.');
   }
 
   findAll(): Promise<Book[]> {

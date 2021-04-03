@@ -1,15 +1,24 @@
 import { wrapError } from 'src/@types';
-import { Book } from 'src/domain/model';
+import { Book, LocalBook } from 'src/domain/model';
 import { IBookPresenter, IBookRepository } from '..';
+import { UnknownError } from '../errors';
+import { ILogger } from '../interfaces/logger';
 
 export default class BookInteractor {
-  bookRepository: IBookRepository;
+  private bookRepository: IBookRepository;
 
-  bookPresenter: IBookPresenter;
+  private bookPresenter: IBookPresenter;
 
-  constructor(bookRepository: IBookRepository, bookPresenter: IBookPresenter) {
+  private logger: ILogger;
+
+  constructor(
+    bookRepository: IBookRepository,
+    bookPresenter: IBookPresenter,
+    logger: ILogger,
+  ) {
     this.bookRepository = bookRepository;
     this.bookPresenter = bookPresenter;
+    this.logger = logger;
   }
 
   async getAll(): Promise<Book[]> {
@@ -17,6 +26,15 @@ export default class BookInteractor {
 
     if (error) {
       throw error;
+    }
+
+    if (!books) {
+      const message = 'Unknown error while getting all books.';
+      this.logger.error(
+        message,
+        { books, logger: 'bookInteractor' },
+      );
+      throw new UnknownError(message);
     }
 
     return this.bookPresenter.findAll(books);
@@ -31,6 +49,45 @@ export default class BookInteractor {
       throw error;
     }
 
+    if (!book) {
+      const message = 'Unknown error while searching by ISBN.';
+      this.logger.error(
+        message,
+        { isbn, logger: 'bookInteractor' },
+      );
+      throw new UnknownError(message);
+    }
+
     return this.bookPresenter.findByISBN(book);
+  }
+
+  async registerBook(
+    bookData: Omit<LocalBook & { isLoan: boolean }, 'id'>,
+  ): Promise<LocalBook['id']> {
+    if (bookData.price < 0) {
+      this.logger.error(
+        'The book can not have a negative price.',
+        { bookData, logger: 'bookInteractor' },
+      );
+    }
+
+    const [result, error] = await wrapError(
+      this.bookRepository.registerBook(bookData),
+    );
+
+    if (error) {
+      throw error;
+    }
+
+    if (!result) {
+      const message = 'Unknown error while registering book.';
+      this.logger.error(
+        message,
+        { bookData, logger: 'bookInteractor' },
+      );
+      throw new UnknownError(message);
+    }
+
+    return result;
   }
 }

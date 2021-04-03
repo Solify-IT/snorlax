@@ -17,7 +17,9 @@ export default class Registry {
   newAppController(): IAppController {
     const bookRepository = new BookRepository(this.datastore);
     const bookPresenter = new BookPresenter();
-    const bookInteractor = new BookInteractor(bookRepository, bookPresenter);
+    const bookInteractor = new BookInteractor(
+      bookRepository, bookPresenter, this.logger,
+    );
     return {
       books: new BookController(bookInteractor),
     };

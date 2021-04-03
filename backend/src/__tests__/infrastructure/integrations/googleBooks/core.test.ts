@@ -24,7 +24,7 @@ describe('GoogleBooksService', () => {
     };
     mockedAxios.get.mockResolvedValue(axiosResp);
 
-    const result = await new GoogleBooksService().getOneByISBN(expectedBook.isbn);
+    const result = await new GoogleBooksService().getOneByISBN(expectedBook.isbn!);
 
     expect(result).toEqual(expectedBook);
   });
@@ -46,7 +46,7 @@ describe('GoogleBooksService', () => {
     };
     mockedAxios.get.mockResolvedValue(axiosResp);
 
-    const result = await new GoogleBooksService().getOneByISBN(mockedBook.isbn);
+    const result = await new GoogleBooksService().getOneByISBN(mockedBook.isbn!);
 
     expect(result).toEqual(null);
   });
