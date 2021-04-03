@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { Maybe, wrapError } from 'src/@types';
 import { ExternalBook } from 'src/domain/model';
-import IMetadataProviderCore from 'src/usecases/integrations/metadataProvider/core';
+import IMetadataProviderCore from 'src/usecases/interfaces/metadataProvider';
 
 const GOOGLE_BOOKS_URL_API = 'https://www.googleapis.com/books/v1/volumes?q=';
 
