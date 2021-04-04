@@ -1,4 +1,10 @@
 /* eslint-disable import/prefer-default-export */
-import { Book, LocalBook, ExternalBook } from './book';
+import {
+  Book, LocalBook, ExternalBook, BookTableName,
+} from './book';
 
-export { Book, LocalBook, ExternalBook };
+import CommonType from './common';
+
+export {
+  Book, LocalBook, ExternalBook, BookTableName, CommonType,
+};

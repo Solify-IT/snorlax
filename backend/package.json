@@ -11,7 +11,7 @@
     "lint": "eslint . --ext .ts",
     "typecheck": "tsc",
     "dev": "tsnd --respawn -r tsconfig-paths/register ./src",
-    "test": "jest --passWithNoTests"
+    "test": "PGHOST=localhost PGUSER=postgres PGPASSWORD=postgres PGDATABASE=test PGPORT=5432 NODE_ENV=test jest --passWithNoTests"
   },
   "devDependencies": {
     "@types/compression": "^1.7.0",

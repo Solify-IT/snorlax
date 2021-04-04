@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Book, LocalBook } from 'src/domain/model';
+import { v4 as uuidv4 } from 'uuid';
+import { wrapError } from 'src/@types';
+import { Book, BookTableName, LocalBook } from 'src/domain/model';
 import { IBookRepository } from 'src/usecases';
 import IDatastore from './datastore';
 
@@ -10,8 +12,18 @@ export default class BookRepository implements IBookRepository {
     this.datastore = datastore;
   }
 
-  registerBook(bookData: Omit<LocalBook, 'id'>): Promise<string> {
-    throw new Error('Method not implemented.');
+  async registerBook(bookData: Omit<LocalBook, 'id'>): Promise<string> {
+    const id = uuidv4();
+
+    const [result, error] = await wrapError(
+      this.datastore.insert<LocalBook>(BookTableName, { ...bookData, id }),
+    );
+
+    if (error) {
+      throw error;
+    }
+
+    return result!;
   }
 
   findAll(): Promise<Book[]> {
