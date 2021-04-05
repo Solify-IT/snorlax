@@ -27,7 +27,7 @@ jest.mock('pg', () => {
 
 describe('registerBook', () => {
   const logger = winston.createLogger();
-  const repository = new BookRepository(new Datastore(new Pool()));
+  const repository = new BookRepository(new Datastore(new Pool(), logger));
   const presenter = new BookPresenter();
 
   it('should return book id when valid data is passed', async () => {

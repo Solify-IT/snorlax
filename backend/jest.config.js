@@ -5,5 +5,6 @@ module.exports = {
   moduleDirectories: ["node_modules"],
   modulePathIgnorePatterns: ["<rootDir>/dist/"],
   testEnvironment: 'node',
-  preset: 'ts-jest'
+  preset: 'ts-jest',
+  // globalSetup: './tests/config.ts'
 };

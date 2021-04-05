@@ -66,7 +66,7 @@ const setupRoutes = async () => {
     logger: 'server:setup',
   });
 
-  const datastore = new Datastore(dbPool);
+  const datastore = new Datastore(dbPool, logger);
   const registry = new Registry(datastore, logger);
   // eslint-disable-next-line no-new
   new Router(app, registry.newAppController());
