@@ -4,6 +4,7 @@ import { wrapError } from 'src/@types';
 import { CommonType } from 'src/domain/model';
 import { IDatastore } from 'src/interface/repository';
 import { ILogger } from 'src/usecases/interfaces/logger';
+import camelToSnakeCase from 'src/utils/camelToSnakeCase';
 
 export default class Datastore implements IDatastore {
   private dbPool: Pool;
@@ -34,7 +35,7 @@ export default class Datastore implements IDatastore {
   async insert<T extends CommonType>(
     tableName: string, values: T,
   ): Promise<CommonType['id']> {
-    const fields = Object.keys(values);
+    const fields = Object.keys(values).map(camelToSnakeCase);
     const paramsPlaceholders = fields.map((_, i) => `$${i + 1}`).join(', ');
     const query = `
       INSERT INTO ${tableName}(${fields})
@@ -57,7 +58,6 @@ export default class Datastore implements IDatastore {
       throw error;
     }
 
-    await this.dbPool.end();
     return result!.rows[0].id;
   }
 }
