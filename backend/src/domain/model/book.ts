@@ -14,4 +14,4 @@ export type ExternalBook = {
 
 export type Book = LocalBook & ExternalBook;
 
-export const BookTableName = 'local_books';
+export const BOOK_TABLE_NAME = 'local_books';

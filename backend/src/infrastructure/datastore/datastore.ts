@@ -57,6 +57,7 @@ export default class Datastore implements IDatastore {
       throw error;
     }
 
+    await this.dbPool.end();
     return result!.rows[0].id;
   }
 }
