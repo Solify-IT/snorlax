@@ -30,8 +30,8 @@ const logger = winston.createLogger({
 });
 
 const setupServer = () => {
+  app.use(express.urlencoded({ extended: false }));
   app.use(express.json());
-  app.use(express.urlencoded({ extended: true }));
   app.use(cors()); // TODO: Create whitelist
   app.use(gzip());
   logger.info({
@@ -73,8 +73,8 @@ const setupRoutes = async () => {
 };
 
 app.listen(process.env.PORT, async () => {
-  await setupRoutes();
   setupServer();
+  await setupRoutes();
   logger.info({
     message: `Backend running on port ${process.env.PORT}`,
     logger: 'server:setup',

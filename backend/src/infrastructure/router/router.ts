@@ -19,5 +19,11 @@ export default class Router {
         ),
       );
     });
+
+    app.post('/books', async (request, response, next) => {
+      await controller.books.registerBook(
+        { request, response, next },
+      );
+    });
   }
 }

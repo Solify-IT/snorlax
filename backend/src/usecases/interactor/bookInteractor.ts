@@ -63,7 +63,7 @@ export default class BookInteractor {
       throw new UnknownError(message);
     }
 
-    return this.bookPresenter.findByISBN(book);
+    return this.bookPresenter.findByISBN(book[0]);
   }
 
   async registerBook(
@@ -104,23 +104,41 @@ export default class BookInteractor {
       throw new InvalidDataError(message);
     }
 
-    const [bookResult, bookError] = await wrapError(
-      this.bookRepository.registerBook(bookData),
+    const [existLocalBook, existLocalBookErr] = await wrapError(
+      this.bookRepository.findByISBN(bookData.isbn),
     );
 
-    if (bookError) {
-      throw bookError;
+    if (existLocalBookErr) {
+      throw existLocalBookErr;
     }
 
-    if (!bookResult) {
-      const message = 'Unknown error while registering book.';
-      this.logger.error(
-        message,
-        { bookData, logger: 'bookInteractor' },
+    // TODO: validate duplicated books on libraries
+    if (
+      existLocalBook
+      && existLocalBook.every((book) => book.libraryId !== bookData.libraryId)
+    ) {
+      const [bookResult, bookError] = await wrapError(
+        this.bookRepository.registerBook({
+          isbn: bookData.isbn, price: bookData.price, libraryId: bookData.libraryId,
+        }),
       );
-      throw new UnknownError(message);
+
+      if (bookError) {
+        throw bookError;
+      }
+
+      if (!bookResult) {
+        const message = 'Unknown error while registering book.';
+        this.logger.error(
+          message,
+          { bookData, logger: 'bookInteractor' },
+        );
+        throw new UnknownError(message);
+      }
+
+      return bookResult;
     }
 
-    return bookResult;
+    throw new UnknownError('unknown');
   }
 }

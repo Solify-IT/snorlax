@@ -3,6 +3,7 @@ import { Pool, QueryResult } from 'pg';
 import { wrapError } from 'src/@types';
 import { CommonType } from 'src/domain/model';
 import { IDatastore } from 'src/interface/repository';
+import NotFoundError from 'src/usecases/errors/notFoundError';
 import { ILogger } from 'src/usecases/interfaces/logger';
 import camelToSnakeCase from 'src/utils/camelToSnakeCase';
 
@@ -16,12 +17,39 @@ export default class Datastore implements IDatastore {
     this.logger = logger;
   }
 
-  get<T>(queryText: string, values?: any[]): Promise<T[]> {
-    throw new Error('Method not implemented.');
+  async get<T>(queryText: string, values?: any[]): Promise<T[]> {
+    const [result, error] = await wrapError(
+      this.dbPool.query(queryText, values),
+    );
+
+    if (error) {
+      throw error;
+    }
+
+    if (!result) return [];
+
+    return result.rows;
   }
 
-  getById<T>(tablenName: string, id: string): Promise<T> {
-    throw new Error('Method not implemented.');
+  async getById<T>(tableName: string, id: string): Promise<T> {
+    const query = `SELECT * FROM ${tableName} WHERE id = $1`;
+    const [result, error] = await wrapError(this.dbPool.query<T>(query, [id]));
+
+    if (error) {
+      throw error;
+    }
+
+    if (!result) {
+      const message = 'The object searched was not found';
+      this.logger.error(message, {
+        logger: 'datasotre:getById',
+        id,
+        tableName,
+      });
+      throw new NotFoundError(message);
+    }
+
+    return result.rows[0];
   }
 
   getOne<T>(queryText: string, values?: any[]): Promise<T> {

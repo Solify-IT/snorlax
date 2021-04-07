@@ -11,7 +11,7 @@
     "lint": "eslint . --ext .ts",
     "typecheck": "tsc",
     "dev": "tsnd --respawn -r tsconfig-paths/register ./src",
-    "migrate":  "node-pg-migrate -j ts -m src/infrastructure/datastore/migrations",
+    "migrate": "node-pg-migrate -j ts -m src/infrastructure/datastore/migrations",
     "migrate:create": "node-pg-migrate -j ts -m src/infrastructure/datastore/migrations create",
     "migrate:up": "ts-node node_modules/.bin/node-pg-migrate -j ts -m src/infrastructure/datastore/migrations up",
     "migrate:down": "ts-node node_modules/.bin/node-pg-migrate -j ts -m src/infrastructure/datastore/migrations down",
@@ -51,6 +51,7 @@
   "dependencies": {
     "@types/uuid": "^8.3.0",
     "axios": "^0.21.1",
+    "body-parser": "^1.19.0",
     "compression": "^1.7.4",
     "cors": "^2.8.5",
     "cross-var": "^1.1.0",

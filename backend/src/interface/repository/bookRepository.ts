@@ -5,6 +5,7 @@ import {
   Book, BOOK_TABLE_NAME, LocalBookInput,
 } from 'src/domain/model';
 import { IBookRepository } from 'src/usecases';
+import { UnknownError } from 'src/usecases/errors';
 import IDatastore from './datastore';
 
 export default class BookRepository implements IBookRepository {
@@ -34,7 +35,21 @@ export default class BookRepository implements IBookRepository {
     throw new Error('Method not implemented.');
   }
 
-  findByISBN(isbn: string): Promise<Book> {
-    throw new Error('Method not implemented.');
+  async findByISBN(isbn: string): Promise<Book[]> {
+    const [books, error] = await wrapError(
+      this.datastore.get<Book>(
+        `SELECT * FROM ${BOOK_TABLE_NAME} WHERE isbn = $1`, [isbn],
+      ),
+    );
+
+    if (error) {
+      throw error;
+    }
+
+    if (!books) {
+      throw new UnknownError('Null returned from datastore');
+    }
+
+    return books;
   }
 }
