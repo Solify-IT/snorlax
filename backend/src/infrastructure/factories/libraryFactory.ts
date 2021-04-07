@@ -4,12 +4,12 @@ import { Library } from 'src/domain/model';
 
 const LibraryFactory = Sync.makeFactory<Library>({
   id: each(() => faker.datatype.uuid()),
-  address: each(() => faker.address.direction()),
+  address: each(() => faker.address.streetAddress()),
   city: each(() => faker.address.city()),
   email: each(() => faker.internet.email()),
   inCharge: each(() => faker.name.firstName()),
   name: each(() => faker.company.companyName()),
-  phoneNumber: each(() => faker.phone.phoneNumber()),
+  phoneNumber: each(() => faker.phone.phoneNumber('##########')),
   state: each(() => faker.address.state()),
 });
 
