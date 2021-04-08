@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Pool, QueryResult } from 'pg';
+import loadash from 'lodash';
 import { wrapError } from 'src/@types';
 import { CommonType } from 'src/domain/model';
 import { IDatastore } from 'src/interface/repository';
@@ -28,7 +29,7 @@ export default class Datastore implements IDatastore {
 
     if (!result) return [];
 
-    return result.rows;
+    return result.rows.map((el) => this.toCamel<T>(el));
   }
 
   async getById<T>(tableName: string, id: string): Promise<T> {
@@ -49,7 +50,7 @@ export default class Datastore implements IDatastore {
       throw new NotFoundError(message);
     }
 
-    return result.rows[0];
+    return this.toCamel<T>(result.rows[0]);
   }
 
   getOne<T>(queryText: string, values?: any[]): Promise<T> {
@@ -87,5 +88,9 @@ export default class Datastore implements IDatastore {
     }
 
     return result!.rows[0].id;
+  }
+
+  private toCamel<T>(obj: any) {
+    return loadash.mapKeys(obj, (v, k) => loadash.camelCase(k)) as T;
   }
 }
