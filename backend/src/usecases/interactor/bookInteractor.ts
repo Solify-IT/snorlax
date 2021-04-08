@@ -1,5 +1,5 @@
 import { wrapError } from 'src/@types';
-import { Book, LocalBook } from 'src/domain/model';
+import { LocalBook } from 'src/domain/model';
 import { IBookPresenter, IBookRepository, ILibraryRepository } from '..';
 import { UnknownError } from '../errors';
 import InvalidDataError from '../errors/invalidDataError';
@@ -24,46 +24,6 @@ export default class BookInteractor {
     this.bookPresenter = bookPresenter;
     this.libraryRepository = libraryRepository;
     this.logger = logger;
-  }
-
-  async getAll(): Promise<Book[]> {
-    const [books, error] = await wrapError(this.bookRepository.findAll());
-
-    if (error) {
-      throw error;
-    }
-
-    if (!books) {
-      const message = 'Unknown error while getting all books.';
-      this.logger.error(
-        message,
-        { books, logger: 'bookInteractor' },
-      );
-      throw new UnknownError(message);
-    }
-
-    return this.bookPresenter.findAll(books);
-  }
-
-  async getByISBN(isbn: string): Promise<Book> {
-    const [book, error] = await wrapError(
-      this.bookRepository.findByISBN(isbn),
-    );
-
-    if (error) {
-      throw error;
-    }
-
-    if (!book) {
-      const message = 'Unknown error while searching by ISBN.';
-      this.logger.error(
-        message,
-        { isbn, logger: 'bookInteractor' },
-      );
-      throw new UnknownError(message);
-    }
-
-    return this.bookPresenter.findByISBN(book[0]);
   }
 
   async registerBook(
@@ -114,8 +74,9 @@ export default class BookInteractor {
 
     // TODO: validate duplicated books on libraries
     if (
-      existLocalBook
-      && existLocalBook.every((book) => book.libraryId !== bookData.libraryId)
+      (existLocalBook
+      && existLocalBook.every((book) => book.libraryId !== bookData.libraryId))
+      || !existLocalBook
     ) {
       const [bookResult, bookError] = await wrapError(
         this.bookRepository.registerBook({

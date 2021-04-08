@@ -2,7 +2,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import { wrapError } from 'src/@types';
 import {
-  Book, BOOK_TABLE_NAME, LocalBookInput,
+  Book, BOOK_TABLE_NAME, LocalBook, LocalBookInput,
 } from 'src/domain/model';
 import { IBookRepository } from 'src/usecases';
 import { UnknownError } from 'src/usecases/errors';
@@ -35,9 +35,9 @@ export default class BookRepository implements IBookRepository {
     throw new Error('Method not implemented.');
   }
 
-  async findByISBN(isbn: string): Promise<Book[]> {
+  async findByISBN(isbn: string): Promise<LocalBook[]> {
     const [books, error] = await wrapError(
-      this.datastore.get<Book>(
+      this.datastore.get<LocalBook>(
         `SELECT * FROM ${BOOK_TABLE_NAME} WHERE isbn = $1`, [isbn],
       ),
     );
