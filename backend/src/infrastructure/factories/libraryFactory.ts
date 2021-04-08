@@ -1,6 +1,7 @@
 import faker from 'faker';
 import { Sync, each } from 'factory.ts';
-import { Library } from 'src/domain/model';
+import { Library, LIBRARY_TABLE_NAME } from 'src/domain/model';
+import { IDatastore } from 'src/interface/repository';
 
 const LibraryFactory = Sync.makeFactory<Library>({
   id: each(() => faker.datatype.uuid()),
@@ -12,5 +13,15 @@ const LibraryFactory = Sync.makeFactory<Library>({
   phoneNumber: each(() => faker.phone.phoneNumber('##########')),
   state: each(() => faker.address.state()),
 });
+
+export const givenALibrary = async (
+  datastore: IDatastore, library?: Library,
+) => {
+  const lib = library || LibraryFactory.build();
+
+  await datastore.insert(LIBRARY_TABLE_NAME, lib);
+
+  return lib;
+};
 
 export default LibraryFactory;
