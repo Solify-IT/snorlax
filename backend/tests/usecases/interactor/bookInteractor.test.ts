@@ -9,6 +9,7 @@ import { UnknownError, InvalidDataError } from 'src/usecases/errors';
 import LibraryRepository from 'src/interface/repository/libraryRepository';
 import LibraryFactory from 'src/infrastructure/factories/libraryFactory';
 import { LocalBookFactory } from 'src/infrastructure/factories';
+import MovementRepository from 'src/interface/repository/movementRepository';
 
 jest.mock('src/interface/presenter/bookPresenter');
 jest.mock('src/interface/repository/bookRepository');

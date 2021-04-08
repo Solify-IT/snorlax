@@ -7,6 +7,8 @@ import { Library, LIBRARY_TABLE_NAME } from './library';
 
 import CommonType from './common';
 
+import Movement from './movement';
+
 export {
   Book,
   LocalBook,
@@ -14,5 +16,7 @@ export {
   BOOK_TABLE_NAME,
   CommonType,
   Library,
-  LIBRARY_TABLE_NAME, LocalBookInput,
+  LIBRARY_TABLE_NAME,
+  LocalBookInput,
+  Movement,
 };
