@@ -18,17 +18,11 @@ export default class BookRepository implements IBookRepository {
   async registerBook(bookData: Omit<LocalBookInput, 'id'>): Promise<string> {
     const id = uuidv4();
 
-    const [result, error] = await wrapError(
-      this.datastore.insert<LocalBookInput>(
-        BOOK_TABLE_NAME, { ...bookData, id },
-      ),
+    const result = await this.datastore.insert<LocalBookInput>(
+      BOOK_TABLE_NAME, { ...bookData, id },
     );
 
-    if (error) {
-      throw error;
-    }
-
-    return result!;
+    return result;
   }
 
   findAll(): Promise<Book[]> {
@@ -36,19 +30,9 @@ export default class BookRepository implements IBookRepository {
   }
 
   async findByISBN(isbn: string): Promise<LocalBook[]> {
-    const [books, error] = await wrapError(
-      this.datastore.get<LocalBook>(
-        `SELECT * FROM ${BOOK_TABLE_NAME} WHERE isbn = $1`, [isbn],
-      ),
+    const books = await this.datastore.get<LocalBook>(
+      `SELECT * FROM ${BOOK_TABLE_NAME} WHERE isbn = $1`, [isbn],
     );
-
-    if (error) {
-      throw error;
-    }
-
-    if (!books) {
-      throw new UnknownError('Null returned from datastore');
-    }
 
     return books;
   }

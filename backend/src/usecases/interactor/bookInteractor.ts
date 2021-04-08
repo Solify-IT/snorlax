@@ -79,7 +79,7 @@ export default class BookInteractor {
     // Register the inventory movement
     // TODO: also save the user and turn in which the movement was registered
     await this.movementInteractor.registerMovement({
-      amount: bookData.amount, idLocalBook: result, isLoan: bookData.isLoan,
+      amount: bookData.amount, localBookId: result, isLoan: bookData.isLoan,
     });
 
     if (result !== '') return result;

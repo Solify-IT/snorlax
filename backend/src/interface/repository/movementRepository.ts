@@ -1,5 +1,6 @@
-import { Movement, MovementInputData } from 'src/domain/model';
+import { Movement, MovementInputData, MOVEMENT_TABLE_NAME } from 'src/domain/model';
 import { IMovementRepository } from 'src/usecases';
+import { v4 as uuidv4 } from 'uuid';
 import { IDatastore } from '.';
 
 export default class MovementRepository implements IMovementRepository {
@@ -9,7 +10,13 @@ export default class MovementRepository implements IMovementRepository {
     this.datastore = datastore;
   }
 
-  registerMovement(movementData: MovementInputData): Promise<Movement['id']> {
-    throw new Error('Method not implemented.');
+  async registerMovement(movementData: MovementInputData): Promise<Movement['id']> {
+    const id = uuidv4();
+
+    const result = await this.datastore.insert<Movement>(MOVEMENT_TABLE_NAME, {
+      ...movementData, id,
+    });
+
+    return result;
   }
 }
