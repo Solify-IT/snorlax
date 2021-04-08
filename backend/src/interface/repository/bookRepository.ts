@@ -1,11 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { v4 as uuidv4 } from 'uuid';
-import { wrapError } from 'src/@types';
 import {
   Book, BOOK_TABLE_NAME, LocalBook, LocalBookInput,
 } from 'src/domain/model';
 import { IBookRepository } from 'src/usecases';
-import { UnknownError } from 'src/usecases/errors';
 import IDatastore from './datastore';
 
 export default class BookRepository implements IBookRepository {

@@ -15,9 +15,15 @@ const LibraryFactory = Sync.makeFactory<Library>({
 });
 
 export const givenALibrary = async (
-  datastore: IDatastore, library?: Library,
+  datastore: IDatastore, library?: Library | Library[],
 ) => {
   const lib = library || LibraryFactory.build();
+
+  if (Array.isArray(lib)) {
+    lib.forEach(async (libr) => datastore.insert(LIBRARY_TABLE_NAME, libr));
+
+    return lib;
+  }
 
   await datastore.insert(LIBRARY_TABLE_NAME, lib);
 

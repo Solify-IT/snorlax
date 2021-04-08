@@ -18,7 +18,9 @@ describe('findOneByID', () => {
   const repository = new LibraryRepository(datastore);
 
   it('should return the id of the new movement when valid data', async () => {
-    const { id } = await givenALibrary(datastore);
+    const library = await givenALibrary(datastore);
+
+    const id = Array.isArray(library) ? '' : library.id;
 
     const [result, error] = await wrapError(repository.findOneByID(id));
 

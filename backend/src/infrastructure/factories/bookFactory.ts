@@ -1,10 +1,10 @@
 import faker from 'faker';
 import { Sync, each } from 'factory.ts';
 import {
-  LocalBook, ExternalBook, BOOK_TABLE_NAME, Library, LIBRARY_TABLE_NAME, LocalBookInput,
+  LocalBook, ExternalBook, BOOK_TABLE_NAME, Library, LocalBookInput,
 } from 'src/domain/model';
 import { IDatastore } from 'src/interface/repository';
-import LibraryFactory from './libraryFactory';
+import LibraryFactory, { givenALibrary } from './libraryFactory';
 
 export const LocalBookFactory = Sync.makeFactory<LocalBook>({
   id: each(() => faker.datatype.uuid()),
@@ -32,7 +32,9 @@ export const givenALocalBook = async (
   const lib = library || LibraryFactory.build();
   const book = localBook || LocalBookFactory.build({ libraryId: lib.id, library: lib });
 
-  await datastore.insert(LIBRARY_TABLE_NAME, lib);
+  if (!library) {
+    await givenALibrary(datastore, lib);
+  }
   await datastore.insert<LocalBookInput>(BOOK_TABLE_NAME, {
     id: book.id, isbn: book.isbn, libraryId: lib.id, price: book.price,
   });
