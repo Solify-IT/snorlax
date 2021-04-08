@@ -27,7 +27,7 @@ export default class BookInteractor {
   }
 
   async registerBook(
-    bookData: Omit<LocalBook & { isLoan: boolean }, 'id' | 'library'>,
+    bookData: Omit<LocalBook & { isLoan: boolean, amount: number }, 'id' | 'library'>,
   ): Promise<LocalBook['id']> {
     if (bookData.price < 0) {
       const message = 'The book can not have a negative price.';
