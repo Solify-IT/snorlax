@@ -10,6 +10,7 @@ import LibraryRepository from 'src/interface/repository/libraryRepository';
 import LibraryFactory from 'src/infrastructure/factories/libraryFactory';
 import { LocalBookFactory } from 'src/infrastructure/factories';
 import MovementRepository from 'src/interface/repository/movementRepository';
+import NotFoundError from 'src/usecases/errors/notFoundError';
 
 jest.mock('src/interface/presenter/bookPresenter');
 jest.mock('src/interface/repository/bookRepository');
@@ -38,6 +39,10 @@ describe('registerBook', () => {
   const libraryInteractor = new LibraryInteractor(libraryRepository, logger);
   const movementInteractor = new MovementInteractor(movementRepository, logger);
 
+  const interactor = new BookInteractor(
+    bookRepository, presenter, libraryInteractor, movementInteractor, logger,
+  );
+
   it('should return book id when valid data is passed', async () => {
     const expectedID = 'expected';
     const library = LibraryFactory.build();
@@ -51,10 +56,6 @@ describe('registerBook', () => {
       movementRepository, 'registerMovement',
     ).mockImplementation(async () => expectedID);
 
-    const interactor = new BookInteractor(
-      bookRepository, presenter, libraryInteractor, movementInteractor, logger,
-    );
-
     const [res, error] = await wrapError(
       interactor.registerBook({
         isbn: '123', price: 10, isLoan: false, libraryId: library.id, amount: 10,
@@ -66,9 +67,6 @@ describe('registerBook', () => {
   });
 
   it('should throw InvalidDataError with negative price', async () => {
-    const interactor = new BookInteractor(
-      bookRepository, presenter, libraryInteractor, movementInteractor, logger,
-    );
     const [res, error] = await wrapError(interactor.registerBook(
       {
         isbn: '123', price: -10, isLoan: false, libraryId: 'id_library', amount: 10,
@@ -88,9 +86,6 @@ describe('registerBook', () => {
       libraryRepository, 'findOneByID',
     ).mockImplementation(async () => library);
 
-    const interactor = new BookInteractor(
-      bookRepository, presenter, libraryInteractor, movementInteractor, logger,
-    );
     const [result, error] = await wrapError(interactor.registerBook(
       {
         isbn: '123', price: 10, isLoan: false, libraryId: library.id, amount: 10,
@@ -118,9 +113,6 @@ describe('registerBook', () => {
       movementRepository, 'registerMovement',
     ).mockImplementation(async () => 'movementID');
 
-    const interactor = new BookInteractor(
-      bookRepository, presenter, libraryInteractor, movementInteractor, logger,
-    );
     const [result, error] = await wrapError(interactor.registerBook(
       {
         isbn: '123', price: 10, isLoan: false, libraryId: library.id, amount: 10,
@@ -145,9 +137,6 @@ describe('registerBook', () => {
       libraryRepository, 'findOneByID',
     ).mockImplementation(async () => library);
 
-    const interactor = new BookInteractor(
-      bookRepository, presenter, libraryInteractor, movementInteractor, logger,
-    );
     const [result, error] = await wrapError(interactor.registerBook(
       {
         isbn: '123', price: 10, isLoan: false, libraryId: library.id, amount: 0,
@@ -172,9 +161,6 @@ describe('registerBook', () => {
       libraryRepository, 'findOneByID',
     ).mockImplementation(async () => library);
 
-    const interactor = new BookInteractor(
-      bookRepository, presenter, libraryInteractor, movementInteractor, logger,
-    );
     const [result, error] = await wrapError(interactor.registerBook(
       {
         isbn: '123', price: 10, isLoan: false, libraryId: library.id, amount: -10,
@@ -183,6 +169,25 @@ describe('registerBook', () => {
 
     expect(error).toBeInstanceOf(InvalidDataError);
     expect(result).toBe(null);
+  });
+
+  it('should throw NotFoundError when library is not found', async () => {
+    const expectedID = 'expected';
+    jest.spyOn(
+      bookRepository, 'registerBook',
+    ).mockImplementation(async () => expectedID);
+    jest.spyOn(
+      libraryRepository, 'findOneByID',
+    ).mockImplementation(async () => null);
+
+    const [res, error] = await wrapError(
+      interactor.registerBook({
+        isbn: '123', price: 10, isLoan: false, libraryId: 'notfound', amount: 10,
+      }),
+    );
+
+    expect(error).toBeInstanceOf(NotFoundError);
+    expect(res).toBe(null);
   });
 
   afterEach(() => {

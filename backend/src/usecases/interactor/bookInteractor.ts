@@ -51,7 +51,13 @@ export default class BookInteractor {
     ]);
 
     if (!libraryResult) {
-      throw new NotFoundError('Library not found');
+      const message = 'Library not found';
+      this.logger.error(
+        message, {
+          bookData, logger: 'BookInteractor:registerBook',
+        },
+      );
+      throw new NotFoundError(message);
     }
 
     const shouldSaveNewLocalBook = (
@@ -66,7 +72,15 @@ export default class BookInteractor {
       result = await this.bookRepository.registerBook({
         isbn: bookData.isbn, price: bookData.price, libraryId: bookData.libraryId,
       });
+    } else if (existLocalBook) {
+      result = existLocalBook[0].id;
     }
+
+    // Register the inventory movement
+    // TODO: also save the user and turn in which the movement was registered
+    await this.movementInteractor.registerMovement({
+      amount: bookData.amount, idLocalBook: result, isLoan: bookData.isLoan,
+    });
 
     if (result !== '') return result;
 
@@ -82,10 +96,6 @@ export default class BookInteractor {
 
     if (!bookData.libraryId) {
       message += 'The book needs a LibraryId. ';
-    }
-
-    if (bookData.amount <= 0) {
-      message += 'The amount of books must be greater than 0. ';
     }
 
     if (message !== '') {

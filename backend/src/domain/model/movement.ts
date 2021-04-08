@@ -6,4 +6,6 @@ type Movement = CommonType & {
   isLoan: boolean;
 };
 
+export type MovementInputData = Omit<Movement, 'id'>;
+
 export default Movement;

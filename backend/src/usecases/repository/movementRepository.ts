@@ -1,5 +1,5 @@
-import { Movement } from 'src/domain/model';
+import { Movement, MovementInputData } from 'src/domain/model';
 
 export default interface IMovementRepository {
-  registerMovement(movementData: Movement): Promise<Movement['id']>;
+  registerMovement(movementData: MovementInputData): Promise<Movement['id']>;
 }

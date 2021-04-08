@@ -1,4 +1,4 @@
-import { Movement } from 'src/domain/model';
+import { Movement, MovementInputData } from 'src/domain/model';
 import { IMovementRepository } from 'src/usecases';
 import { IDatastore } from '.';
 
@@ -9,7 +9,7 @@ export default class MovementRepository implements IMovementRepository {
     this.datastore = datastore;
   }
 
-  registerMovement(movementData: Movement): Promise<string> {
+  registerMovement(movementData: MovementInputData): Promise<Movement['id']> {
     throw new Error('Method not implemented.');
   }
 }
