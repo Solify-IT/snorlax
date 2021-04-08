@@ -1,6 +1,5 @@
 import { wrapError } from 'src/@types';
-import { LocalBook } from 'src/domain/model';
-import BookInteractor from 'src/usecases/interactor/bookInteractor';
+import BookInteractor, { RegisterBookInputData } from 'src/usecases/interactor/bookInteractor';
 import { IContext } from './context';
 
 export default class BookController {
@@ -17,13 +16,15 @@ export default class BookController {
       isbn,
       libraryId,
       price,
+      amount,
     } = context.request.body;
 
-    const bookData: Omit<LocalBook & { isLoan: boolean }, 'id' | 'library'> = {
+    const bookData: RegisterBookInputData = {
       isLoan: JSON.parse(isLoan),
       isbn,
       libraryId,
       price: JSON.parse(price),
+      amount: JSON.parse(amount),
     };
 
     const [bookId, error] = await wrapError(

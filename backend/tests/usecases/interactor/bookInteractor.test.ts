@@ -3,7 +3,7 @@ import winston from 'winston';
 import { wrapError } from 'src/@types';
 import BookPresenter from 'src/interface/presenter/bookPresenter';
 import BookRepository from 'src/interface/repository/bookRepository';
-import BookInteractor from 'src/usecases/interactor/bookInteractor';
+import { BookInteractor, LibraryInteractor, MovementInteractor } from 'src/usecases/interactor';
 import Datastore from 'src/infrastructure/datastore/datastore';
 import { UnknownError, InvalidDataError } from 'src/usecases/errors';
 import LibraryRepository from 'src/interface/repository/libraryRepository';
@@ -35,6 +35,8 @@ describe('registerBook', () => {
   const libraryRepository = new LibraryRepository(new Datastore(new Pool(), logger));
   const movementRepository = new MovementRepository(new Datastore(new Pool(), logger));
   const presenter = new BookPresenter();
+  const libraryInteractor = new LibraryInteractor(libraryRepository, logger);
+  const movementInteractor = new MovementInteractor(movementRepository, logger);
 
   it('should return book id when valid data is passed', async () => {
     const expectedID = 'expected';
@@ -50,7 +52,7 @@ describe('registerBook', () => {
     ).mockImplementation(async () => expectedID);
 
     const interactor = new BookInteractor(
-      bookRepository, presenter, libraryRepository, logger,
+      bookRepository, presenter, libraryInteractor, movementInteractor, logger,
     );
 
     const [res, error] = await wrapError(
@@ -64,7 +66,9 @@ describe('registerBook', () => {
   });
 
   it('should throw InvalidDataError with negative price', async () => {
-    const interactor = new BookInteractor(bookRepository, presenter, libraryRepository, logger);
+    const interactor = new BookInteractor(
+      bookRepository, presenter, libraryInteractor, movementInteractor, logger,
+    );
     const [res, error] = await wrapError(interactor.registerBook(
       {
         isbn: '123', price: -10, isLoan: false, libraryId: 'id_library', amount: 10,
@@ -84,7 +88,9 @@ describe('registerBook', () => {
       libraryRepository, 'findOneByID',
     ).mockImplementation(async () => library);
 
-    const interactor = new BookInteractor(bookRepository, presenter, libraryRepository, logger);
+    const interactor = new BookInteractor(
+      bookRepository, presenter, libraryInteractor, movementInteractor, logger,
+    );
     const [result, error] = await wrapError(interactor.registerBook(
       {
         isbn: '123', price: 10, isLoan: false, libraryId: library.id, amount: 10,
@@ -112,7 +118,9 @@ describe('registerBook', () => {
       movementRepository, 'registerMovement',
     ).mockImplementation(async () => 'movementID');
 
-    const interactor = new BookInteractor(bookRepository, presenter, libraryRepository, logger);
+    const interactor = new BookInteractor(
+      bookRepository, presenter, libraryInteractor, movementInteractor, logger,
+    );
     const [result, error] = await wrapError(interactor.registerBook(
       {
         isbn: '123', price: 10, isLoan: false, libraryId: library.id, amount: 10,
@@ -137,7 +145,9 @@ describe('registerBook', () => {
       libraryRepository, 'findOneByID',
     ).mockImplementation(async () => library);
 
-    const interactor = new BookInteractor(bookRepository, presenter, libraryRepository, logger);
+    const interactor = new BookInteractor(
+      bookRepository, presenter, libraryInteractor, movementInteractor, logger,
+    );
     const [result, error] = await wrapError(interactor.registerBook(
       {
         isbn: '123', price: 10, isLoan: false, libraryId: library.id, amount: 0,
@@ -162,7 +172,9 @@ describe('registerBook', () => {
       libraryRepository, 'findOneByID',
     ).mockImplementation(async () => library);
 
-    const interactor = new BookInteractor(bookRepository, presenter, libraryRepository, logger);
+    const interactor = new BookInteractor(
+      bookRepository, presenter, libraryInteractor, movementInteractor, logger,
+    );
     const [result, error] = await wrapError(interactor.registerBook(
       {
         isbn: '123', price: 10, isLoan: false, libraryId: library.id, amount: -10,
