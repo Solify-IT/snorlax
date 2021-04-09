@@ -1,7 +1,10 @@
 module.exports = {
   extends: ['airbnb-typescript'],
   parserOptions: {
-    project: './tsconfig.json',
+    project: './tsconfig.json'
+  },
+  rules: {
+    'react/prop-types': ['off']
   }
 };
 
