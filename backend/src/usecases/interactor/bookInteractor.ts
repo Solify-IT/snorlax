@@ -1,36 +1,109 @@
-import { wrapError } from 'src/@types';
-import { Book } from 'src/domain/model';
-import { IBookPresenter, IBookRepository } from '..';
+import { LocalBook } from 'src/domain/model';
+import {
+  IBookPresenter,
+  IBookRepository,
+} from '..';
+import { UnknownError } from '../errors';
+import InvalidDataError from '../errors/invalidDataError';
+import NotFoundError from '../errors/notFoundError';
+import { ILogger } from '../interfaces/logger';
+import LibraryInteractor from './libraryInteractor';
+import MovementInteractor from './movementInteractor';
+
+export type RegisterBookInputData = Omit<LocalBook & {
+  isLoan: boolean, amount: number,
+}, 'id' | 'library'>;
 
 export default class BookInteractor {
-  bookRepository: IBookRepository;
+  private bookRepository: IBookRepository;
 
-  bookPresenter: IBookPresenter;
+  private libraryInteractor: LibraryInteractor;
 
-  constructor(bookRepository: IBookRepository, bookPresenter: IBookPresenter) {
+  private movementInteractor: MovementInteractor;
+
+  private bookPresenter: IBookPresenter;
+
+  private logger: ILogger;
+
+  constructor(
+    bookRepository: IBookRepository,
+    bookPresenter: IBookPresenter,
+    libraryInteractor: LibraryInteractor,
+    movementInteractor: MovementInteractor,
+    logger: ILogger,
+  ) {
     this.bookRepository = bookRepository;
     this.bookPresenter = bookPresenter;
+    this.libraryInteractor = libraryInteractor;
+    this.movementInteractor = movementInteractor;
+    this.logger = logger;
   }
 
-  async getAll(): Promise<Book[]> {
-    const [books, error] = await wrapError(this.bookRepository.findAll());
+  async registerBook(
+    bookData: RegisterBookInputData,
+  ): Promise<LocalBook['id']> {
+    this.validateRegisterBookData(bookData);
 
-    if (error) {
-      throw error;
+    // Check if the library exists and if already is registered the book in the library
+    const [libraryResult, existLocalBook] = await Promise.all([
+      this.libraryInteractor.getOneById(bookData.libraryId),
+      this.bookRepository.findByISBN(bookData.isbn),
+    ]);
+
+    if (!libraryResult) {
+      const message = 'Library not found';
+      this.logger.error(
+        message, {
+          bookData, logger: 'BookInteractor:registerBook',
+        },
+      );
+      throw new NotFoundError(message);
     }
 
-    return this.bookPresenter.findAll(books);
+    const shouldSaveNewLocalBook = (
+      existLocalBook && existLocalBook.every(
+        (book) => book.libraryId !== bookData.libraryId,
+      )
+    ) || !existLocalBook;
+
+    let result = '';
+
+    if (shouldSaveNewLocalBook) {
+      result = await this.bookRepository.registerBook({
+        isbn: bookData.isbn, price: bookData.price, libraryId: bookData.libraryId,
+      });
+    } else if (existLocalBook) {
+      result = existLocalBook[0].id;
+    }
+
+    // Register the inventory movement
+    // TODO: also save the user and turn in which the movement was registered
+    await this.movementInteractor.registerMovement({
+      amount: bookData.amount, localBookId: result, isLoan: bookData.isLoan,
+    });
+
+    if (result !== '') return result;
+
+    throw new UnknownError('unknown');
   }
 
-  async getByISBN(isbn: string): Promise<Book> {
-    const [book, error] = await wrapError(
-      this.bookRepository.findByISBN(isbn),
-    );
+  private validateRegisterBookData(bookData: RegisterBookInputData): void {
+    let message = '';
 
-    if (error) {
-      throw error;
+    if (bookData.price < 0) {
+      message += 'The book can not have a negative price. ';
     }
 
-    return this.bookPresenter.findByISBN(book);
+    if (!bookData.libraryId) {
+      message += 'The book needs a LibraryId. ';
+    }
+
+    if (message !== '') {
+      this.logger.error(
+        message,
+        { bookData, logger: 'bookInteractor' },
+      );
+      throw new InvalidDataError(message);
+    }
   }
 }

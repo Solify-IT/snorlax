@@ -10,6 +10,7 @@ jobs:
       - image: node:14.16.0-alpine3.11
         environment:
           NODE_PATH: .
+
     steps:
       - checkout
       - node/install-packages:
@@ -39,6 +40,19 @@ jobs:
       - image: node:14.16.0-alpine3.11
         environment:
           NODE_PATH: .
+          NODE_ENV: test
+          PGHOST: localhost
+          PGUSER: postgres
+          PGPASSWORD: postgres
+          PGDATABASE: test
+          PGPORT: 5432
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432/test
+
+      - image: postgres:13.2-alpine
+        environment:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: test
     steps:
       - checkout
       - node/install-packages:
@@ -46,23 +60,31 @@ jobs:
           app-dir: ./backend
           cache-version: v1.0
       - run:
-          name: lint
+          name: Run linter
           working_directory: ./backend
           command: yarn lint
       - run:
-          name: typecheck
+          name: Typecheck
           working_directory: ./backend
           command: yarn typecheck
       - run:
-          name: test
+          name: Waiting for PostgreSQL
+          command: |
+            for i in `seq 1 10`;
+            do
+              nc -z 127.0.0.1 5432 && echo Success && exit 0
+              echo -n .
+              sleep 1
+            done
+            echo Failed waiting for MySQL && exit 1
+      - run:
+          name: Execute migrations
           working_directory: ./backend
-          command: yarn test
-      # - run:
-      #     name: build
-      #     working_directory: ./backend
-      #     environment:
-      #       NODE_ENV: production
-      #     command: yarn build
+          command: yarn migrate:up
+      - run:
+          name: Run unit tests
+          working_directory: ./backend
+          command: yarn jest
 workflows:
   version: 2
   

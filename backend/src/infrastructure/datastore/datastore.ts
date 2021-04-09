@@ -1,16 +1,56 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import axios from 'axios';
+import { Pool, QueryResult } from 'pg';
+import loadash from 'lodash';
 import { wrapError } from 'src/@types';
-import { Book } from 'src/domain/model';
+import { CommonType } from 'src/domain/model';
 import { IDatastore } from 'src/interface/repository';
+import NotFoundError from 'src/usecases/errors/notFoundError';
+import { ILogger } from 'src/usecases/interfaces/logger';
+import camelToSnakeCase from 'src/utils/camelToSnakeCase';
 
 export default class Datastore implements IDatastore {
-  get<T>(queryText: string, values?: any[]): Promise<T[]> {
-    throw new Error('Method not implemented.');
+  private dbPool: Pool;
+
+  private logger: ILogger;
+
+  constructor(dbPool: Pool, logger: ILogger) {
+    this.dbPool = dbPool;
+    this.logger = logger;
   }
 
-  getById<T>(tablenName: string, id: string): Promise<T> {
-    throw new Error('Method not implemented.');
+  async get<T>(queryText: string, values?: any[]): Promise<T[]> {
+    const [result, error] = await wrapError(
+      this.dbPool.query(queryText, values),
+    );
+
+    if (error) {
+      throw error;
+    }
+
+    if (!result) return [];
+
+    return result.rows.map((el) => this.toCamel<T>(el));
+  }
+
+  async getById<T>(tableName: string, id: string): Promise<T> {
+    const query = `SELECT * FROM ${tableName} WHERE id = $1`;
+    const [result, error] = await wrapError(this.dbPool.query<T>(query, [id]));
+
+    if (error) {
+      throw error;
+    }
+
+    if (!result) {
+      const message = 'The object searched was not found';
+      this.logger.error(message, {
+        logger: 'datasotre:getById',
+        id,
+        tableName,
+      });
+      throw new NotFoundError(message);
+    }
+
+    return this.toCamel<T>(result.rows[0]);
   }
 
   getOne<T>(queryText: string, values?: any[]): Promise<T> {
@@ -21,60 +61,36 @@ export default class Datastore implements IDatastore {
     throw new Error('Method not implemented.');
   }
 
-  books: {
-    query(queryText?: string): Promise<Book[]>;
-    getByISBN(isbn: string): Promise<Book>;
-  };
+  async insert<T extends CommonType>(
+    tableName: string, values: T,
+  ): Promise<CommonType['id']> {
+    const fields = Object.keys(values).map(camelToSnakeCase);
+    const paramsPlaceholders = fields.map((_, i) => `$${i + 1}`).join(', ');
+    const query = `
+      INSERT INTO ${tableName}(${fields})
+      VALUES (${paramsPlaceholders})
+      RETURNING *
+    `;
+    const data = Object.values(values);
 
-  constructor() {
-    const getByISBN = async (isbn: string): Promise<Book> => {
-      const [result, error] = await wrapError(
-        axios.get<{ items: any[] }>(
-          `https://www.googleapis.com/books/v1/volumes?q=${isbn}+isbn`,
-        ),
-      );
+    const [result, error] = await wrapError<QueryResult<T>>(
+      this.dbPool.query<T>(query, data),
+    );
 
-      if (error) {
-        throw error;
-      }
-
-      const book: Book = {
-        id: result.data.items[0].id,
-        author: result.data.items[0].volumeInfo.authors[0],
-        price: 0,
-        title: result.data.items[0].volumeInfo.title,
-        isbn: result.data.items[0].volumeInfo.industryIdentifiers[0].identifier,
-      };
-
-      return book;
-    };
-
-    const query = async (): Promise<Book[]> => {
-      const [result, error] = await wrapError(
-        axios.get<{ items: any[] }>(
-          'https://www.googleapis.com/books/v1/volumes?q=lord+of+the+rings',
-        ),
-      );
-
-      if (error) {
-        throw error;
-      }
-
-      const books: Book[] = [];
-
-      result.data.items.forEach((book) => {
-        books.push({
-          id: book.id,
-          author: book.volumeInfo.authors[0],
-          price: 0,
-          title: book.volumeInfo.title,
-          isbn: book.volumeInfo.industryIdentifiers[0].identifier,
-        });
+    if (error) {
+      this.logger.error('Error while inserting an object', {
+        logger: 'datastore',
+        tableName,
+        values,
+        error,
       });
+      throw error;
+    }
 
-      return books;
-    };
+    return result!.rows[0].id;
+  }
 
-    this.books = { query, getByISBN };
+  private toCamel<T>(obj: any) {
+    return loadash.mapKeys(obj, (v, k) => loadash.camelCase(k)) as T;
   }
 }

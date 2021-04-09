@@ -2,11 +2,12 @@
   "compilerOptions": {
     "baseUrl": "./",
     "outDir": "./dist",
-    "rootDir": "./src",
+    "rootDir": ".",
     "module": "commonjs",
     "esModuleInterop": true,
     "target": "es6",
     "noImplicitAny": true,
+    "strictNullChecks": true,
     "moduleResolution": "node",
     "sourceMap": true,
     "typeRoots" : ["./node_modules/@types", "./src/@types"],
@@ -18,6 +19,8 @@
   },
   "include": [
     "src/**/*.ts",
+    "tests/**/*.ts",
+    "scripts/**/*.ts",
   ],
   "exclude": [
     "node_modules"

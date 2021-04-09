@@ -1,6 +1,7 @@
-import { Book } from 'src/domain/model';
+import { Book, LocalBook, LocalBookInput } from 'src/domain/model';
 
 export interface IBookRepository {
   findAll(): Promise<Book[]>;
-  findByISBN(isbn: string): Promise<Book>;
+  findByISBN(isbn: string): Promise<LocalBook[]>;
+  registerBook(bookData: Omit<LocalBookInput, 'id'>): Promise<LocalBook['id']>;
 }
