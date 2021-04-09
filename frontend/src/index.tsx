@@ -2,10 +2,13 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './views/App/App';
 import reportWebVitals from './reportWebVitals';
+import { NavigationContextProvider } from './hooks/navigation';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <NavigationContextProvider>
+      <App />
+    </NavigationContextProvider>
   </React.StrictMode>,
   document.getElementById('root'),
 );
