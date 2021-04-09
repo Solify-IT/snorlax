@@ -46,7 +46,7 @@ jobs:
           PGPASSWORD: postgres
           PGDATABASE: test
           PGPORT: 5432
-          DATABASE_URL: "postgres://${PGUSER}:${PGPASSWORD}@localhost:${PGPORT}/${PGDATABASE}"
+          DATABASE_URL: postgres://${PGUSER}:${PGPASSWORD}@localhost:${PGPORT}/${PGDATABASE}
 
       - image: postgres:13.2-alpine
         environment:
