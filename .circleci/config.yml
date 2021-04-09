@@ -53,15 +53,28 @@ jobs:
           app-dir: ./backend
           cache-version: v1.0
       - run:
-          name: lint
+          name: Run linter
           working_directory: ./backend
           command: yarn lint
       - run:
-          name: typecheck
+          name: Typecheck
           working_directory: ./backend
           command: yarn typecheck
       - run:
-          name: test
+          name: Waiting for PostgreSQL
+          command: |
+            for i in `seq 1 10`;
+            do
+              nc -z 127.0.0.1 3306 && echo Success && exit 0
+              echo -n .
+              sleep 1
+            done
+            echo Failed waiting for MySQL && exit 1
+      - run:
+          name: Execute migrations
+          command: yarn migrate:up
+      - run:
+          name: Run unit tests
           working_directory: ./backend
           environment:
             NODE_ENV: test
@@ -71,9 +84,7 @@ jobs:
             PGDATABASE: test
             PGPORT: 5432
             DATABASE_URL: "postgres://${PGUSER}:${PGPASSWORD}@localhost:${PGPORT}/${PGDATABASE}"
-          command: |
-            yarn migrate:up
-            yarn jest
+          command: yarn jest
 workflows:
   version: 2
   
