@@ -10,6 +10,13 @@ jobs:
       - image: node:14.16.0-alpine3.11
         environment:
           NODE_PATH: .
+
+      - image: postgres:13.2-alpine
+        environment:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: snorlax
+
     steps:
       - checkout
       - node/install-packages:
@@ -56,13 +63,17 @@ jobs:
       - run:
           name: test
           working_directory: ./backend
-          command: yarn test
-      # - run:
-      #     name: build
-      #     working_directory: ./backend
-      #     environment:
-      #       NODE_ENV: production
-      #     command: yarn build
+          environment:
+            NODE_ENV: test
+            PGHOST: postgres
+            PGUSER: postgres
+            PGPASSWORD: postgres
+            PGDATABASE: test
+            PGPORT: 5432
+            DATABASE_URL: "postgres://${PGUSER}:${PGPASSWORD}@localhost:${PGPORT}/${PGDATABASE}"
+          command: |
+            yarn migrate:up
+            yarn jest
 workflows:
   version: 2
   
