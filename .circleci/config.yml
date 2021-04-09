@@ -84,7 +84,6 @@ jobs:
       - run:
           name: Run unit tests
           working_directory: ./backend
-          environment:
           command: yarn jest
 workflows:
   version: 2
