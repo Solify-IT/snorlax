@@ -11,12 +11,6 @@ jobs:
         environment:
           NODE_PATH: .
 
-      - image: postgres:13.2-alpine
-        environment:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: snorlax
-
     steps:
       - checkout
       - node/install-packages:
@@ -46,6 +40,12 @@ jobs:
       - image: node:14.16.0-alpine3.11
         environment:
           NODE_PATH: .
+
+      - image: postgres:13.2-alpine
+        environment:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: snorlax
     steps:
       - checkout
       - node/install-packages:
