@@ -65,7 +65,7 @@ jobs:
           working_directory: ./backend
           environment:
             NODE_ENV: test
-            PGHOST: postgres
+            PGHOST: localhost
             PGUSER: postgres
             PGPASSWORD: postgres
             PGDATABASE: test
