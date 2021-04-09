@@ -40,6 +40,13 @@ jobs:
       - image: node:14.16.0-alpine3.11
         environment:
           NODE_PATH: .
+          NODE_ENV: test
+          PGHOST: localhost
+          PGUSER: postgres
+          PGPASSWORD: postgres
+          PGDATABASE: test
+          PGPORT: 5432
+          DATABASE_URL: "postgres://${PGUSER}:${PGPASSWORD}@localhost:${PGPORT}/${PGDATABASE}"
 
       - image: postgres:13.2-alpine
         environment:
@@ -72,18 +79,12 @@ jobs:
             echo Failed waiting for MySQL && exit 1
       - run:
           name: Execute migrations
+          working_directory: ./backend
           command: yarn migrate:up
       - run:
           name: Run unit tests
           working_directory: ./backend
           environment:
-            NODE_ENV: test
-            PGHOST: localhost
-            PGUSER: postgres
-            PGPASSWORD: postgres
-            PGDATABASE: test
-            PGPORT: 5432
-            DATABASE_URL: "postgres://${PGUSER}:${PGPASSWORD}@localhost:${PGPORT}/${PGDATABASE}"
           command: yarn jest
 workflows:
   version: 2
