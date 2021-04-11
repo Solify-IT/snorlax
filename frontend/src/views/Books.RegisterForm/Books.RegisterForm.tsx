@@ -9,7 +9,7 @@ const RegisterForm: React.FC = () => {
   }, []);
 
   return (
-    <>Register Form</>
+    <>Aquí iría el formulario</>
   );
 };
 
