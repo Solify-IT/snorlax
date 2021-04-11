@@ -1,4 +1,6 @@
-import { LocalBook } from 'src/domain/model';
+import async from 'async';
+import { LocalBook, Book } from 'src/domain/model';
+import { ConsoleTransportOptions } from 'winston/lib/winston/transports';
 import {
   IBookPresenter,
   IBookRepository,
@@ -7,6 +9,7 @@ import { UnknownError } from '../errors';
 import InvalidDataError from '../errors/invalidDataError';
 import NotFoundError from '../errors/notFoundError';
 import { ILogger } from '../interfaces/logger';
+import IMetadataProviderCore from '../interfaces/metadataProvider';
 import LibraryInteractor from './libraryInteractor';
 import MovementInteractor from './movementInteractor';
 
@@ -23,6 +26,8 @@ export default class BookInteractor {
 
   private bookPresenter: IBookPresenter;
 
+  private metadataProvider: IMetadataProviderCore;
+
   private logger: ILogger;
 
   constructor(
@@ -30,12 +35,14 @@ export default class BookInteractor {
     bookPresenter: IBookPresenter,
     libraryInteractor: LibraryInteractor,
     movementInteractor: MovementInteractor,
+    metadataProvider: IMetadataProviderCore,
     logger: ILogger,
   ) {
     this.bookRepository = bookRepository;
     this.bookPresenter = bookPresenter;
     this.libraryInteractor = libraryInteractor;
     this.movementInteractor = movementInteractor;
+    this.metadataProvider = metadataProvider;
     this.logger = logger;
   }
 
@@ -105,5 +112,24 @@ export default class BookInteractor {
       );
       throw new InvalidDataError(message);
     }
+  }
+
+  async listBooksByLibrary(libraryId: string): Promise<Book[]> {
+    const localBooks = await this.bookRepository.listBooksByLibrary(libraryId);
+    const books: Book[] = [];
+
+    // eslint-disable-next-line no-restricted-syntax
+    for (const book of localBooks) {
+      // eslint-disable-next-line no-await-in-loop
+      const remoteBook = await this.metadataProvider.getOneByISBN(book.isbn);
+
+      if (remoteBook) {
+        books.push({
+          ...book, ...remoteBook,
+        });
+      }
+    }
+
+    return books;
   }
 }
