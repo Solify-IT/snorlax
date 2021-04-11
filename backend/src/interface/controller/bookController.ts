@@ -38,4 +38,18 @@ export default class BookController {
 
     context.response.status(200).json({ bookId });
   }
+
+  // recibe GET /books?libraryId=<?>
+  async listBooksByLibrary(context: IContext): Promise<void> {
+    const { libraryId } = context.request.query;
+    const [books, error] = await wrapError(
+      this.bookInteractor.listBooksByLibrary(libraryId as string),
+    );
+
+    if (error) {
+      context.next(error);
+    }
+
+    context.response.status(200).json({ books });
+  }
 }

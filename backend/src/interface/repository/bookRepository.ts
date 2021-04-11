@@ -13,6 +13,13 @@ export default class BookRepository implements IBookRepository {
     this.datastore = datastore;
   }
 
+  // regresar
+  async listBooksByLibrary(libraryId: string): Promise<LocalBook[]> {
+    return this.datastore.get<LocalBook>(
+      `SELECT * FROM ${BOOK_TABLE_NAME} WHERE library_id = $1`, [libraryId],
+    );
+  }
+
   async registerBook(bookData: Omit<LocalBookInput, 'id'>): Promise<string> {
     const id = uuidv4();
 

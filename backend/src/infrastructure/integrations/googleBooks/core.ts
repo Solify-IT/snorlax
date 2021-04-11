@@ -14,12 +14,18 @@ export default class GoogleBooksService implements IMetadataProviderCore {
 
   async getOneByISBN(isbn: string): Promise<Maybe<ExternalBook>> {
     const [result, error] = await wrapError(this.get(`${isbn}+isbn&maxResults=1`));
-
     if (error) {
       throw error;
     }
 
-    const foundIsbn = result.data.items[0].volumeInfo.industryIdentifiers[0].identifier;
+    let foundIsbn = '';
+    result.data.items[0].volumeInfo.industryIdentifiers.forEach(
+      (element: { type: string, identifier: string }) => {
+        if (element.type === 'ISBN_13') {
+          foundIsbn = element.identifier;
+        }
+      },
+    );
 
     if (foundIsbn !== isbn) {
       return null;
@@ -35,6 +41,7 @@ export default class GoogleBooksService implements IMetadataProviderCore {
   }
 
   private async get(searchCriteria: string): Promise<any> {
-    return axios.get(`${this.baseURL}${searchCriteria}`);
+    const result = await axios.get(`${this.baseURL}${searchCriteria}`);
+    return result;
   }
 }
