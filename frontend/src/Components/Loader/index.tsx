@@ -5,7 +5,7 @@ import styles from './styles.module.css';
 const Loader: React.FC<{ isLoading: boolean }> = ({ isLoading }) => (
   <>
     {isLoading && (
-      <div className={styles.loader}>
+      <div data-testid="loader" className={styles.loader}>
         <Spin size="large" />
       </div>
     )}
