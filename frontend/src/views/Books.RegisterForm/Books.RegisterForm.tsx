@@ -6,7 +6,7 @@ const RegisterForm: React.FC = () => {
 
   useEffect(() => {
     setTitles({ title: 'Añadir libros' });
-  }, []);
+  }, [setTitles]);
 
   return (
     <>Aquí iría el formulario</>
