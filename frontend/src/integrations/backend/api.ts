@@ -1,4 +1,6 @@
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios, {
+  AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosError,
+} from 'axios';
 
 class Api {
   private api: AxiosInstance;
@@ -11,53 +13,53 @@ class Api {
     }));
   }
 
-  public async get<T, R = AxiosResponse<T>>(
+  public async get<T>(
     url: string,
     config?: AxiosRequestConfig,
-  ): Promise<[AxiosResponse<R> | undefined, Error | undefined]> {
+  ): Promise<[AxiosResponse<T> | null, AxiosError | null]> {
     try {
-      const res = await this.api.get<R>(url, config);
-      return [res, undefined];
+      const res = await this.api.get<T>(url, config);
+      return [res, null];
     } catch (e) {
-      return [undefined, e.response];
+      return [null, e];
     }
   }
 
-  public async delete<T, R = AxiosResponse<T>>(
+  public async delete<T>(
     url: string,
     config?: AxiosRequestConfig,
-  ): Promise<[AxiosResponse<R> | undefined, Error | undefined]> {
+  ): Promise<[AxiosResponse<T> | null, AxiosError | null]> {
     try {
-      const res = await this.api.delete<R>(url, config);
-      return [res, undefined];
+      const res = await this.api.delete<T>(url, config);
+      return [res, null];
     } catch (e) {
-      return [undefined, e.response];
+      return [null, e];
     }
   }
 
-  public async post<T, B, R = AxiosResponse<T>>(
+  public async post<T, B>(
     url: string,
     data?: B,
     config?: AxiosRequestConfig,
-  ): Promise<[AxiosResponse<R> | undefined, Error | undefined]> {
+  ): Promise<[AxiosResponse<T> | null, AxiosError | null]> {
     try {
-      const res = await this.api.post<R>(url, data, config);
-      return [res, undefined];
+      const res = await this.api.post<T>(url, data, config);
+      return [res, null];
     } catch (e) {
-      return [undefined, e.response];
+      return [null, e];
     }
   }
 
-  public async patch<T, B, R = AxiosResponse<T>>(
+  public async patch<T, B>(
     url: string,
     data?: B,
     config?: AxiosRequestConfig,
-  ): Promise<[AxiosResponse<R> | undefined, Error | undefined]> {
+  ): Promise<[AxiosResponse<T> | null, AxiosError | null]> {
     try {
-      const res = await this.api.patch<R>(url, data, config);
-      return [res, undefined];
+      const res = await this.api.patch<T>(url, data, config);
+      return [res, null];
     } catch (e) {
-      return [undefined, e.response];
+      return [null, e];
     }
   }
 }

@@ -4,7 +4,7 @@ import { LocalBook, LocalBookInput, MovementInputData } from 'src/@types';
 import { BACKEND_MAIN_EP, BOOKS_ROOT } from 'src/settings';
 import CRUD from './crud';
 
-export type RegisterBook = Omit<LocalBookInput & MovementInputData, 'id'>;
+export type RegisterBook = Omit<LocalBookInput & MovementInputData, 'id' | 'localBookId'>;
 
 export class Backend {
   rootEndpoint: string;

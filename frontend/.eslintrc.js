@@ -4,7 +4,8 @@ module.exports = {
     project: './tsconfig.json'
   },
   rules: {
-    'react/prop-types': ['off']
+    'react/prop-types': ['off'],
+    'react/jsx-props-no-spreading': ['off']
   }
 };
 

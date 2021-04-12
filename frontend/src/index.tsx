@@ -3,11 +3,14 @@ import ReactDOM from 'react-dom';
 import App from './views/App/App';
 import reportWebVitals from './reportWebVitals';
 import { NavigationContextProvider } from './hooks/navigation';
+import { BackendProvider } from './integrations/backend';
 
 ReactDOM.render(
   <React.StrictMode>
     <NavigationContextProvider>
-      <App />
+      <BackendProvider>
+        <App />
+      </BackendProvider>
     </NavigationContextProvider>
   </React.StrictMode>,
   document.getElementById('root'),
