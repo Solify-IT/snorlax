@@ -137,7 +137,7 @@ const RegisterForm: React.FC = () => {
           </Form.Item>
         </Form>
       </Col>
-      <Col span={12}>
+      <Col style={{ position: 'relative' }} span={12}>
         <PossibleBooks isbn={selectedISBN || ''} />
       </Col>
     </Row>

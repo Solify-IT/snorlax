@@ -25,16 +25,20 @@ export default class Client {
 
     const books: ExternalBook[] = [];
 
-    res.data.items.forEach((item) => {
-      const foundIsbn = item.volumeInfo.industryIdentifiers[0].identifier;
-      books.push({
-        authors: item.volumeInfo.authors,
-        title: item.volumeInfo.title,
-        isbn: foundIsbn,
-        coverURL: item.volumeInfo.imageLinks.thumbnail
-          || item.volumeInfo.imageLinks.smallThumbnail,
+    const { items } = res.data;
+
+    if (items) {
+      items.forEach((item) => {
+        const foundIsbn = item.volumeInfo.industryIdentifiers[0].identifier;
+        books.push({
+          authors: item.volumeInfo.authors,
+          title: item.volumeInfo.title,
+          isbn: foundIsbn,
+          coverURL: item.volumeInfo.imageLinks.thumbnail
+            || item.volumeInfo.imageLinks.smallThumbnail,
+        });
       });
-    });
+    }
 
     return [books, null];
   }
