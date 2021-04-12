@@ -18,8 +18,9 @@ export default class Client {
     isbn: string, max: number = 3,
   ): Promise<WithError<ExternalBook[], AxiosError>> {
     const [res, error] = await this.get<{ items: any[] }>(
-      `?q=${isbn}+isbn+maxResults=${max}`,
+      `${isbn}+isbn&maxResults=${max}`,
     );
+    console.log(res);
 
     if (error || !res) return [null, error];
 

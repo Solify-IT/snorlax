@@ -3,6 +3,7 @@ import {
 } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import PossibleBooks from 'src/Components/PossibleBooks';
 import useNavigation from 'src/hooks/navigation';
 import { useBackend } from 'src/integrations/backend';
 import { StateType } from './Books.RegisterForm.type';
@@ -26,6 +27,7 @@ const tailLayout = {
 const RegisterForm: React.FC = () => {
   const { setTitles } = useNavigation();
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedISBN, setSelectedISBN] = useState(INITIAL_STATE.isbn);
   const backend = useBackend();
   const history = useHistory();
   const [form] = Form.useForm();
@@ -67,17 +69,15 @@ const RegisterForm: React.FC = () => {
     setIsLoading(false);
   };
 
-  const isbnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.value.length === 13) {
-      console.log('Call GoogleBooks API');
-    }
-  };
-
   const onFinishFailed = () => {
     notification.error({
       message: '¡Ocurrió un error al guardar!',
       description: 'Intentalo después.',
     });
+  };
+
+  const onISBNChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSelectedISBN(event.target.value);
   };
 
   return (
@@ -101,7 +101,7 @@ const RegisterForm: React.FC = () => {
               len: 13,
             }]}
           >
-            <Input onChange={isbnChange} />
+            <Input onChange={onISBNChange} />
           </Form.Item>
 
           <Form.Item
@@ -136,6 +136,9 @@ const RegisterForm: React.FC = () => {
             </Button>
           </Form.Item>
         </Form>
+      </Col>
+      <Col span={12}>
+        <PossibleBooks isbn={selectedISBN || ''} />
       </Col>
     </Row>
   );
