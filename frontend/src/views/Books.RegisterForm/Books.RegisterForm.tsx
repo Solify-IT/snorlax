@@ -5,7 +5,9 @@ const RegisterForm: React.FC = () => {
   const { setTitles } = useNavigation();
 
   useEffect(() => {
-    setTitles({ title: 'Añadir libros' });
+    setTitles({
+      title: 'Añadir libros', subtitle: 'Ingresa todos los campos requeridos',
+    });
   }, [setTitles]);
 
   return (
