@@ -11,11 +11,11 @@ import Movement, { MovementInputData, MOVEMENT_TABLE_NAME } from './movement';
 
 export type Maybe<T> = T | null;
 
-export type WithError<T> = Promise<[T | null, Error | null]>;
+export type WithError<T, E = Error> = Promise<[T | null, E | null]>;
 
-export async function wrapError<T>(
+export async function wrapError<T, E = Error>(
   p: Promise<T>,
-): WithError<T> {
+): WithError<T, E> {
   try {
     return [await p, null];
   } catch (err) {

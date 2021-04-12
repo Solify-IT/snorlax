@@ -1,5 +1,5 @@
 import {
-  Button, Form, Input, InputNumber, notification, Spin, Switch,
+  Button, Col, Form, Input, InputNumber, notification, Row, Spin, Switch,
 } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
@@ -15,12 +15,12 @@ const INITIAL_STATE = {
 };
 
 const layout = {
-  labelCol: { span: 4 },
-  wrapperCol: { span: 12 },
+  labelCol: { span: 6 },
+  wrapperCol: { span: 18 },
 };
 
 const tailLayout = {
-  wrapperCol: { offset: 4, span: 12 },
+  wrapperCol: { offset: 6, span: 18 },
 };
 
 const RegisterForm: React.FC = () => {
@@ -67,68 +67,77 @@ const RegisterForm: React.FC = () => {
     setIsLoading(false);
   };
 
-  const onFinishFailed = (errorInfo: any) => {
-    console.log('Failed:', errorInfo);
+  const isbnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.value.length === 13) {
+      console.log('Call GoogleBooks API');
+    }
+  };
+
+  const onFinishFailed = () => {
+    notification.error({
+      message: '¡Ocurrió un error al guardar!',
+      description: 'Intentalo después.',
+    });
   };
 
   return (
-    <Form
-      {...layout}
-      form={form}
-      name="registerBook"
-      initialValues={INITIAL_STATE}
-      onFinish={onFinish}
-      onFinishFailed={onFinishFailed}
-      size="large"
-    >
-      <Form.Item
-        label="ISBN"
-        name="isbn"
-        rules={[{
-          required: true,
-          message: 'Debes ingresar un ISBN válido',
-          len: 13,
-        }]}
-      >
-        <Input />
-      </Form.Item>
+    <Row>
+      <Col span={12}>
+        <Form
+          {...layout}
+          form={form}
+          name="registerBook"
+          initialValues={INITIAL_STATE}
+          onFinish={onFinish}
+          onFinishFailed={onFinishFailed}
+          size="large"
+        >
+          <Form.Item
+            label="ISBN"
+            name="isbn"
+            rules={[{
+              required: true,
+              message: 'Debes ingresar un ISBN válido',
+              len: 13,
+            }]}
+          >
+            <Input onChange={isbnChange} />
+          </Form.Item>
 
-      <Form.Item
-        label="Precio"
-        name="price"
-        rules={[{
-          required: true,
-          message: 'Debes ingresar un precio válido',
-          // min: 0,
-          // max: 9999,
-        }]}
-      >
-        <InputNumber />
-      </Form.Item>
+          <Form.Item
+            label="Precio"
+            name="price"
+            rules={[{
+              required: true,
+              message: 'Debes ingresar un precio válido',
+            }]}
+          >
+            <InputNumber />
+          </Form.Item>
 
-      <Form.Item
-        label="Cantidad"
-        name="amount"
-        rules={[{
-          required: true,
-          message: 'Debes ingresar una cantidad válida',
-          // min: 0,
-          // max: 9999,
-        }]}
-      >
-        <InputNumber />
-      </Form.Item>
+          <Form.Item
+            label="Cantidad"
+            name="amount"
+            rules={[{
+              required: true,
+              message: 'Debes ingresar una cantidad válida',
+            }]}
+          >
+            <InputNumber />
+          </Form.Item>
 
-      <Form.Item label="¿Es consigna?" name="isLoan">
-        <Switch />
-      </Form.Item>
+          <Form.Item label="¿Es consigna?" name="isLoan">
+            <Switch />
+          </Form.Item>
 
-      <Form.Item {...tailLayout}>
-        <Button disabled={isLoading} type="primary" htmlType="submit">
-          {isLoading ? <Spin size="small" /> : 'Guardar'}
-        </Button>
-      </Form.Item>
-    </Form>
+          <Form.Item {...tailLayout}>
+            <Button disabled={isLoading} type="primary" htmlType="submit">
+              {isLoading ? <Spin size="small" /> : 'Guardar'}
+            </Button>
+          </Form.Item>
+        </Form>
+      </Col>
+    </Row>
   );
 };
 

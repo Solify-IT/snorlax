@@ -13,6 +13,7 @@ export type LocalBookInput = Omit<LocalBook, 'library'>;
 
 export type ExternalBook = {
   authors: string[],
+  coverURL: string,
   title: string,
   isbn?: string,
 };
