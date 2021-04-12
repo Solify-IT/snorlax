@@ -20,7 +20,6 @@ export default class Client {
     const [res, error] = await this.get<{ items: any[] }>(
       `${isbn}+isbn&maxResults=${max}`,
     );
-    console.log(res);
 
     if (error || !res) return [null, error];
 
