@@ -8,5 +8,14 @@ export default class Router {
         { request, response, next },
       );
     });
+    app.get('/books', async (request, response, next) => {
+      await controller.books.presentBook(
+        { request, response, next },
+      );
+    });
+  
+  
   }
+
+  
 }
