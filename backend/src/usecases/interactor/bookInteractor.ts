@@ -1,4 +1,4 @@
-import { LocalBook } from 'src/domain/model';
+import { LocalBook,Book } from 'src/domain/model';
 import {
   IBookPresenter,
   IBookRepository,
@@ -9,7 +9,7 @@ import NotFoundError from '../errors/notFoundError';
 import { ILogger } from '../interfaces/logger';
 import LibraryInteractor from './libraryInteractor';
 import MovementInteractor from './movementInteractor';
-
+import IMetadataProviderCore from '../interfaces/metadataProvider';
 export type RegisterBookInputData = Omit<LocalBook & {
   isLoan: boolean, amount: number,
 }, 'id' | 'library'>;
@@ -22,6 +22,7 @@ export default class BookInteractor {
   private movementInteractor: MovementInteractor;
 
   private bookPresenter: IBookPresenter;
+  private metadataProvider: IMetadataProviderCore;
 
   private logger: ILogger;
 
@@ -105,5 +106,32 @@ export default class BookInteractor {
       );
       throw new InvalidDataError(message);
     }
+  }
+
+
+
+  async getBook(bookId: string): Promise<Book[]> {
+    const localBook = await this.bookRepository.findByISBN(bookId);
+     
+
+      
+  
+      const books: Book[] = [];
+
+      // eslint-disable-next-line no-restricted-syntax
+      for (const book of localBook) {
+        // eslint-disable-next-line no-await-in-loop
+        const remoteBook = await this.metadataProvider.getOneByISBN(book.isbn);
+  
+        if (remoteBook) {
+          books.push({
+            ...book, ...remoteBook,
+          });
+        }
+      }
+      
+    
+  
+    return books;
   }
 }
