@@ -34,4 +34,11 @@ export default class BookRepository implements IBookRepository {
 
     return books;
   }
+
+  async getBookInLibrary(libraryId: string, isbn: string): Promise<LocalBook>{
+    const book = await this.datastore.update<LocalBook>(
+      `SELECT * FROM ${BOOK_TABLE_NAME} WHERE library_id = $1 AND isbn = $2 `, [libraryId, isbn],
+    );
+    return book;
+  }
 }

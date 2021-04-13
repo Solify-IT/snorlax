@@ -6,7 +6,6 @@ export default interface IDatastore {
   getById<T>(tablenName: string, id: string): Promise<Maybe<T>>;
   getOne<T>(queryText: string, values?: any[]): Promise<T>;
   getOneOrNull<T>(queryText: string, values?: any[]): Promise<T | null>;
-  insert<T extends CommonType>(
-    tableName: string, values: T,
-  ): Promise<CommonType['id']>;
+  insert<T extends CommonType>(tableName: string, values: T,): Promise<CommonType['id']>;
+  update<T>(queryText: string, values?: any[]): Promise<T>;
 }
