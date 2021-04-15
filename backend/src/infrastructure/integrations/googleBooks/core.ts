@@ -18,8 +18,12 @@ export default class GoogleBooksService implements IMetadataProviderCore {
       throw error;
     }
 
+    const item = result.data.items ? result.data.items[0] : null;
+
+    if (!item) return null;
+
     let foundIsbn = '';
-    result.data.items[0].volumeInfo.industryIdentifiers.forEach(
+    item.volumeInfo.industryIdentifiers.forEach(
       (element: { type: string, identifier: string }) => {
         if (element.type === 'ISBN_13') {
           foundIsbn = element.identifier;
@@ -27,13 +31,14 @@ export default class GoogleBooksService implements IMetadataProviderCore {
       },
     );
 
-    if (foundIsbn !== isbn) {
-      return null;
-    }
+    // TODO: Review if we need to keep this validation
+    // if (foundIsbn !== isbn) {
+    //   return null;
+    // }
 
     const book: ExternalBook = {
-      authors: result.data.items[0].volumeInfo.authors,
-      title: result.data.items[0].volumeInfo.title,
+      authors: item.volumeInfo.authors,
+      title: item.volumeInfo.title,
       isbn: foundIsbn,
     };
 

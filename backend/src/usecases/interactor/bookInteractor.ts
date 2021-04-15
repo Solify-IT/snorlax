@@ -122,6 +122,7 @@ export default class BookInteractor {
       const remoteBook = await this.metadataProvider.getOneByISBN(book.isbn);
 
       if (remoteBook) {
+        this.logger.info('llega');
         books.push({
           ...book, ...remoteBook,
         });
