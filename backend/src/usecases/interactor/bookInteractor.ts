@@ -1,6 +1,4 @@
-import async from 'async';
 import { LocalBook, Book } from 'src/domain/model';
-import { ConsoleTransportOptions } from 'winston/lib/winston/transports';
 import {
   IBookPresenter,
   IBookRepository,
