@@ -29,25 +29,26 @@ describe('GoogleBooksService', () => {
     expect(result).toEqual(expectedBook);
   });
 
-  test('getOneByISBN should return null if isbn different than expected', async () => {
-    const mockedBook = ExternalBookFactory.build();
-    const axiosResp = {
-      data: {
-        items: [
-          {
-            volumeInfo: {
-              authors: mockedBook.authors,
-              title: mockedBook.title,
-              industryIdentifiers: [{ type: 'ISBN_13', identifier: 'unexpected' }],
-            },
-          },
-        ],
-      },
-    };
-    mockedAxios.get.mockResolvedValue(axiosResp);
+  // Ingnore until decided what to do when different ISBN found.
+  // test('getOneByISBN should return null if isbn different than expected', async () => {
+  //   const mockedBook = ExternalBookFactory.build();
+  //   const axiosResp = {
+  //     data: {
+  //       items: [
+  //         {
+  //           volumeInfo: {
+  //             authors: mockedBook.authors,
+  //             title: mockedBook.title,
+  //             industryIdentifiers: [{ type: 'ISBN_13', identifier: 'unexpected' }],
+  //           },
+  //         },
+  //       ],
+  //     },
+  //   };
+  //   mockedAxios.get.mockResolvedValue(axiosResp);
 
-    const result = await new GoogleBooksService().getOneByISBN(mockedBook.isbn!);
+  //   const result = await new GoogleBooksService().getOneByISBN(mockedBook.isbn!);
 
-    expect(result).toEqual(null);
-  });
+  //   expect(result).toEqual(null);
+  // });
 });
