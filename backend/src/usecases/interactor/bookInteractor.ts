@@ -1,8 +1,5 @@
 import { LocalBook, Book } from 'src/domain/model';
-import {
-  IBookPresenter,
-  IBookRepository,
-} from '..';
+import { IBookRepository } from '..';
 import { UnknownError } from '../errors';
 import InvalidDataError from '../errors/invalidDataError';
 import NotFoundError from '../errors/notFoundError';
@@ -22,22 +19,18 @@ export default class BookInteractor {
 
   private movementInteractor: MovementInteractor;
 
-  private bookPresenter: IBookPresenter;
-
   private metadataProvider: IMetadataProviderCore;
 
   private logger: ILogger;
 
   constructor(
     bookRepository: IBookRepository,
-    bookPresenter: IBookPresenter,
     libraryInteractor: LibraryInteractor,
     movementInteractor: MovementInteractor,
     metadataProvider: IMetadataProviderCore,
     logger: ILogger,
   ) {
     this.bookRepository = bookRepository;
-    this.bookPresenter = bookPresenter;
     this.libraryInteractor = libraryInteractor;
     this.movementInteractor = movementInteractor;
     this.metadataProvider = metadataProvider;

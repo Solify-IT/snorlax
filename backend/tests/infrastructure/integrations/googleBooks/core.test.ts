@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { GoogleBooksService } from 'src/infrastructure/integrations';
 import { ExternalBookFactory } from 'src/infrastructure/factories';
+import { wrapError } from 'src/@types';
 
 jest.mock('axios');
 
@@ -27,6 +28,18 @@ describe('GoogleBooksService', () => {
     const result = await new GoogleBooksService().getOneByISBN(expectedBook.isbn!);
 
     expect(result).toEqual(expectedBook);
+  });
+
+  test('getOneByISBN should be successful with correct data', async () => {
+    const expectedBook = ExternalBookFactory.build();
+    mockedAxios.get.mockRejectedValueOnce({});
+
+    const service = new GoogleBooksService();
+
+    const [result, error] = await wrapError(service.getOneByISBN(expectedBook.isbn!));
+
+    expect(result).toBe(null);
+    expect(error).not.toBe(null);
   });
 
   // Ingnore until decided what to do when different ISBN found.

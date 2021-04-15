@@ -14,6 +14,7 @@ export default class GoogleBooksService implements IMetadataProviderCore {
 
   async getOneByISBN(isbn: string): Promise<Maybe<ExternalBook>> {
     const [result, error] = await wrapError(this.get(`${isbn}+isbn&maxResults=1`));
+
     if (error) {
       throw error;
     }

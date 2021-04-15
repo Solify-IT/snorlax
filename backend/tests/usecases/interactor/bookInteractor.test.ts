@@ -1,7 +1,6 @@
 import { Pool } from 'pg';
 import winston from 'winston';
 import { wrapError } from 'src/@types';
-import BookPresenter from 'src/interface/presenter/bookPresenter';
 import BookRepository from 'src/interface/repository/bookRepository';
 import { BookInteractor, LibraryInteractor, MovementInteractor } from 'src/usecases/interactor';
 import Datastore from 'src/infrastructure/datastore/datastore';
@@ -13,7 +12,6 @@ import MovementRepository from 'src/interface/repository/movementRepository';
 import NotFoundError from 'src/usecases/errors/notFoundError';
 import { GoogleBooksService } from 'src/infrastructure/integrations';
 
-jest.mock('src/interface/presenter/bookPresenter');
 jest.mock('src/interface/repository/bookRepository');
 jest.mock('src/infrastructure/datastore/datastore');
 jest.mock('src/infrastructure/integrations');
@@ -36,14 +34,12 @@ const logger = winston.createLogger();
 const bookRepository = new BookRepository(new Datastore(new Pool(), logger));
 const libraryRepository = new LibraryRepository(new Datastore(new Pool(), logger));
 const movementRepository = new MovementRepository(new Datastore(new Pool(), logger));
-const presenter = new BookPresenter();
 const libraryInteractor = new LibraryInteractor(libraryRepository, logger);
 const movementInteractor = new MovementInteractor(movementRepository, logger);
 const metadataProvider = new GoogleBooksService();
 
 const interactor = new BookInteractor(
   bookRepository,
-  presenter,
   libraryInteractor,
   movementInteractor,
   metadataProvider,
