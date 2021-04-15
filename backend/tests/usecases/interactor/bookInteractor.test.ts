@@ -11,10 +11,12 @@ import LibraryFactory from 'src/infrastructure/factories/libraryFactory';
 import { LocalBookFactory } from 'src/infrastructure/factories';
 import MovementRepository from 'src/interface/repository/movementRepository';
 import NotFoundError from 'src/usecases/errors/notFoundError';
+import { GoogleBooksService } from 'src/infrastructure/integrations';
 
 jest.mock('src/interface/presenter/bookPresenter');
 jest.mock('src/interface/repository/bookRepository');
 jest.mock('src/infrastructure/datastore/datastore');
+jest.mock('src/infrastructure/integrations');
 jest.mock('winston', () => ({
   createLogger: () => ({
     error: jest.fn(),
@@ -38,9 +40,15 @@ describe('registerBook', () => {
   const presenter = new BookPresenter();
   const libraryInteractor = new LibraryInteractor(libraryRepository, logger);
   const movementInteractor = new MovementInteractor(movementRepository, logger);
+  const metadataProvider = new GoogleBooksService();
 
   const interactor = new BookInteractor(
-    bookRepository, presenter, libraryInteractor, movementInteractor, logger,
+    bookRepository,
+    presenter,
+    libraryInteractor,
+    movementInteractor,
+    metadataProvider,
+    logger,
   );
 
   it('should return book id when valid data is passed', async () => {

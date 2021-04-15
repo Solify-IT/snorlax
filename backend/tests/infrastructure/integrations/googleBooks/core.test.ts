@@ -16,7 +16,7 @@ describe('GoogleBooksService', () => {
             volumeInfo: {
               authors: expectedBook.authors,
               title: expectedBook.title,
-              industryIdentifiers: [{ identifier: expectedBook.isbn }],
+              industryIdentifiers: [{ type: 'ISBN_13', identifier: expectedBook.isbn }],
             },
           },
         ],
@@ -38,7 +38,7 @@ describe('GoogleBooksService', () => {
             volumeInfo: {
               authors: mockedBook.authors,
               title: mockedBook.title,
-              industryIdentifiers: [{ identifier: 'unexpected' }],
+              industryIdentifiers: [{ type: 'ISBN_13', identifier: 'unexpected' }],
             },
           },
         ],
