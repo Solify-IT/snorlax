@@ -19,7 +19,6 @@
     "jest": "dotenv -e .env.test -- jest",
     "test": "./scripts/test.sh",
     "build": "tsc -p .",
-    "prestart": "npm-run-all migrate:up",
     "start": "node dist/index.js"
   },
   "devDependencies": {
@@ -42,6 +41,7 @@
     "jest": "^26.6.3",
     "node-dev": "^6.4.0",
     "nodemon": "^2.0.7",
+    "npm-run-all": "^4.1.5",
     "rimraf": "^3.0.2",
     "shelljs": "^0.8.4",
     "ts-jest": "^26.5.4",
@@ -63,7 +63,6 @@
     "faker": "^5.5.2",
     "lodash": "^4.17.21",
     "node-pg-migrate": "^5.9.0",
-    "npm-run-all": "^4.1.5",
     "pg": "^8.5.1",
     "uuid": "^8.3.2",
     "winston": "^3.3.3"
