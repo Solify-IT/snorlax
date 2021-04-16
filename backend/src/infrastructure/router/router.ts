@@ -19,5 +19,21 @@ export default class Router {
         ),
       );
     });
+
+    app.get('/localbooks', async (request, response, next) => {
+      await wrapError(
+        controller.books.getLocalBooks(
+          { request, response, next },
+        ),
+      );
+    });
+
+    app.get('/localbooks/:isbn', async (request, response, next) => {
+      await wrapError(
+        controller.books.getLocalBooks(
+          { request, response, next },
+        ),
+      );
+    });
   }
 }

@@ -22,6 +22,16 @@ export default class BookInteractor {
     return this.bookPresenter.findAll(books);
   }
 
+  async getLocalAll(): Promise<Book[]> {
+    const [books, error] = await wrapError(this.bookRepository.findLocalAll());
+
+    if (error) {
+      throw error;
+    }
+
+    return this.bookPresenter.findLocalAll(books);
+  }
+
   async getByISBN(isbn: string): Promise<Book> {
     const [book, error] = await wrapError(
       this.bookRepository.findByISBN(isbn),

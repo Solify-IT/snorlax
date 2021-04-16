@@ -34,4 +34,15 @@ export default class BookController {
 
     context.response.status(200).json(book);
   }
+
+  async getLocalBooks(context: IContext): Promise<void> {
+    const [books, error] = await wrapError(this.bookInteractor.getLocalAll());
+
+    if (error) {
+      context.next(error);
+      return;
+    }
+
+    context.response.status(200).json(books);
+  }
 }
