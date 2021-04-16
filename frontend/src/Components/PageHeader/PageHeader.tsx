@@ -2,14 +2,20 @@ import React from 'react';
 import {
   Menu, Layout, PageHeader as PageHeaderAntd,
 } from 'antd';
+import { useHistory } from 'react-router-dom';
 import useNavigation from 'src/hooks/navigation';
 import './styles.css';
+import { LIST_LOCAL_BOOKS, NEW_BOOK } from '../Router/routes';
 
 const { SubMenu } = Menu;
 const { Header, Content, Sider } = Layout;
 
 const PageHeader: React.FC = ({ children }) => {
   const { title, subtitle, extra } = useNavigation();
+  const history = useHistory();
+
+  const goTo = (path: string) => () => history.push(path);
+
   return (
     <Layout id="components-layout">
       <Header className="header">
@@ -29,7 +35,12 @@ const PageHeader: React.FC = ({ children }) => {
             style={{ height: '100%', borderRight: 0 }}
           >
             <SubMenu key="books" title="Libros">
-              <Menu.Item key="1">Registrar Libros</Menu.Item>
+              <Menu.Item key="1" onClick={goTo(NEW_BOOK)}>
+                Registrar Libros
+              </Menu.Item>
+              <Menu.Item key="2" onClick={goTo(LIST_LOCAL_BOOKS)}>
+                Libros disponibles
+              </Menu.Item>
             </SubMenu>
           </Menu>
         </Sider>

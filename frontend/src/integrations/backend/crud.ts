@@ -1,7 +1,9 @@
 import Api from './api';
 
 export default class CRUD<T, C = any, U = any> extends Api {
-  public getAll = () => this.get<T[]>('/');
+  public getAll = <A = T>(filter: string = '') => this.get<A[]>(
+    `/${filter !== '' && '?'}${filter || ''}`,
+  );
 
   // TODO: Create new class to separate this method, since it is just used for establishments
   public getOne = (slug: string) => this.get<T>(`/${slug}`);

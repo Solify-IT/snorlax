@@ -131,8 +131,12 @@ const RegisterForm: React.FC = () => {
           </Form.Item>
 
           <Form.Item {...tailLayout}>
-            <Button disabled={isLoading} type="primary" htmlType="submit">
-              {isLoading ? <Spin size="small" /> : 'Guardar'}
+            <Button
+              loading={isLoading}
+              type="primary"
+              htmlType="submit"
+            >
+              Guardar
             </Button>
           </Form.Item>
         </Form>
