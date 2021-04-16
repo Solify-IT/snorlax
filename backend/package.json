@@ -19,7 +19,8 @@
     "jest": "dotenv -e .env.test -- jest",
     "test": "./scripts/test.sh",
     "build": "tsc -p .",
-    "start": "node dist/index.js"
+    "prestart": "node-pg-migrate -m dist/src/infrastructure/datastore/migrations up",
+    "start": "node dist/src/index.js"
   },
   "devDependencies": {
     "@types/compression": "^1.7.0",
