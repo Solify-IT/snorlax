@@ -18,7 +18,7 @@
     "before:test": "dotenv -e .env.test -- npm-run-all migrate:up",
     "jest": "dotenv -e .env.test -- jest",
     "test": "./scripts/test.sh",
-    "asdf": "echo hola"
+    "build": "tsc -p ."
   },
   "devDependencies": {
     "@types/compression": "^1.7.0",
