@@ -27,7 +27,7 @@ export default class BookController {
       amount: JSON.parse(amount),
     };
 
-    const [bookId, error] = await wrapError(
+    const [id, error] = await wrapError(
       this.bookInteractor.registerBook(bookData),
     );
 
@@ -36,6 +36,6 @@ export default class BookController {
       return;
     }
 
-    context.response.status(200).json({ bookId });
+    context.response.status(200).json({ id });
   }
 }
