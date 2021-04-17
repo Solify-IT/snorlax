@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 
 export type NavigationStateType = {
   title: string;
@@ -21,13 +21,13 @@ const DEFAULT_STATE: NavigationStateType = {
 export const NavigationContextProvider: React.FC = ({ children }) => {
   const [state, setState] = useState<NavigationStateType>(DEFAULT_STATE);
 
-  const setTitles: NavigationType['setTitles'] = ({ subtitle, title, extra }) => {
+  const setTitles: NavigationType['setTitles'] = useCallback(({ subtitle, title, extra }) => {
     setState({
       subtitle: subtitle || DEFAULT_STATE.subtitle,
       title: title || DEFAULT_STATE.title,
       extra: extra || DEFAULT_STATE.extra,
     });
-  };
+  }, []);
 
   return (
     <NavigationContext.Provider value={{ ...state, setTitles }}>

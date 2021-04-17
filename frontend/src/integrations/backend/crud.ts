@@ -1,7 +1,7 @@
 import Api from './api';
 
 export default class CRUD<T, C = any, U = any> extends Api {
-  public getAll = <A = T>(filter: string = '') => this.get<A[]>(
+  public getAll = <A = T[]>(filter: string = '') => this.get<A>(
     `/${filter !== '' && '?'}${filter || ''}`,
   );
 

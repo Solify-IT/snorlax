@@ -1,5 +1,5 @@
 import {
-  Button, Col, Form, Input, InputNumber, notification, Row, Spin, Switch,
+  Button, Col, Form, Input, InputNumber, notification, Row, Switch,
 } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
