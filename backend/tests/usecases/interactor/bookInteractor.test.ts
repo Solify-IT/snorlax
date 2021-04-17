@@ -206,7 +206,9 @@ describe('listBooksByLibrary', () => {
       LOCAL_BOOKS_AMOUNT, { library, libraryId: library.id },
     );
 
-    const listBooksByLibraryMock = jest.fn(async () => localBooksMock);
+    const listBooksByLibraryMock = jest.fn(async () => ({
+      localBooks: localBooksMock, total: localBooksMock.length,
+    }));
     const getOneByISBNMock = jest.fn(
       async (isbn: string) => ExternalBookFactory.build({ isbn }),
     );
@@ -227,7 +229,7 @@ describe('listBooksByLibrary', () => {
   });
 
   it('should return empty array when no book is associated with the library id', async () => {
-    const listBooksByLibraryMock = jest.fn(async () => []);
+    const listBooksByLibraryMock = jest.fn(async () => ({ localBooks: [], total: 0 }));
     const getOneByISBNMock = jest.fn(
       async (isbn: string) => ExternalBookFactory.build({ isbn }),
     );
@@ -243,7 +245,7 @@ describe('listBooksByLibrary', () => {
 
     expect(err).toBe(null);
     expect(res).not.toBe(null);
-    expect(res).toHaveLength(0);
+    expect(res?.books).toHaveLength(0);
     expect(listBooksByLibraryMock).toBeCalled();
     expect(getOneByISBNMock).not.toBeCalled();
   });

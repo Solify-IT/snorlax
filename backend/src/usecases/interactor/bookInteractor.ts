@@ -105,8 +105,12 @@ export default class BookInteractor {
     }
   }
 
-  async listBooksByLibrary(libraryId: string): Promise<Book[]> {
-    const localBooks = await this.bookRepository.listBooksByLibrary(libraryId);
+  async listBooksByLibrary(
+    libraryId: string, page: number = 1, perPage: number = 10,
+  ): Promise<{ books: Book[], total: number }> {
+    const { localBooks, total } = await this.bookRepository.listBooksByLibrary(
+      libraryId, page, perPage,
+    );
     const books: Book[] = [];
 
     // eslint-disable-next-line no-restricted-syntax
@@ -115,13 +119,14 @@ export default class BookInteractor {
       const remoteBook = await this.metadataProvider.getOneByISBN(book.isbn);
 
       if (remoteBook) {
-        this.logger.info('llega');
         books.push({
           ...book, ...remoteBook,
         });
+      } else {
+        console.log(book.isbn);
       }
     }
 
-    return books;
+    return { books, total };
   }
 }
