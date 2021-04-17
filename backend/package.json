@@ -63,9 +63,13 @@
     "factory.ts": "^0.5.1",
     "faker": "^5.5.2",
     "lodash": "^4.17.21",
+    "module-alias": "^2.2.2",
     "node-pg-migrate": "^5.9.0",
     "pg": "^8.5.1",
     "uuid": "^8.3.2",
     "winston": "^3.3.3"
+  },
+  "_moduleAliases": {
+    "src": "dist/src"
   }
 }
