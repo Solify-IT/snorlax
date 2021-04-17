@@ -9,13 +9,8 @@
     "noImplicitAny": true,
     "strictNullChecks": true,
     "moduleResolution": "node",
-    "sourceMap": true,
+    "sourceMap": false,
     "typeRoots" : ["./node_modules/@types", "./src/@types"],
-    // "paths": {
-    //     "*": [
-    //         "node_modules/*"
-    //     ]
-    // }
   },
   "include": [
     "src/**/*.ts",
