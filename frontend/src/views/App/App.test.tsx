@@ -4,6 +4,6 @@ import App from './App';
 
 test('renders cargó', () => {
   render(<App />);
-  const linkElement = screen.getByText(/Renders App/i);
-  expect(linkElement).toBeInTheDocument();
+  const appContainer = screen.getByTestId('app');
+  expect(appContainer).toBeInTheDocument();
 });

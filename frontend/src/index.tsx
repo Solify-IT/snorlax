@@ -2,10 +2,19 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './views/App/App';
 import reportWebVitals from './reportWebVitals';
+import { NavigationContextProvider } from './hooks/navigation';
+import { BackendProvider } from './integrations/backend';
+import { MetadataProviderContextProvider } from './integrations/metadataProvider';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <NavigationContextProvider>
+      <MetadataProviderContextProvider>
+        <BackendProvider>
+          <App />
+        </BackendProvider>
+      </MetadataProviderContextProvider>
+    </NavigationContextProvider>
   </React.StrictMode>,
   document.getElementById('root'),
 );
