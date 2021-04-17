@@ -1,20 +1,27 @@
-#### What does this PR do?
+#### ¿Qué hace este PR?
 
-#### How should this be manually tested?
+#### ¿Cómo debería ser probado manualmente?
 
-#### Any background context you want to provide?
+#### ¿Algún background que desees proveer? 
 
-#### What are the relevant tickets?
+#### ¿Cuáles son los tickets relevantes? 
 
-Use the format: Closes #X
+Usa el formato: SNLX-XX
 
 #### Screenshots
 
-#### Questions
+#### Preguntas
 
 #### Checklist
 
-- [ ] I added the necessary documentation, if appropriate.
-- [ ] I added tests to prove that my fix is effective or my feature works.
-- [ ] I reviewed existing Pull Requests before submitting mine.
+**Assignees:**
+- [x] Añadí la documentación necesaria, si es necesario. 
+- [x] Agregué tests para probar que mi código funciona
+- [x] Revisé PRs existentes antes de publicar el mío. 
 
+**Reviewers:**
+- [ ] La Inyección de dependencias es correcta.
+- [ ] No se importan archivos de niveles superiores de la arquitectura. 
+- [ ] Los nombres de variables, objetos, clases y demás son entendibles. 
+- [ ] El CI/CD Pipeline pasa.
+ 
