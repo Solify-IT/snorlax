@@ -42,11 +42,11 @@ export default class BookController {
 
 
 
-  // recibe GET /book?libraryId=<?>
+  // recibe GET /book?bookId=<?>
   async presentBook(context: IContext): Promise<void> {
-    const { libraryId } = context.request.query;
+    const { bookId } = context.request.query;
     const [books, error] = await wrapError(
-      this.bookInteractor.getBook(libraryId as string),
+      this.bookInteractor.getBook(bookId as string),
     );
 
     if (error) {
