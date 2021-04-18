@@ -1,3 +1,4 @@
+import { GoogleBooksService } from 'src/infrastructure/integrations';
 import IAppController, { BookController } from 'src/interface/controller';
 import { BookPresenter } from 'src/interface/presenter';
 import { BookRepository, IDatastore } from 'src/interface/repository';
@@ -25,8 +26,9 @@ export default class Registry {
     const bookPresenter = new BookPresenter();
     const libraryInteractor = new LibraryInteractor(libraryRepository, this.logger);
     const movementInteractor = new MovementInteractor(movementRepository, this.logger);
+    const metadataProvider = new GoogleBooksService();
     const bookInteractor = new BookInteractor(
-      bookRepository, bookPresenter, libraryInteractor, movementInteractor, this.logger,
+      bookRepository, bookPresenter, libraryInteractor, metadataProvider,movementInteractor, this.logger,
     );
     return {
       books: new BookController(bookInteractor),

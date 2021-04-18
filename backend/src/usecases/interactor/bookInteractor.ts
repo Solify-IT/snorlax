@@ -30,12 +30,14 @@ export default class BookInteractor {
     bookRepository: IBookRepository,
     bookPresenter: IBookPresenter,
     libraryInteractor: LibraryInteractor,
+    metadataProvider: IMetadataProviderCore,
     movementInteractor: MovementInteractor,
     logger: ILogger,
   ) {
     this.bookRepository = bookRepository;
     this.bookPresenter = bookPresenter;
     this.libraryInteractor = libraryInteractor;
+    this.metadataProvider = metadataProvider;
     this.movementInteractor = movementInteractor;
     this.logger = logger;
   }
