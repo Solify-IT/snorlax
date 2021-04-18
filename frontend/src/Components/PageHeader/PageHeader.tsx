@@ -5,7 +5,7 @@ import {
 import { useHistory } from 'react-router-dom';
 import useNavigation from 'src/hooks/navigation';
 import './styles.css';
-import { LIST_LOCAL_BOOKS, NEW_BOOK } from '../Router/routes';
+import { LIST_LOCAL_BOOKS,SEARCH_LOCAL_BOOKS, NEW_BOOK } from '../Router/routes';
 
 const { SubMenu } = Menu;
 const { Header, Content, Sider } = Layout;
@@ -40,6 +40,9 @@ const PageHeader: React.FC = ({ children }) => {
               </Menu.Item>
               <Menu.Item key="2" onClick={goTo(LIST_LOCAL_BOOKS)}>
                 Libros disponibles
+              </Menu.Item>
+              <Menu.Item key="3" onClick={goTo(SEARCH_LOCAL_BOOKS)}>
+                Consulta de libros
               </Menu.Item>
             </SubMenu>
           </Menu>
