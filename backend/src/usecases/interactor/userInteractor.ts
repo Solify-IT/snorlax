@@ -1,5 +1,6 @@
 import { wrapError } from 'src/@types';
 import User, { UserInput } from 'src/domain/model/user';
+import { v4 as uuidv4 } from 'uuid';
 import { InvalidDataError } from '../errors';
 import IFirebaseApp from '../interfaces/firebase';
 import { ILogger } from '../interfaces/logger';
@@ -35,7 +36,14 @@ export default class UserInteractor {
       throw new Error(message);
     }
 
-    const result = await this.userRepository.createUser({ ...userData, id: fbResult.uid });
+    const result = await this.userRepository.createUser({
+      roleId: userData.roleId,
+      libraryId: userData.libraryId,
+      disabled: userData.disabled,
+      displayName: userData.displayName,
+      email: userData.email,
+      id: uuidv4(),
+    });
 
     return result;
   }
