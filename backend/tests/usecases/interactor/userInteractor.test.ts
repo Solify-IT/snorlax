@@ -7,6 +7,7 @@ import UserInteractor from 'src/usecases/interactor/userInteractor';
 import { wrapError } from 'src/@types';
 import UserFactory from 'src/infrastructure/factories/userFactory';
 import IFirebaseApp from 'src/usecases/interfaces/firebase';
+import { InvalidDataError } from 'src/usecases/errors';
 
 jest.mock('src/infrastructure/datastore/datastore');
 jest.mock('src/interface/repository/userRepository');
@@ -82,6 +83,51 @@ describe('createUser', () => {
       ...userData, id: mockUser.id,
     });
     expect(result!.id).toBe(mockUser.id);
+  });
+
+  it('should throw error when invalid email is passed', async () => {
+    const [res, err] = await wrapError(interactor.createUser({
+      disabled: false,
+      displayName: 'Gandalf',
+      email: 'gandalf.com',
+      libraryId: 'anId',
+      password: 'mellon#IHateTheOneRing',
+      roleId: 'roleId',
+    }));
+
+    expect(err).not.toBe(null);
+    expect(res).toBe(null);
+    expect(err).toBeInstanceOf(InvalidDataError);
+  });
+
+  it('should throw error when no password is passed', async () => {
+    const [res, err] = await wrapError(interactor.createUser({
+      disabled: false,
+      displayName: 'Gandalf',
+      email: 'gandalf@arda.com',
+      libraryId: 'anId',
+      password: '',
+      roleId: 'roleId',
+    }));
+
+    expect(err).not.toBe(null);
+    expect(res).toBe(null);
+    expect(err).toBeInstanceOf(InvalidDataError);
+  });
+
+  it('should throw error when invalud password is passed', async () => {
+    const [res, err] = await wrapError(interactor.createUser({
+      disabled: false,
+      displayName: 'Gandalf',
+      email: 'gandalf@arda.com',
+      libraryId: 'anId',
+      password: '1',
+      roleId: 'roleId',
+    }));
+
+    expect(err).not.toBe(null);
+    expect(res).toBe(null);
+    expect(err).toBeInstanceOf(InvalidDataError);
   });
 
   afterEach(() => {
