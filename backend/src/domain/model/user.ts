@@ -37,4 +37,9 @@ export type UserInput = Omit<StoredUser, 'id'> & {
   password: string,
 };
 
+export const USER_TABLE_NAME = 'users';
+export const ROLE_TABLE_NAME = 'roles';
+export const PERMISSION_TABLE_NAME = 'permissions';
+export const ROLES_PERMISSION_TABLE_NAME = 'roles_permissions';
+
 export default User;
