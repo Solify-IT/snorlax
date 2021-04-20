@@ -18,7 +18,7 @@ export default class UserInteractor {
     this.logger = logger;
   }
 
-  async createUser(userData: UserInput): Promise<User> {
+  async createUser(userData: UserInput): Promise<User['id']> {
     this.logger.info('Creating new user.', { logger: 'UserInteractor:createUser' });
 
     this.validateUserData(userData);
