@@ -67,7 +67,7 @@ describe('createUser', () => {
 
     const userData = {
       email: mockUser.email,
-      password: 'mockUser.password',
+      password: '1mellon#IHateTheOneRing',
       displayName: mockUser.displayName,
       disabled: mockUser.disabled,
       roleId: mockUser.role.id,
@@ -91,7 +91,7 @@ describe('createUser', () => {
       displayName: 'Gandalf',
       email: 'gandalf.com',
       libraryId: 'anId',
-      password: 'mellon#IHateTheOneRing',
+      password: '1mellon#IHateTheOneRing',
       roleId: 'roleId',
     }));
 

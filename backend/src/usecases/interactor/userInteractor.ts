@@ -42,10 +42,21 @@ export default class UserInteractor {
 
   private validateUserData(userData: UserInput) {
     let message = '';
+
+    if (!userData.email || !userData.displayName || !userData.password) {
+      message += 'Missing data! ';
+    }
+
     const emailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
     if (!emailRegex.test(userData.email)) {
       message += 'The email is not valid. ';
+    }
+
+    const paswdRegex = new RegExp('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{8,})');
+
+    if (!paswdRegex.test(userData.password)) {
+      message += 'Your password is weak! ';
     }
 
     if (message !== '') {
