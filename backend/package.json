@@ -18,9 +18,12 @@
     "before:test": "dotenv -e .env.test -- npm-run-all migrate:up",
     "jest": "dotenv -e .env.test -- jest",
     "test": "./scripts/test.sh",
-    "asdf": "echo hola"
+    "build": "tsc -p .",
+    "prestart": "node-pg-migrate -m dist/src/infrastructure/datastore/migrations up --reject-unauthorized=false",
+    "start": "node dist/src/index.js"
   },
   "devDependencies": {
+    "@types/async": "^3.2.6",
     "@types/compression": "^1.7.0",
     "@types/cors": "^2.8.10",
     "@types/express": "^4.17.11",
@@ -62,9 +65,13 @@
     "faker": "^5.5.2",
     "firebase-admin": "^9.6.0",
     "lodash": "^4.17.21",
+    "module-alias": "^2.2.2",
     "node-pg-migrate": "^5.9.0",
     "pg": "^8.5.1",
     "uuid": "^8.3.2",
     "winston": "^3.3.3"
+  },
+  "_moduleAliases": {
+    "src": "dist/src"
   }
 }

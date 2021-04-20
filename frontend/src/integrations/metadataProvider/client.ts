@@ -34,8 +34,7 @@ export default class Client {
           authors: item.volumeInfo.authors,
           title: item.volumeInfo.title,
           isbn: foundIsbn,
-          coverURL: item.volumeInfo.imageLinks.thumbnail
-            || item.volumeInfo.imageLinks.smallThumbnail,
+          coverURL: item.volumeInfo.imageLinks ? item.volumeInfo.imageLinks.thumbnail : '',
         });
       });
     }

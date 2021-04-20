@@ -9,6 +9,12 @@ export default class Router {
       );
     });
 
+    app.get('/books', async (request, response, next) => {
+      await controller.books.listBooksByLibrary(
+        { request, response, next },
+      );
+    });
+
     app.post('/users', async (request, response, next) => {
       await controller.users.createUser({ request, response, next });
     });
