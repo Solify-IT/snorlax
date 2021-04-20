@@ -8,5 +8,9 @@ export default class Router {
         { request, response, next },
       );
     });
+
+    app.post('/users', async (request, response, next) => {
+      await controller.users.createUser({ request, response, next });
+    });
   }
 }
