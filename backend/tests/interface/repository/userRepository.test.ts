@@ -1,7 +1,8 @@
 import { Pool } from 'pg';
 import { wrapError } from 'src/@types';
 import Datastore from 'src/infrastructure/datastore/datastore';
-import UserFactory from 'src/infrastructure/factories/userFactory';
+import { givenALibrary } from 'src/infrastructure/factories/libraryFactory';
+import UserFactory, { givenARole } from 'src/infrastructure/factories/userFactory';
 import UserRepository from 'src/interface/repository/userRepository';
 import { createLogger } from 'winston';
 
@@ -23,7 +24,15 @@ describe('createUser', () => {
   const repository = new UserRepository(datastore);
 
   it('should save the user when valid data is passed', async () => {
-    const mockedUser = UserFactory.build();
+    const library = await givenALibrary(datastore);
+    const role = await givenARole(datastore);
+
+    const mockedUser = UserFactory.build({
+      roleId: role.id,
+      role,
+      library: Array.isArray(library) ? library[0] : library,
+      libraryId: Array.isArray(library) ? library[0].id : library.id,
+    });
 
     const [res, err] = await wrapError(repository.createUser({
       disabled: mockedUser.disabled,
@@ -40,7 +49,12 @@ describe('createUser', () => {
   });
 
   it('should not save the user when invalid roleId is passed', async () => {
-    const mockedUser = UserFactory.build();
+    const library = await givenALibrary(datastore);
+
+    const mockedUser = UserFactory.build({
+      library: Array.isArray(library) ? library[0] : library,
+      libraryId: Array.isArray(library) ? library[0].id : library.id,
+    });
 
     const [res, err] = await wrapError(repository.createUser({
       disabled: mockedUser.disabled,
@@ -56,7 +70,9 @@ describe('createUser', () => {
   });
 
   it('should not save the user when invalid libraryId is passed', async () => {
-    const mockedUser = UserFactory.build();
+    const role = await givenARole(datastore);
+
+    const mockedUser = UserFactory.build({ role, roleId: role.id });
 
     const [res, err] = await wrapError(repository.createUser({
       disabled: mockedUser.disabled,
