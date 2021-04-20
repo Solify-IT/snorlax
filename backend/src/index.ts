@@ -1,4 +1,4 @@
-import 'module-alias/register';
+import moduleAlias from 'module-alias';
 import express from 'express';
 import cors from 'cors';
 import gzip from 'compression';
@@ -8,6 +8,11 @@ import Registry from './registry';
 import Router from './infrastructure/router/router';
 import Datastore from './infrastructure/datastore/datastore';
 import { wrapError } from './@types';
+import { NODE_ENV } from './utils/settings';
+
+if (NODE_ENV === 'production') {
+  moduleAlias.addAlias('src', `${__dirname}/dist/src`);
+}
 
 const app: express.Application = express();
 const logger = winston.createLogger({
