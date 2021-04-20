@@ -50,9 +50,7 @@ describe('createUser', () => {
       toJSON: jest.fn(),
     };
     const mockUser = UserFactory.build();
-    const repoCreateUser = jest.fn(async () => ({
-      ...mockUser,
-    }));
+    const repoCreateUser = jest.fn(async () => mockUser.id);
 
     firebase.auth.mockImplementation(jest.fn(() => ({
       createUser: async () => ({
@@ -82,7 +80,7 @@ describe('createUser', () => {
     expect(repoCreateUser).toBeCalledWith({
       ...userData, id: mockUser.id,
     });
-    expect(result!.id).toBe(mockUser.id);
+    expect(result).toBe(mockUser.id);
   });
 
   it('should throw error when invalid email is passed', async () => {
