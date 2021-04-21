@@ -17,15 +17,18 @@ const LibraryFactory = Sync.makeFactory<Library>({
 export const givenALibrary = async (
   datastore: IDatastore, library?: Library | Library[],
 ) => {
-  const lib = library || LibraryFactory.build();
+  // eslint-disable-next-line no-nested-ternary
+  const lib = library
+    ? Array.isArray(library)
+      ? library
+      : [library]
+    : [LibraryFactory.build()];
 
-  if (Array.isArray(lib)) {
-    lib.forEach(async (libr) => datastore.insert(LIBRARY_TABLE_NAME, libr));
-
-    return lib;
+  // eslint-disable-next-line no-restricted-syntax
+  for (const libr of lib) {
+    // eslint-disable-next-line no-await-in-loop
+    await datastore.insert(LIBRARY_TABLE_NAME, libr);
   }
-
-  await datastore.insert(LIBRARY_TABLE_NAME, lib);
 
   return lib;
 };
