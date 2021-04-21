@@ -4,6 +4,7 @@ import {
   Book, BOOK_TABLE_NAME, LocalBook, LocalBookInput,
 } from 'src/domain/model';
 import { IBookRepository } from 'src/usecases';
+import { InvalidDataError } from 'src/usecases/errors';
 import IDatastore from './datastore';
 import { Maybe } from 'src/@types';
 
@@ -14,11 +15,29 @@ export default class BookRepository implements IBookRepository {
     this.datastore = datastore;
   }
 
+<<<<<<< HEAD
   async findById(id: string): Promise<Maybe<LocalBook>> {
     const book = await this.datastore.getById<LocalBook>(
        BOOK_TABLE_NAME,id
     );
     return book;
+=======
+  // regresar
+  async listBooksByLibrary(
+    libraryId: string, page: number, perPage: number,
+  ): Promise<{ localBooks: LocalBook[], total: number }> {
+    if (page <= 0) throw new InvalidDataError('Page is less than one!');
+    const [localBooks, total] = await Promise.all([
+      this.datastore.get<LocalBook>(
+        `SELECT * FROM ${BOOK_TABLE_NAME} WHERE library_id = $1 OFFSET $2 LIMIT $3`,
+        [libraryId, (page - 1) * perPage, perPage],
+      ),
+      this.datastore.get<{ count: number }>(
+        `SELECT count(0) FROM ${BOOK_TABLE_NAME} WHERE library_id = $1`, [libraryId],
+      ),
+    ]);
+    return { localBooks, total: total[0].count };
+>>>>>>> 0df92ea3b153dcced5774eb4daa276439dbc0f66
   }
 
   async registerBook(bookData: Omit<LocalBookInput, 'id'>): Promise<string> {

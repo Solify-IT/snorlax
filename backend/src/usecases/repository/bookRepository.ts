@@ -6,4 +6,7 @@ export interface IBookRepository {
   findByISBN(isbn: string): Promise<LocalBook[]>;
   findById(id: string): Promise<Maybe<LocalBook>>;
   registerBook(bookData: Omit<LocalBookInput, 'id'>): Promise<LocalBook['id']>;
+  listBooksByLibrary(
+    libraryId: string, page: number, perPage: number,
+  ): Promise<{ localBooks: LocalBook[], total: number }>;
 }

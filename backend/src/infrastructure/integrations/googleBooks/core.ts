@@ -19,15 +19,30 @@ export default class GoogleBooksService implements IMetadataProviderCore {
       throw error;
     }
 
-    const foundIsbn = result.data.items[0].volumeInfo.industryIdentifiers[0].identifier;
+    const item = result.data.items ? result.data.items[0] : null;
 
+<<<<<<< HEAD
+=======
+    if (!item) return null;
+
+    let foundIsbn = '';
+    item.volumeInfo.industryIdentifiers.forEach(
+      (element: { type: string, identifier: string }) => {
+        if (element.type === 'ISBN_13') {
+          foundIsbn = element.identifier;
+        }
+      },
+    );
+
+    // TODO: Review if we need to keep this validation
+>>>>>>> 0df92ea3b153dcced5774eb4daa276439dbc0f66
     // if (foundIsbn !== isbn) {
     //   return null;
     // }
 
     const book: ExternalBook = {
-      authors: result.data.items[0].volumeInfo.authors,
-      title: result.data.items[0].volumeInfo.title,
+      authors: item.volumeInfo.authors,
+      title: item.volumeInfo.title,
       isbn: foundIsbn,
     };
 
@@ -35,6 +50,7 @@ export default class GoogleBooksService implements IMetadataProviderCore {
   }
 
   private async get(searchCriteria: string): Promise<any> {
-    return axios.get(`${this.baseURL}${searchCriteria}`);
+    const result = await axios.get(`${this.baseURL}${searchCriteria}`);
+    return result;
   }
 }

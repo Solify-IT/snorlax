@@ -1,6 +1,5 @@
 import { GoogleBooksService } from 'src/infrastructure/integrations';
 import IAppController, { BookController } from 'src/interface/controller';
-import { BookPresenter } from 'src/interface/presenter';
 import { BookRepository, IDatastore } from 'src/interface/repository';
 import LibraryRepository from 'src/interface/repository/libraryRepository';
 import MovementRepository from 'src/interface/repository/movementRepository';
@@ -23,12 +22,19 @@ export default class Registry {
     const bookRepository = new BookRepository(this.datastore);
     const libraryRepository = new LibraryRepository(this.datastore);
     const movementRepository = new MovementRepository(this.datastore);
-    const bookPresenter = new BookPresenter();
     const libraryInteractor = new LibraryInteractor(libraryRepository, this.logger);
     const movementInteractor = new MovementInteractor(movementRepository, this.logger);
     const metadataProvider = new GoogleBooksService();
     const bookInteractor = new BookInteractor(
+<<<<<<< HEAD
       bookRepository, bookPresenter, libraryInteractor, metadataProvider,movementInteractor, this.logger,
+=======
+      bookRepository,
+      libraryInteractor,
+      movementInteractor,
+      metadataProvider,
+      this.logger,
+>>>>>>> 0df92ea3b153dcced5774eb4daa276439dbc0f66
     );
     return {
       books: new BookController(bookInteractor),

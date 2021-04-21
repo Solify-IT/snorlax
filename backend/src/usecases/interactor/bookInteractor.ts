@@ -1,12 +1,17 @@
 import { LocalBook, Book } from 'src/domain/model';
+<<<<<<< HEAD
 import {
   IBookPresenter,
   IBookRepository,
 } from '..';
+=======
+import { IBookRepository } from '..';
+>>>>>>> 0df92ea3b153dcced5774eb4daa276439dbc0f66
 import { UnknownError } from '../errors';
 import InvalidDataError from '../errors/invalidDataError';
 import NotFoundError from '../errors/notFoundError';
 import { ILogger } from '../interfaces/logger';
+import IMetadataProviderCore from '../interfaces/metadataProvider';
 import LibraryInteractor from './libraryInteractor';
 import MovementInteractor from './movementInteractor';
 import IMetadataProviderCore from '../interfaces/metadataProvider';
@@ -22,7 +27,7 @@ export default class BookInteractor {
 
   private movementInteractor: MovementInteractor;
 
-  private bookPresenter: IBookPresenter;
+  private metadataProvider: IMetadataProviderCore;
 
   private metadataProvider: IMetadataProviderCore;
 
@@ -30,17 +35,17 @@ export default class BookInteractor {
 
   constructor(
     bookRepository: IBookRepository,
-    bookPresenter: IBookPresenter,
     libraryInteractor: LibraryInteractor,
     metadataProvider: IMetadataProviderCore,
     movementInteractor: MovementInteractor,
+    metadataProvider: IMetadataProviderCore,
     logger: ILogger,
   ) {
     this.bookRepository = bookRepository;
-    this.bookPresenter = bookPresenter;
     this.libraryInteractor = libraryInteractor;
     this.metadataProvider = metadataProvider;
     this.movementInteractor = movementInteractor;
+    this.metadataProvider = metadataProvider;
     this.logger = logger;
   }
 
@@ -112,6 +117,7 @@ export default class BookInteractor {
     }
   }
 
+<<<<<<< HEAD
   async getBook(bookId: string): Promise<Book> {
     const localBook = await this.bookRepository.findById(bookId);
     console.log(localBook);
@@ -126,5 +132,30 @@ export default class BookInteractor {
       throw new Error('Remote Book not found.');
     }
     return { ...localBook, ...remoteBook };
+=======
+  async listBooksByLibrary(
+    libraryId: string, page: number = 1, perPage: number = 10,
+  ): Promise<{ books: Book[], total: number }> {
+    const { localBooks, total } = await this.bookRepository.listBooksByLibrary(
+      libraryId, page, perPage,
+    );
+    const books: Book[] = [];
+
+    // eslint-disable-next-line no-restricted-syntax
+    for (const book of localBooks) {
+      // eslint-disable-next-line no-await-in-loop
+      const remoteBook = await this.metadataProvider.getOneByISBN(book.isbn);
+
+      if (remoteBook) {
+        books.push({
+          ...book, ...remoteBook,
+        });
+      } else {
+        console.log(book.isbn);
+      }
+    }
+
+    return { books, total };
+>>>>>>> 0df92ea3b153dcced5774eb4daa276439dbc0f66
   }
 }

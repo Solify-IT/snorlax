@@ -1,13 +1,23 @@
 import React from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
+import Loader from '../Loader';
+import PageHeader from '../PageHeader';
+import HOME, { NEW_BOOK, LIST_LOCAL_BOOKS } from './routes';
+
+const RegisterFormView = React.lazy(() => import('src/views/Books.RegisterForm'));
+const LocalBooksListView = React.lazy(() => import('src/views/Inventory.LocalBooksList'));
 
 const Router: React.FC = () => (
-  <BrowserRouter>
-    <Switch>
-      {/* {} es para ingresar código de JS o TS */}
-      <Route exact path="/libros/nuevo" component={() => <>Hola</>} />
-    </Switch>
-  </BrowserRouter>
+  <Switch>
+    {/* {} es para ingresar código de JS o TS */}
+    <Route exact path={HOME} />
+    <PageHeader>
+      <React.Suspense fallback={<Loader isLoading />}>
+        <Route exact path={NEW_BOOK} component={RegisterFormView} />
+        <Route exact path={LIST_LOCAL_BOOKS} component={LocalBooksListView} />
+      </React.Suspense>
+    </PageHeader>
+  </Switch>
 );
 
 export default Router;
