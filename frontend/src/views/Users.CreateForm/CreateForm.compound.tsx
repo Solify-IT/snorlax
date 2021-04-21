@@ -3,7 +3,8 @@ import {
 } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { UserInput } from 'src/@types/user';
+import { Library, wrapError } from 'src/@types';
+import { StoredRole, UserInput } from 'src/@types/user';
 import { toUserDetail } from 'src/Components/Router/routes';
 import useNavigation from 'src/hooks/navigation';
 import { useBackend } from 'src/integrations/backend';
@@ -28,20 +29,49 @@ const tailLayout = {
 
 const RegisterForm: React.FC = () => {
   const { setTitles } = useNavigation();
-  const [isLoading, setIsLoading] = useState(false);
+  const [isFormLoading, setIsFormLoading] = useState(false);
+  const [isMetadataLoading, setIsMedatadaLoading] = useState(true);
+  const [metadata, setMetadata] = useState<{
+    roles: StoredRole[], libraries: Library[],
+  }>({ roles: [], libraries: [] });
   const backend = useBackend();
   const history = useHistory();
   const [form] = Form.useForm();
+
+  const fetchMetadata = async () => {
+    setIsMedatadaLoading(true);
+    const [result, error] = await wrapError(
+      Promise.all([
+        backend.libraries.getAll<{ libraries: Library[] }>(),
+        backend.users.get<{ roles: StoredRole[] }>('/roles'),
+      ]),
+    );
+
+    if (error || !result || !result[0][0] || !result[1][0]) {
+      notification.error({
+        message: 'Ocurrió un problema al cargar.', description: 'Intentalo más tarde.',
+      });
+      setIsMedatadaLoading(false);
+      return;
+    }
+
+    setMetadata({
+      libraries: result[0][0]!.data.libraries,
+      roles: result[1][0]!.data.roles,
+    });
+    setIsMedatadaLoading(false);
+  };
 
   useEffect(() => {
     setTitles({
       title: 'Crear nuevo usuario', subtitle: 'Ingresa todos los campos requeridos',
     });
+    fetchMetadata();
     // eslint-disable-next-line
   }, [INITIAL_STATE]);
 
   const onFinish = async (values: UserInput) => {
-    setIsLoading(true);
+    setIsFormLoading(true);
     const [result, error] = await backend.users.createOne({ ...values, disabled: false });
 
     if (error) {
@@ -65,7 +95,7 @@ const RegisterForm: React.FC = () => {
       form.resetFields();
     }
 
-    setIsLoading(false);
+    setIsFormLoading(false);
   };
 
   const onFinishFailed = () => {
@@ -140,10 +170,10 @@ const RegisterForm: React.FC = () => {
           message: 'Debes seleccionar una librería',
         }]}
       >
-        <Select showSearch>
-          <Select.Option value="e11e5635-094c-4224-836f-b0caa13986f3">Testito</Select.Option>
-          <Select.Option value="e11e5635-094c-4224-836f-b0caa13986f4">Choose</Select.Option>
-          <Select.Option value="e11e5635-094c-4224-836f-b0caa13986f5">Wow</Select.Option>
+        <Select showSearch disabled={isMetadataLoading} loading={isMetadataLoading}>
+          {metadata.libraries.map((lib) => (
+            <Select.Option value={lib.id}>{lib.name}</Select.Option>
+          ))}
         </Select>
       </Form.Item>
 
@@ -155,20 +185,20 @@ const RegisterForm: React.FC = () => {
           message: 'Debes seleccionar un rol',
         }]}
       >
-        <Select showSearch>
-          <Select.Option value="e450d7e3-05a7-4750-8791-de92772d4275">Admin</Select.Option>
-          <Select.Option value="e450d7e3-05a7-4750-8791-de92772d4276">Librero</Select.Option>
-          <Select.Option value="e450d7e3-05a7-4750-8791-de92772d4277">Otro</Select.Option>
+        <Select showSearch disabled={isMetadataLoading} loading={isMetadataLoading}>
+          {metadata.roles.map((role) => (
+            <Select.Option value={role.id}>{role.name}</Select.Option>
+          ))}
         </Select>
       </Form.Item>
 
       <Form.Item {...tailLayout}>
         <Button
-          loading={isLoading}
+          loading={isFormLoading}
           type="primary"
           htmlType="submit"
         >
-          Guardar
+          Registrar Usuario
         </Button>
       </Form.Item>
     </Form>

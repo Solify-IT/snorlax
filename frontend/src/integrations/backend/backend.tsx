@@ -1,7 +1,11 @@
 import React from 'react';
 import { AxiosRequestConfig } from 'axios';
-import { LocalBook, LocalBookInput, MovementInputData } from 'src/@types';
-import { BACKEND_MAIN_EP, BOOKS_ROOT, USERS_ROOT } from 'src/settings';
+import {
+  Library, LocalBook, LocalBookInput, MovementInputData,
+} from 'src/@types';
+import {
+  BACKEND_MAIN_EP, BOOKS_ROOT, LIBRARIES_ROOT, USERS_ROOT,
+} from 'src/settings';
 import User, { UserInput } from 'src/@types/user';
 import CRUD from './crud';
 
@@ -14,6 +18,8 @@ export class Backend {
 
   users: CRUD<User, UserInput, UserInput>;
 
+  libraries: CRUD<Library, unknown, unknown>;
+
   public constructor(rootEndpoint: string, config?: AxiosRequestConfig) {
     this.rootEndpoint = rootEndpoint;
     this.books = new CRUD(
@@ -21,6 +27,9 @@ export class Backend {
     );
     this.users = new CRUD(
       `${this.rootEndpoint}${USERS_ROOT}`, config,
+    );
+    this.libraries = new CRUD(
+      `${this.rootEndpoint}${LIBRARIES_ROOT}`, config,
     );
   }
 }
