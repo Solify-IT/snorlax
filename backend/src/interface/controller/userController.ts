@@ -41,4 +41,18 @@ export default class UserController {
 
     context.response.status(200).json({ id });
   }
+
+  // GET /users/roles
+  async listAllRoles(context: IContext): Promise<void> {
+    const [roles, error] = await wrapError(
+      this.userInteractor.listAllRoles(),
+    );
+
+    if (error) {
+      context.next(error);
+      return;
+    }
+
+    context.response.status(200).json({ roles });
+  }
 }

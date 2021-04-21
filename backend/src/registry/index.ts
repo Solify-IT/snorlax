@@ -1,5 +1,5 @@
 import { credential, initializeApp } from 'firebase-admin';
-import IAppController, { BookController } from 'src/interface/controller';
+import IAppController, { BookController, LibraryController } from 'src/interface/controller';
 import UserController from 'src/interface/controller/userController';
 import { GoogleBooksService } from 'src/infrastructure/integrations';
 import { BookRepository, IDatastore } from 'src/interface/repository';
@@ -52,6 +52,7 @@ export default class Registry {
     return {
       books: new BookController(bookInteractor),
       users: new UserController(userInteractor),
+      libraries: new LibraryController(libraryInteractor),
     };
   }
 }
