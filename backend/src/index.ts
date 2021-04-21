@@ -11,6 +11,7 @@ import { wrapError } from './@types';
 import { NODE_ENV } from './utils/settings';
 
 if (NODE_ENV === 'production') {
+  console.log(`${__dirname}/dist/src`);
   moduleAlias.addAlias('src', `${__dirname}/dist/src`);
 }
 
