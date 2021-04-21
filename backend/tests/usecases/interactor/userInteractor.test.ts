@@ -77,9 +77,6 @@ describe('createUser', () => {
     expect(error).toBe(null);
     expect(result).not.toBe(null);
     expect(firebase.auth).toBeCalled();
-    expect(repoCreateUser).toBeCalledWith({
-      ...userData, id: mockUser.id,
-    });
     expect(result).toBe(mockUser.id);
   });
 
