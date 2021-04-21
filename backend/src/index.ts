@@ -1,4 +1,3 @@
-import moduleAlias from 'module-alias';
 import express from 'express';
 import cors from 'cors';
 import gzip from 'compression';
@@ -8,13 +7,6 @@ import Registry from './registry';
 import Router from './infrastructure/router/router';
 import Datastore from './infrastructure/datastore/datastore';
 import { wrapError } from './@types';
-import { NODE_ENV } from './utils/settings';
-
-console.log('11111');
-if (NODE_ENV === 'production') {
-  console.log('asdfasf');
-  moduleAlias();
-}
 
 const app: express.Application = express();
 const logger = winston.createLogger({
