@@ -72,6 +72,7 @@ const RegisterForm: React.FC = () => {
 
   const onFinish = async (values: UserInput) => {
     setIsFormLoading(true);
+
     const [result, error] = await backend.users.createOne({ ...values, disabled: false });
 
     if (error) {
@@ -156,6 +157,17 @@ const RegisterForm: React.FC = () => {
             min: 8,
             message: 'La contraseña debe ser de mínimo 8 caracteres',
           },
+          () => ({
+            validator(_, value) {
+              const paswdRegex = new RegExp('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{8,})');
+              if (paswdRegex.test(value)) {
+                return Promise.resolve();
+              }
+              return Promise.reject(new Error(
+                'La contraseña es debil. Debe tener una mayuscula, una minuscula, un número y mínimo 8 caracteres de longitud',
+              ));
+            },
+          }),
         ]}
         hasFeedback
       >
@@ -172,7 +184,7 @@ const RegisterForm: React.FC = () => {
       >
         <Select showSearch disabled={isMetadataLoading} loading={isMetadataLoading}>
           {metadata.libraries.map((lib) => (
-            <Select.Option value={lib.id}>{lib.name}</Select.Option>
+            <Select.Option key={lib.id} value={lib.id}>{lib.name}</Select.Option>
           ))}
         </Select>
       </Form.Item>
@@ -187,14 +199,14 @@ const RegisterForm: React.FC = () => {
       >
         <Select showSearch disabled={isMetadataLoading} loading={isMetadataLoading}>
           {metadata.roles.map((role) => (
-            <Select.Option value={role.id}>{role.name}</Select.Option>
+            <Select.Option key={role.id} value={role.id}>{role.name}</Select.Option>
           ))}
         </Select>
       </Form.Item>
 
       <Form.Item {...tailLayout}>
         <Button
-          loading={isFormLoading}
+          loading={isFormLoading || isMetadataLoading}
           type="primary"
           htmlType="submit"
         >
