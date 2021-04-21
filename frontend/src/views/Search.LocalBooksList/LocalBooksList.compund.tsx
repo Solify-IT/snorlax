@@ -49,7 +49,7 @@ const LocalBooksList: React.FC = () => {
     const [result, error] = await backend.books.getAll<{
       total: number,
       books: Book[],
-    }>(`libraryId=${values.isbn}&page=${pagination.page}&perPage=${pagination.perPage}`);
+    }>(`libraryId=${LIBRARY_ID}&isbn=${values.isbn}&page=${pagination.page}&perPage=${pagination.perPage}`);
 
     if (error || !result) {
       notification.error({ message: 'Ocurrió un error al obtener la lista de libros' });
@@ -72,7 +72,7 @@ const LocalBooksList: React.FC = () => {
     <div>
      
       <Form
-          name="registerBook"
+          name="searchByIsbn"
           size="large"
           form={form}
           initialValues={INITIAL_STATE}

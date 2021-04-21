@@ -16,6 +16,7 @@ export class Backend {
     this.books = new CRUD(
       `${this.rootEndpoint}${BOOKS_ROOT}`, config,
     );
+
   }
 }
 

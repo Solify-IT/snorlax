@@ -106,11 +106,36 @@ export default class BookInteractor {
   }
 
   async listBooksByLibrary(
-    libraryId: string, page: number = 1, perPage: number = 10,
+    libraryId: string, page: number = 1, perPage: number = 10,isbn?: string,
   ): Promise<{ books: Book[], total: number }> {
     const { localBooks, total } = await this.bookRepository.listBooksByLibrary(
-      libraryId, page, perPage,
+      libraryId, page, perPage,isbn,
     );
+    const books: Book[] = [];
+
+    // eslint-disable-next-line no-restricted-syntax
+    for (const book of localBooks) {
+      // eslint-disable-next-line no-await-in-loop
+      const remoteBook = await this.metadataProvider.getOneByISBN(book.isbn);
+
+      if (remoteBook) {
+        books.push({
+          ...book, ...remoteBook,
+        });
+      } else {
+        console.log(book.isbn);
+      }
+    }
+
+    return { books, total };
+  }
+
+  async listBooksByIsbn(
+    isbn: string, page: number = 1, perPage: number = 10,
+  ): Promise<{ books: Book[], total: number }> {
+    const { localBooks, total } = await this.bookRepository.listBooksByIsbn(
+      isbn, page, perPage,
+    )
     const books: Book[] = [];
 
     // eslint-disable-next-line no-restricted-syntax

@@ -16,20 +16,41 @@ export default class BookRepository implements IBookRepository {
 
   // regresar
   async listBooksByLibrary(
-    libraryId: string, page: number, perPage: number,
+    libraryId: string, page: number, perPage: number,isbn?: string
   ): Promise<{ localBooks: LocalBook[], total: number }> {
     if (page <= 0) throw new InvalidDataError('Page is less than one!');
+    
+    
     const [localBooks, total] = await Promise.all([
+      
       this.datastore.get<LocalBook>(
-        `SELECT * FROM ${BOOK_TABLE_NAME} WHERE library_id = $1 OFFSET $2 LIMIT $3`,
-        [libraryId, (page - 1) * perPage, perPage],
+        `SELECT * FROM ${BOOK_TABLE_NAME} WHERE library_id = $1 ${isbn!= null? ' AND isbn = $4': 'AND isbn = $4 '} OFFSET $2 LIMIT $3`,
+        [libraryId, (page - 1) * perPage, perPage, isbn],
       ),
       this.datastore.get<{ count: number }>(
-        `SELECT count(0) FROM ${BOOK_TABLE_NAME} WHERE library_id = $1`, [libraryId],
+        `SELECT count(0) FROM ${BOOK_TABLE_NAME} WHERE library_id = $1  ${isbn != null? 'AND isbn = $2': 'AND isbn = $2 '}`, [libraryId,isbn],
       ),
     ]);
     return { localBooks, total: total[0].count };
   }
+
+  async listBooksByIsbn(
+    isbn: string, page: number, perPage: number,
+  ): Promise<{ localBooks: LocalBook[], total: number }> {
+    if (page <= 0) throw new InvalidDataError('Page is less than one!');
+    const [localBooks, total] = await Promise.all([
+      this.datastore.get<LocalBook>(
+        `SELECT * FROM ${BOOK_TABLE_NAME} WHERE isbn = $1 OFFSET $2 LIMIT $3`,
+        [isbn, (page - 1) * perPage, perPage],
+      ),
+      this.datastore.get<{ count: number }>(
+        `SELECT count(0) FROM ${BOOK_TABLE_NAME} WHERE isbn = $1`, [isbn],
+      ),
+    ]);
+    return { localBooks, total: total[0].count };
+  }
+
+  
 
   async registerBook(bookData: Omit<LocalBookInput, 'id'>): Promise<string> {
     const id = uuidv4();
