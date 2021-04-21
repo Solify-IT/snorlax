@@ -31,15 +31,24 @@ const UserFactory = Sync.makeFactory<User>({
 });
 
 export const givenARole = async (
-  datastore: IDatastore, passedRole?: Role,
+  datastore: IDatastore, passedRoles?: Role | Role[],
 ) => {
-  const role = passedRole || RoleFactory.build();
+  // eslint-disable-next-line no-nested-ternary
+  const roles = passedRoles
+    ? Array.isArray(passedRoles)
+      ? passedRoles
+      : [passedRoles]
+    : [RoleFactory.build()];
 
-  await datastore.insert<StoredRole>(ROLE_TABLE_NAME, {
-    id: role.id, description: role.description, name: role.name,
-  });
+  // eslint-disable-next-line no-restricted-syntax
+  for (const role of roles) {
+    // eslint-disable-next-line no-await-in-loop
+    await datastore.insert<StoredRole>(ROLE_TABLE_NAME, {
+      id: role.id, description: role.description, name: role.name,
+    });
+  }
 
-  return role;
+  return roles;
 };
 
 export default UserFactory;

@@ -2,7 +2,7 @@ import { Pool } from 'pg';
 import { wrapError } from 'src/@types';
 import Datastore from 'src/infrastructure/datastore/datastore';
 import { givenALibrary } from 'src/infrastructure/factories/libraryFactory';
-import UserFactory, { givenARole } from 'src/infrastructure/factories/userFactory';
+import UserFactory, { givenARole, RoleFactory } from 'src/infrastructure/factories/userFactory';
 import UserRepository from 'src/interface/repository/userRepository';
 import { createLogger } from 'winston';
 
@@ -13,19 +13,21 @@ jest.mock('winston', () => ({
   }),
 }));
 
+const pool = new Pool({ min: 1, max: 1 });
+const logger = createLogger();
+
+const datastore = new Datastore(pool, logger);
+
+const repository = new UserRepository(datastore);
+
+beforeEach(() => pool.query('START TRANSACTION'));
+afterEach(() => pool.query('ROLLBACK'));
+
 describe('createUser', () => {
-  const pgPool = new Pool({
-    user: process.env.PGUSER,
-  });
-  const logger = createLogger();
-
-  const datastore = new Datastore(pgPool, logger);
-
-  const repository = new UserRepository(datastore);
-
   it('should save the user when valid data is passed', async () => {
-    const library = await givenALibrary(datastore);
-    const role = await givenARole(datastore);
+    expect.assertions(3);
+    const [library] = await givenALibrary(datastore);
+    const [role] = await givenARole(datastore);
 
     const mockedUser = UserFactory.build({
       roleId: role.id,
@@ -49,7 +51,8 @@ describe('createUser', () => {
   });
 
   it('should not save the user when invalid roleId is passed', async () => {
-    const library = await givenALibrary(datastore);
+    expect.assertions(2);
+    const [library] = await givenALibrary(datastore);
 
     const mockedUser = UserFactory.build({
       library: Array.isArray(library) ? library[0] : library,
@@ -70,7 +73,8 @@ describe('createUser', () => {
   });
 
   it('should not save the user when invalid libraryId is passed', async () => {
-    const role = await givenARole(datastore);
+    expect.assertions(2);
+    const [role] = await givenARole(datastore);
 
     const mockedUser = UserFactory.build({ role, roleId: role.id });
 
@@ -85,5 +89,21 @@ describe('createUser', () => {
 
     expect(res).toBe(null);
     expect(err).not.toBe(null);
+  });
+});
+
+describe('listAllRoles', () => {
+  it('should return all the roles from the database', async () => {
+    expect.assertions(3);
+    const LIBRARIES_LENGTH = 5;
+    await givenARole(
+      datastore, RoleFactory.buildList(LIBRARIES_LENGTH),
+    );
+
+    const [result, error] = await wrapError(repository.listAllRoles());
+
+    expect(error).toBe(null);
+    expect(result).not.toBe(null);
+    expect(result).toHaveLength(LIBRARIES_LENGTH);
   });
 });
