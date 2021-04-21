@@ -33,7 +33,7 @@ export default class Registry {
     const firebase = initializeApp({
       credential: credential.cert({
         clientEmail: FIREBASE_CLIENT_EMAIL,
-        privateKey: FIREBASE_PRIVATE_KEY,
+        privateKey: FIREBASE_PRIVATE_KEY ? FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n') : '',
         projectId: FIREBASE_PROJECT_ID,
       }),
     });
