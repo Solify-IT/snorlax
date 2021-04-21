@@ -39,12 +39,9 @@ export default class BookController {
     context.response.status(200).json({ bookId });
   }
 
-
-
-
-  // recibe GET /book?bookId=<?>
-  async presentBook(context: IContext): Promise<void> {
-    const { bookId } = context.request.query;
+  // recibe GET /book/:bookId
+  async getBookbyId(context: IContext): Promise<void> {
+    const { bookId } = context.request.params;
     const [books, error] = await wrapError(
       this.bookInteractor.getBook(bookId as string),
     );

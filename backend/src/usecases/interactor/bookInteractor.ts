@@ -1,4 +1,4 @@
-import { LocalBook,Book } from 'src/domain/model';
+import { LocalBook, Book } from 'src/domain/model';
 import {
   IBookPresenter,
   IBookRepository,
@@ -10,6 +10,7 @@ import { ILogger } from '../interfaces/logger';
 import LibraryInteractor from './libraryInteractor';
 import MovementInteractor from './movementInteractor';
 import IMetadataProviderCore from '../interfaces/metadataProvider';
+
 export type RegisterBookInputData = Omit<LocalBook & {
   isLoan: boolean, amount: number,
 }, 'id' | 'library'>;
@@ -22,6 +23,7 @@ export default class BookInteractor {
   private movementInteractor: MovementInteractor;
 
   private bookPresenter: IBookPresenter;
+
   private metadataProvider: IMetadataProviderCore;
 
   private logger: ILogger;
@@ -110,30 +112,19 @@ export default class BookInteractor {
     }
   }
 
-
-
-  async getBook(bookId: string): Promise<Book[]> {
-    const localBook = await this.bookRepository.findByISBN(bookId);
-     
-
-      
-  
-      const books: Book[] = [];
-
-      // eslint-disable-next-line no-restricted-syntax
-      for (const book of localBook) {
-        // eslint-disable-next-line no-await-in-loop
-        const remoteBook = await this.metadataProvider.getOneByISBN(book.isbn);
-  
-        if (remoteBook) {
-          books.push({
-            ...book, ...remoteBook,
-          });
-        }
-      }
-      
-    
-  
-    return books;
+  async getBook(bookId: string): Promise<Book> {
+    const localBook = await this.bookRepository.findById(bookId);
+    console.log(localBook);
+    if (!localBook) {
+      this.logger.error('Local Book not found', { logger: 'bookInteractor:getbook', bookId });
+      throw new NotFoundError('Local Book not found');
+    }
+    const remoteBook = await this.metadataProvider.getOneByISBN(localBook.isbn);
+    console.log(remoteBook);
+    if (!remoteBook) {
+      this.logger.error('Remote Book not found', { logger: 'bookInteractor:getbook', isbn: localBook.isbn });
+      throw new Error('Remote Book not found.');
+    }
+    return { ...localBook, ...remoteBook };
   }
 }

@@ -5,12 +5,20 @@ import {
 } from 'src/domain/model';
 import { IBookRepository } from 'src/usecases';
 import IDatastore from './datastore';
+import { Maybe } from 'src/@types';
 
 export default class BookRepository implements IBookRepository {
   datastore: IDatastore;
 
   constructor(datastore: IDatastore) {
     this.datastore = datastore;
+  }
+
+  async findById(id: string): Promise<Maybe<LocalBook>> {
+    const book = await this.datastore.getById<LocalBook>(
+       BOOK_TABLE_NAME,id
+    );
+    return book;
   }
 
   async registerBook(bookData: Omit<LocalBookInput, 'id'>): Promise<string> {

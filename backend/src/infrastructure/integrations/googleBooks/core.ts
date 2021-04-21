@@ -21,9 +21,9 @@ export default class GoogleBooksService implements IMetadataProviderCore {
 
     const foundIsbn = result.data.items[0].volumeInfo.industryIdentifiers[0].identifier;
 
-    if (foundIsbn !== isbn) {
-      return null;
-    }
+    // if (foundIsbn !== isbn) {
+    //   return null;
+    // }
 
     const book: ExternalBook = {
       authors: result.data.items[0].volumeInfo.authors,
