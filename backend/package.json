@@ -71,5 +71,8 @@
     "pg": "^8.5.1",
     "uuid": "^8.3.2",
     "winston": "^3.3.3"
+  },
+  "_moduleAliases": {
+    "src": "dist/src"
   }
 }
