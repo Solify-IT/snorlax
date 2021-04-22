@@ -41,12 +41,14 @@ export default class BookController {
 
   // recibe GET /books?libraryId=<?>&isbn=<?>
   async listBooksByLibrary(context: IContext): Promise<void> {
-    const { libraryId, page, perPage, isbn } = context.request.query;
+    const {
+      libraryId, page, perPage, isbn,
+    } = context.request.query;
     const pageNumber = page ? parseInt(page as string, 10) : undefined;
     const perPageNumber = perPage ? parseInt(perPage as string, 10) : undefined;
     const [books, error] = await wrapError(
       this.bookInteractor.listBooksByLibrary(
-        libraryId as string, pageNumber, perPageNumber,isbn as string,
+        libraryId as string, pageNumber, perPageNumber, isbn as string,
       ),
     );
 

@@ -19,16 +19,20 @@ export default class BookRepository implements IBookRepository {
     libraryId: string, page: number, perPage: number,isbn?: string
   ): Promise<{ localBooks: LocalBook[], total: number }> {
     if (page <= 0) throw new InvalidDataError('Page is less than one!');
-    
-    
+    const valuesQuery1 = [libraryId, (page - 1) * perPage, perPage];
+    const valuesQuery2 = [libraryId];
+    if(isbn){
+      valuesQuery1.push(isbn);
+      valuesQuery2.push(isbn);
+    }
     const [localBooks, total] = await Promise.all([
       
       this.datastore.get<LocalBook>(
-        `SELECT * FROM ${BOOK_TABLE_NAME} WHERE library_id = $1 ${isbn!= null? ' AND isbn = $4': 'AND isbn = $4 '} OFFSET $2 LIMIT $3`,
-        [libraryId, (page - 1) * perPage, perPage, isbn],
+        `SELECT * FROM ${BOOK_TABLE_NAME} WHERE library_id = $1 ${isbn ? ' AND isbn = $4': ''} OFFSET $2 LIMIT $3`,
+        valuesQuery1
       ),
       this.datastore.get<{ count: number }>(
-        `SELECT count(0) FROM ${BOOK_TABLE_NAME} WHERE library_id = $1  ${isbn != null? 'AND isbn = $2': 'AND isbn = $2 '}`, [libraryId,isbn],
+        `SELECT count(0) FROM ${BOOK_TABLE_NAME} WHERE library_id = $1  ${isbn ? 'AND isbn = $2': ''}`,valuesQuery2
       ),
     ]);
     return { localBooks, total: total[0].count };
