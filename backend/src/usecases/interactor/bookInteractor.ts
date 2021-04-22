@@ -106,10 +106,10 @@ export default class BookInteractor {
   }
 
   async listBooksByLibrary(
-    libraryId: string, page: number = 1, perPage: number = 10,isbn?: string,
+    page: number = 1, perPage: number = 10, libraryId?: string, isbn?: string,
   ): Promise<{ books: Book[], total: number }> {
     const { localBooks, total } = await this.bookRepository.listBooksByLibrary(
-      libraryId, page, perPage,isbn,
+      page, perPage, libraryId, isbn,
     );
     const books: Book[] = [];
 
@@ -135,7 +135,7 @@ export default class BookInteractor {
   ): Promise<{ books: Book[], total: number }> {
     const { localBooks, total } = await this.bookRepository.listBooksByIsbn(
       isbn, page, perPage,
-    )
+    );
     const books: Book[] = [];
 
     // eslint-disable-next-line no-restricted-syntax

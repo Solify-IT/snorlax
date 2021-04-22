@@ -16,23 +16,30 @@ export default class BookRepository implements IBookRepository {
 
   // regresar
   async listBooksByLibrary(
-    libraryId: string, page: number, perPage: number,isbn?: string
+    page: number, perPage: number, libraryId?: string, isbn?: string,
   ): Promise<{ localBooks: LocalBook[], total: number }> {
     if (page <= 0) throw new InvalidDataError('Page is less than one!');
-    const valuesQuery1 = [libraryId, (page - 1) * perPage, perPage];
-    const valuesQuery2 = [libraryId];
-    if(isbn){
-      valuesQuery1.push(isbn);
-      valuesQuery2.push(isbn);
+    // Case Library not null isbn null
+    let valuesQuery1 = [(page - 1) * perPage, perPage, libraryId];
+    let valuesQuery2 = [libraryId];
+    // Case Library not null isbn not null
+    if (isbn != null && libraryId == null) {
+      valuesQuery1 = [(page - 1) * perPage, perPage, isbn];
+      valuesQuery2 = [isbn];
+    }
+    // Case Library not null isbn not null
+    if (isbn != null && libraryId != null) {
+      valuesQuery1 = [(page - 1) * perPage, perPage, libraryId, isbn];
+      valuesQuery2 = [libraryId, isbn];
     }
     const [localBooks, total] = await Promise.all([
-      
+
       this.datastore.get<LocalBook>(
-        `SELECT * FROM ${BOOK_TABLE_NAME} WHERE library_id = $1 ${isbn ? ' AND isbn = $4': ''} OFFSET $2 LIMIT $3`,
-        valuesQuery1
+        `SELECT * FROM ${BOOK_TABLE_NAME} WHERE price > 0 ${isbn == null && libraryId != null ? ' AND library_id = $3' : ''}  ${isbn != null && libraryId == null ? ' AND isbn = $3' : ''} ${isbn != null && libraryId != null ? ' AND library_id = $3  AND isbn = $4' : ''} OFFSET $1 LIMIT $2`,
+        valuesQuery1,
       ),
       this.datastore.get<{ count: number }>(
-        `SELECT count(0) FROM ${BOOK_TABLE_NAME} WHERE library_id = $1  ${isbn ? 'AND isbn = $2': ''}`,valuesQuery2
+        `SELECT count(0) FROM ${BOOK_TABLE_NAME} WHERE price > 0 ${isbn == null && libraryId != null ? ' AND library_id = $1' : ''}  ${isbn != null && libraryId == null ? ' AND isbn = $1' : ''} ${isbn != null && libraryId != null ? ' AND library_id = $1  AND isbn = $2' : ''}`, valuesQuery2,
       ),
     ]);
     return { localBooks, total: total[0].count };
@@ -53,8 +60,6 @@ export default class BookRepository implements IBookRepository {
     ]);
     return { localBooks, total: total[0].count };
   }
-
-  
 
   async registerBook(bookData: Omit<LocalBookInput, 'id'>): Promise<string> {
     const id = uuidv4();
