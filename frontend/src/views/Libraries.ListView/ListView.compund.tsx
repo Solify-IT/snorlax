@@ -1,6 +1,7 @@
 import { notification } from 'antd';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Library } from 'src/@types';
+import useNavigation from 'src/hooks/navigation';
 import { useBackend } from 'src/integrations/backend';
 import LibrariesListViewComp from './ListView';
 
@@ -8,6 +9,7 @@ const LibrariesListView: React.FC = () => {
   const [libraries, setLibraries] = useState<Library[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const backend = useBackend();
+  const { setTitles } = useNavigation();
 
   const fetchLibraries = useCallback(async () => {
     setIsLoading(true);
@@ -29,8 +31,9 @@ const LibrariesListView: React.FC = () => {
   }, [backend.libraries]);
 
   useEffect(() => {
+    setTitles({ title: 'Librerías' });
     fetchLibraries();
-  }, [fetchLibraries]);
+  }, [fetchLibraries, setTitles]);
 
   return (
     <LibrariesListViewComp libraries={libraries} isLoading={isLoading} />
