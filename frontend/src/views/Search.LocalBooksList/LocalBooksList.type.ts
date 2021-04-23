@@ -6,4 +6,10 @@ export default interface Props {
   setPagination: (pagination: { page: number, perPage: number }) => void;
   pagination: { page: number, perPage: number };
   total: number;
+
 }
+
+export type SearchType = {
+  isbn: string;
+  isGlobal:boolean;
+};
