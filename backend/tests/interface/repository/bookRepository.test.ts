@@ -15,15 +15,18 @@ jest.mock('winston', () => ({
   }),
 }));
 
+const pool = new Pool({ min: 1, max: 1 });
+
+beforeEach(() => pool.query('START TRANSACTION'));
+afterEach(() => pool.query('ROLLBACK'));
+
 describe('registerBook', () => {
-  const pgPool = new Pool({
-    user: process.env.PGUSER,
-  });
   const logger = winston.createLogger();
-  const datastore = new Datastore(pgPool, logger);
+  const datastore = new Datastore(pool, logger);
   const repository = new BookRepository(datastore);
 
   it('should save the book with valid data', async () => {
+    expect.assertions(1);
     const libraryData = LibraryFactory.build();
     await datastore.insert(LIBRARY_TABLE_NAME, libraryData);
     const bookData = LocalBookFactory.build({
@@ -37,21 +40,15 @@ describe('registerBook', () => {
 
     expect(res).not.toBe(null);
   });
-
-  afterAll(async () => {
-    await pgPool.end();
-  });
 });
 
 describe('findByISBN', () => {
-  const pgPool = new Pool({
-    user: process.env.PGUSER,
-  });
   const logger = winston.createLogger();
-  const datastore = new Datastore(pgPool, logger);
+  const datastore = new Datastore(pool, logger);
   const repository = new BookRepository(datastore);
 
   it('should return an empty list when no local books found', async () => {
+    expect.assertions(2);
     const [result, error] = await wrapError(repository.findByISBN('nothing'));
 
     expect(error).toBe(null);
@@ -59,6 +56,7 @@ describe('findByISBN', () => {
   });
 
   it('should return a list with local books when found local books', async () => {
+    expect.assertions(5);
     const libraries = await givenALibrary(datastore, LibraryFactory.buildList(3));
 
     if (!Array.isArray(libraries)) {

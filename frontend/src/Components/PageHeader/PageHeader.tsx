@@ -5,7 +5,7 @@ import {
 import { useHistory } from 'react-router-dom';
 import useNavigation from 'src/hooks/navigation';
 import './styles.css';
-import { LIST_LOCAL_BOOKS, NEW_BOOK } from '../Router/routes';
+import { LIST_LOCAL_BOOKS, LIST_USERS, NEW_BOOK } from '../Router/routes';
 
 const { SubMenu } = Menu;
 const { Header, Content, Sider } = Layout;
@@ -20,7 +20,7 @@ const PageHeader: React.FC = ({ children }) => {
     <Layout id="components-layout">
       <Header className="header">
         <div className="logo" />
-        <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['1']}>
+        <Menu theme="dark" mode="horizontal">
           <Menu.Item key="1">Inventario</Menu.Item>
           <Menu.Item key="2">Punto de venta</Menu.Item>
           <Menu.Item key="3">Administración</Menu.Item>
@@ -30,7 +30,6 @@ const PageHeader: React.FC = ({ children }) => {
         <Sider width={200} className="site-layout-background">
           <Menu
             mode="inline"
-            defaultSelectedKeys={['1']}
             defaultOpenKeys={['books']}
             style={{ height: '100%', borderRight: 0 }}
           >
@@ -40,6 +39,11 @@ const PageHeader: React.FC = ({ children }) => {
               </Menu.Item>
               <Menu.Item key="2" onClick={goTo(LIST_LOCAL_BOOKS)}>
                 Libros disponibles
+              </Menu.Item>
+            </SubMenu>
+            <SubMenu key="users" title="Usuarios">
+              <Menu.Item key="3" onClick={goTo(LIST_USERS)}>
+                Lista de usuarios
               </Menu.Item>
             </SubMenu>
           </Menu>
