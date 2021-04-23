@@ -164,7 +164,7 @@ const RegisterForm: React.FC = () => {
                 return Promise.resolve();
               }
               return Promise.reject(new Error(
-                'La contraseña es debil. Debe tener una mayuscula, una minuscula, un número y mínimo 8 caracteres de longitud',
+                'La contraseña es debil. Debe tener una mayuscula, una minuscula, un número, un símbolo y mínimo 8 caracteres de longitud',
               ));
             },
           }),
