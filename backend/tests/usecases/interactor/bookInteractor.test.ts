@@ -1,20 +1,20 @@
 import { Pool } from 'pg';
 import winston from 'winston';
 import { wrapError } from 'src/@types';
-import BookPresenter from 'src/interface/presenter/bookPresenter';
 import BookRepository from 'src/interface/repository/bookRepository';
 import { BookInteractor, LibraryInteractor, MovementInteractor } from 'src/usecases/interactor';
 import Datastore from 'src/infrastructure/datastore/datastore';
 import { UnknownError, InvalidDataError } from 'src/usecases/errors';
 import LibraryRepository from 'src/interface/repository/libraryRepository';
 import LibraryFactory from 'src/infrastructure/factories/libraryFactory';
-import { LocalBookFactory } from 'src/infrastructure/factories';
+import { ExternalBookFactory, LocalBookFactory } from 'src/infrastructure/factories';
 import MovementRepository from 'src/interface/repository/movementRepository';
 import NotFoundError from 'src/usecases/errors/notFoundError';
+import { GoogleBooksService } from 'src/infrastructure/integrations';
 
-jest.mock('src/interface/presenter/bookPresenter');
 jest.mock('src/interface/repository/bookRepository');
 jest.mock('src/infrastructure/datastore/datastore');
+jest.mock('src/infrastructure/integrations');
 jest.mock('winston', () => ({
   createLogger: () => ({
     error: jest.fn(),
@@ -30,19 +30,22 @@ jest.mock('pg', () => {
   return { Pool: jest.fn(() => mPool) };
 });
 
+const logger = winston.createLogger();
+const bookRepository = new BookRepository(new Datastore(new Pool(), logger));
+const libraryRepository = new LibraryRepository(new Datastore(new Pool(), logger));
+const movementRepository = new MovementRepository(new Datastore(new Pool(), logger));
+const libraryInteractor = new LibraryInteractor(libraryRepository, logger);
+const movementInteractor = new MovementInteractor(movementRepository, logger);
+const metadataProvider = new GoogleBooksService();
+
+const interactor = new BookInteractor(
+  bookRepository,
+  libraryInteractor,
+  movementInteractor,
+  metadataProvider,
+  logger,
+);
 describe('registerBook', () => {
-  const logger = winston.createLogger();
-  const bookRepository = new BookRepository(new Datastore(new Pool(), logger));
-  const libraryRepository = new LibraryRepository(new Datastore(new Pool(), logger));
-  const movementRepository = new MovementRepository(new Datastore(new Pool(), logger));
-  const presenter = new BookPresenter();
-  const libraryInteractor = new LibraryInteractor(libraryRepository, logger);
-  const movementInteractor = new MovementInteractor(movementRepository, logger);
-
-  const interactor = new BookInteractor(
-    bookRepository, presenter, libraryInteractor, movementInteractor, logger,
-  );
-
   it('should return book id when valid data is passed', async () => {
     const expectedID = 'expected';
     const library = LibraryFactory.build();
@@ -188,6 +191,63 @@ describe('registerBook', () => {
 
     expect(error).toBeInstanceOf(NotFoundError);
     expect(res).toBe(null);
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+});
+
+describe('listBooksByLibrary', () => {
+  it('should return the books and call the metadata provider for book information', async () => {
+    const library = LibraryFactory.build();
+    const LOCAL_BOOKS_AMOUNT = 3;
+    const localBooksMock = LocalBookFactory.buildList(
+      LOCAL_BOOKS_AMOUNT, { library, libraryId: library.id },
+    );
+
+    const listBooksByLibraryMock = jest.fn(async () => ({
+      localBooks: localBooksMock, total: localBooksMock.length,
+    }));
+    const getOneByISBNMock = jest.fn(
+      async (isbn: string) => ExternalBookFactory.build({ isbn }),
+    );
+
+    jest.spyOn(
+      bookRepository, 'listBooksByLibrary',
+    ).mockImplementation(listBooksByLibraryMock);
+    jest.spyOn(
+      metadataProvider, 'getOneByISBN',
+    ).mockImplementation(getOneByISBNMock);
+
+    const [res, err] = await wrapError(interactor.listBooksByLibrary(library.id));
+
+    expect(err).toBe(null);
+    expect(res).not.toBe(null);
+    expect(listBooksByLibraryMock).toBeCalled();
+    expect(getOneByISBNMock).toBeCalledTimes(LOCAL_BOOKS_AMOUNT);
+  });
+
+  it('should return empty array when no book is associated with the library id', async () => {
+    const listBooksByLibraryMock = jest.fn(async () => ({ localBooks: [], total: 0 }));
+    const getOneByISBNMock = jest.fn(
+      async (isbn: string) => ExternalBookFactory.build({ isbn }),
+    );
+
+    jest.spyOn(
+      bookRepository, 'listBooksByLibrary',
+    ).mockImplementation(listBooksByLibraryMock);
+    jest.spyOn(
+      metadataProvider, 'getOneByISBN',
+    ).mockImplementation(getOneByISBNMock);
+
+    const [res, err] = await wrapError(interactor.listBooksByLibrary('anUUID'));
+
+    expect(err).toBe(null);
+    expect(res).not.toBe(null);
+    expect(res?.books).toHaveLength(0);
+    expect(listBooksByLibraryMock).toBeCalled();
+    expect(getOneByISBNMock).not.toBeCalled();
   });
 
   afterEach(() => {

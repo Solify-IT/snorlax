@@ -8,5 +8,11 @@ export default class Router {
         { request, response, next },
       );
     });
+
+    app.get('/books', async (request, response, next) => {
+      await controller.books.listBooksByLibrary(
+        { request, response, next },
+      );
+    });
   }
 }

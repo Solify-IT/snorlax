@@ -1,5 +1,5 @@
 import {
-  Button, Col, Form, Input, InputNumber, notification, Row, Spin, Switch,
+  Button, Col, Form, Input, InputNumber, notification, Row, Switch,
 } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
@@ -131,8 +131,12 @@ const RegisterForm: React.FC = () => {
           </Form.Item>
 
           <Form.Item {...tailLayout}>
-            <Button disabled={isLoading} type="primary" htmlType="submit">
-              {isLoading ? <Spin size="small" /> : 'Guardar'}
+            <Button
+              loading={isLoading}
+              type="primary"
+              htmlType="submit"
+            >
+              Guardar
             </Button>
           </Form.Item>
         </Form>
