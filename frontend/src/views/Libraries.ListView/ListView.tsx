@@ -16,6 +16,21 @@ const LibrariesListView: React.FC<Props> = ({ libraries, isLoading }) => {
         </Typography.Link>
       ),
     },
+    {
+      title: 'A Cargo',
+      dataIndex: 'inCharge',
+      key: 'inCharge',
+    },
+    {
+      title: 'Teléfono',
+      dataIndex: 'phoneNumber',
+      key: 'phoneNumber',
+    },
+    {
+      title: 'Ciudad',
+      dataIndex: 'city',
+      key: 'city',
+    },
   ];
 
   return (
