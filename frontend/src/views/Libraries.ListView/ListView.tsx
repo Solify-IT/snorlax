@@ -34,7 +34,12 @@ const LibrariesListView: React.FC<Props> = ({ libraries, isLoading }) => {
   ];
 
   return (
-    <Table columns={columns} dataSource={libraries} loading={isLoading} />
+    <Table
+      pagination={{ disabled: true }}
+      columns={columns}
+      dataSource={libraries}
+      loading={isLoading}
+    />
   );
 };
 
