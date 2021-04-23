@@ -2,7 +2,14 @@ import { Menu } from 'antd';
 import React from 'react';
 import { useLocation } from 'react-router-dom';
 import {
-  ADMIN, INVENTORY, LIBRARIES, LIST_LOCAL_BOOKS, NEW_BOOK, sideMenuItems, sideMenuItemsOpen,
+  ADMIN,
+  INVENTORY,
+  LIBRARIES,
+  LIST_LOCAL_BOOKS,
+  LIST_USERS,
+  NEW_BOOK,
+  sideMenuItems,
+  sideMenuItemsOpen,
 } from '../Router/routes';
 
 const SideMenu: React.FC<{ goTo(path: string): () => void }> = ({ goTo }) => {
@@ -30,14 +37,21 @@ const SideMenu: React.FC<{ goTo(path: string): () => void }> = ({ goTo }) => {
         </Menu.SubMenu>
       )}
       {pathname.includes(ADMIN) && (
-        <Menu.SubMenu key={sideMenuItemsOpen.admin.libraries} title="Librerías">
-          <Menu.Item
-            key={sideMenuItems.inventory.books.list}
-            onClick={goTo(LIBRARIES)}
-          >
-            Lista de Librerías
-          </Menu.Item>
-        </Menu.SubMenu>
+        <>
+          <Menu.SubMenu key="users" title="Usuarios">
+            <Menu.Item key="3" onClick={goTo(LIST_USERS)}>
+              Lista de usuarios
+            </Menu.Item>
+          </Menu.SubMenu>
+          <Menu.SubMenu key={sideMenuItemsOpen.admin.libraries} title="Librerías">
+            <Menu.Item
+              key={sideMenuItems.inventory.books.list}
+              onClick={goTo(LIBRARIES)}
+            >
+              Lista de Librerías
+            </Menu.Item>
+          </Menu.SubMenu>
+        </>
       )}
     </Menu>
   );

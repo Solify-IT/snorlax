@@ -14,5 +14,17 @@ export default class Router {
         { request, response, next },
       );
     });
+
+    app.get('/users/roles', async (request, response, next) => {
+      await controller.users.listAllRoles({ request, response, next });
+    });
+
+    app.post('/users', async (request, response, next) => {
+      await controller.users.createUser({ request, response, next });
+    });
+
+    app.get('/libraries', async (request, response, next) => {
+      await controller.libraries.listAll({ request, response, next });
+    });
   }
 }
