@@ -1,25 +1,36 @@
-import React, { useEffect, useState } from 'react';
+import { notification } from 'antd';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Library } from 'src/@types';
-import LibraryFactory from 'src/mocks/libraryFactory';
+import { useBackend } from 'src/integrations/backend';
 import LibrariesListViewComp from './ListView';
 
 const LibrariesListView: React.FC = () => {
   const [libraries, setLibraries] = useState<Library[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const backend = useBackend();
 
-  const fetchLibraries = async () => {
+  const fetchLibraries = useCallback(async () => {
     setIsLoading(true);
 
-    const result = LibraryFactory.buildList(5);
+    const [result, error] = await backend.libraries.getAll<{ libraries: Library[] }>();
 
-    setLibraries(result);
+    if (error || !result) {
+      notification.error({
+        message: 'Error al cargar las librerías',
+        description: 'Intentalo más tarde.',
+      });
+      setIsLoading(false);
+      return;
+    }
+
+    setLibraries(result.data.libraries);
 
     setIsLoading(false);
-  };
+  }, [backend.libraries]);
 
   useEffect(() => {
     fetchLibraries();
-  }, []);
+  }, [fetchLibraries]);
 
   return (
     <LibrariesListViewComp libraries={libraries} isLoading={isLoading} />
