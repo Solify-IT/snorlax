@@ -19,7 +19,7 @@ const NavHeader: React.FC = () => {
     if (pathname.includes(ADMIN)) newSelectedKeys.push(`header-${itemKeys.admin}`);
 
     setSelectedKeys(newSelectedKeys);
-  }, [pathname]);
+  }, [pathname, itemKeys.intentory, itemKeys.admin, itemKeys.salesPoint]);
 
   return (
     <Header className="header">
