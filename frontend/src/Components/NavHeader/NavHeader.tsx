@@ -7,7 +7,7 @@ import {
 
 const { Header } = Layout;
 
-const NavHeader: React.FC = () => {
+const NavHeader: React.FC<{ goTo(path: string): () => void }> = ({ goTo }) => {
   const { pathname } = useLocation();
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
   const itemKeys = useMemo(() => menuItemKeys, []);
@@ -25,9 +25,15 @@ const NavHeader: React.FC = () => {
     <Header className="header">
       <div className="logo" />
       <Menu theme="dark" mode="horizontal" selectedKeys={selectedKeys}>
-        <Menu.Item key={`header-${itemKeys.intentory}`}>Inventario</Menu.Item>
-        <Menu.Item key={`header-${itemKeys.salesPoint}`}>Punto de venta</Menu.Item>
-        <Menu.Item key={`header-${itemKeys.admin}`}>Administración</Menu.Item>
+        <Menu.Item key={`header-${itemKeys.intentory}`} onClick={goTo(INVENTORY)}>
+          Inventario
+        </Menu.Item>
+        <Menu.Item key={`header-${itemKeys.salesPoint}`} onClick={goTo(SALES_POINT)}>
+          Punto de venta
+        </Menu.Item>
+        <Menu.Item key={`header-${itemKeys.admin}`} onClick={goTo(ADMIN)}>
+          Administración
+        </Menu.Item>
       </Menu>
     </Header>
   );

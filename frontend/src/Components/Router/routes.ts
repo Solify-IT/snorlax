@@ -12,7 +12,11 @@ export const toBookDetail = (
   uuid: string,
 ) => `${BOOKS}/${uuid}`;
 
-export const LIBRARIES = `${INVENTORY}/librerías`;
+export const LIBRARIES = `${ADMIN}/librerías`;
+
+export const toLibraryDetail = (
+  uuid: string,
+) => `${LIBRARIES}/${uuid}`;
 
 export const menuItemKeys = {
   intentory: 'inventory',
@@ -33,6 +37,7 @@ export const sideMenuItems = {
   inventory: {
     books: {
       newBook: 'section-inventory-books-new',
+      list: 'section-inventory-books-list',
     },
   },
 };

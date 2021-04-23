@@ -18,7 +18,7 @@ const PageHeader: React.FC = ({ children }) => {
 
   return (
     <Layout id="components-layout">
-      <NavHeader />
+      <NavHeader goTo={goTo} />
       <Layout>
         <Sider width={200} className="site-layout-background">
           <SideMenu goTo={goTo} />
