@@ -5,6 +5,7 @@ import {
 } from 'src/domain/model';
 import { IBookRepository } from 'src/usecases';
 import { InvalidDataError } from 'src/usecases/errors';
+import { Maybe } from 'src/@types';
 import IDatastore from './datastore';
 
 export default class BookRepository implements IBookRepository {
@@ -51,5 +52,13 @@ export default class BookRepository implements IBookRepository {
     );
 
     return books;
+  }
+
+  async findById(id: string): Promise<Maybe<LocalBook>> {
+    const book = await this.datastore.getById<LocalBook>(
+      BOOK_TABLE_NAME, id,
+    );
+    return book;
+  // regresar
   }
 }
