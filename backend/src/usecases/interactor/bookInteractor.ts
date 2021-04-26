@@ -129,4 +129,20 @@ export default class BookInteractor {
 
     return { books, total };
   }
+
+  async getBook(bookId: string): Promise<Book> {
+    const localBook = await this.bookRepository.findById(bookId);
+    console.log(localBook);
+    if (!localBook) {
+      this.logger.error('Local Book not found', { logger: 'bookInteractor:getbook', bookId });
+      throw new NotFoundError('Local Book not found');
+    }
+    const remoteBook = await this.metadataProvider.getOneByISBN(localBook.isbn);
+    console.log(remoteBook);
+    if (!remoteBook) {
+      this.logger.error('Remote Book not found', { logger: 'bookInteractor:getbook', isbn: localBook.isbn });
+      throw new Error('Remote Book not found.');
+    }
+    return { ...localBook, ...remoteBook };
+  }
 }
