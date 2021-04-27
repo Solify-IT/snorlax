@@ -11,6 +11,10 @@ export default class UserRepository implements IUserRepository {
     this.datastore = datastore;
   }
 
+  listUsers(): Promise<StoredUser[]> {
+    throw new Error('Method not implemented.');
+  }
+
   listAllRoles(): Promise<StoredRole[]> {
     return this.datastore.get(`SELECT * FROM ${ROLE_TABLE_NAME}`);
   }

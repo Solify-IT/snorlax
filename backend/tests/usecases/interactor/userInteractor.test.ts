@@ -160,3 +160,29 @@ describe('listAllRoles', () => {
     expect(res).toBe(null);
   });
 });
+
+// GIVEN - WHEN - THEN
+describe('listUsers', () => {
+  it('should list the users', async () => {
+    const USERS_LENGTH = 5;
+
+    jest.spyOn(userRepository, 'listUsers').mockImplementation(async () => UserFactory.buildList(USERS_LENGTH));
+
+    const [result, error] = await wrapError(interactor.listUsers());
+
+    expect(error).toBe(null);
+    expect(result).toHaveLength(USERS_LENGTH);
+  });
+
+  it('should throw error when repository throws error', async () => {
+    const ERROR_MESSAGE = 'Disconected from DB.';
+
+    jest.spyOn(userRepository, 'listUsers').mockImplementation(async () => { throw new Error(ERROR_MESSAGE); });
+
+    const [result, error] = await wrapError(interactor.listUsers());
+
+    expect(error).not.toBe(null);
+    expect(error!.message).toBe(ERROR_MESSAGE);
+    expect(result).toBe(null);
+  });
+});
