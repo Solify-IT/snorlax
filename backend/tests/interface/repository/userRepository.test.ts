@@ -112,8 +112,13 @@ describe('listUsers', () => {
   it('should return all the users from the database', async () => {
     expect.assertions(3);
     const USERS_LENGTH = 5;
+    const [role] = await givenARole(datastore);
+    const [library] = await givenALibrary(datastore);
+    const usersMocked = UserFactory.buildList(
+      USERS_LENGTH, { roleId: role.id, libraryId: library.id },
+    );
     await givenAUser(
-      datastore, UserFactory.buildList(USERS_LENGTH),
+      datastore, usersMocked,
     );
 
     const [result, error] = await wrapError(repository.listUsers());
