@@ -31,14 +31,19 @@ const columns = [
     ),
   },
   {
-    title: 'Library',
-    dataIndex: 'libraryId',
-    key: 'libraryId',
+    title: 'Librería',
+    dataIndex: ['library', 'name'],
+    key: 'libraryName',
+  },
+  {
+    title: 'Rol',
+    dataIndex: ['role', 'name'],
+    key: 'roleName',
   },
   {
     title: 'Estado',
-    dataIndex: 'libraryId',
-    key: 'libraryId',
+    dataIndex: 'disabled',
+    key: 'disabled',
     render: (disabled: boolean) => (
       <Typography.Text>
         {disabled ? 'Desactivado' : 'Activo'}
