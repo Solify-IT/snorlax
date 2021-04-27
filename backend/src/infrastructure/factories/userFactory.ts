@@ -1,7 +1,7 @@
 import { each, Sync } from 'factory.ts';
 import faker from 'faker';
 import User, {
-  Permission, Role, ROLE_TABLE_NAME, StoredRole,
+  Permission, Role, ROLE_TABLE_NAME, StoredRole, StoredUser, USER_TABLE_NAME,
 } from 'src/domain/model/user';
 import { IDatastore } from 'src/interface/repository';
 import LibraryFactory from './libraryFactory';
@@ -49,6 +49,32 @@ export const givenARole = async (
   }
 
   return roles;
+};
+
+export const givenAUser = async (
+  datastore: IDatastore, passedUsers?: StoredUser | StoredUser[],
+) => {
+  // eslint-disable-next-line no-nested-ternary
+  const users = passedUsers
+    ? Array.isArray(passedUsers)
+      ? passedUsers
+      : [passedUsers]
+    : [UserFactory.build()];
+
+  // eslint-disable-next-line no-restricted-syntax
+  for (const user of users) {
+    // eslint-disable-next-line no-await-in-loop
+    await datastore.insert<StoredUser>(USER_TABLE_NAME, {
+      id: user.id,
+      disabled: user.disabled,
+      displayName: user.displayName,
+      email: user.email,
+      libraryId: user.libraryId,
+      roleId: user.roleId,
+    });
+  }
+
+  return users;
 };
 
 export default UserFactory;

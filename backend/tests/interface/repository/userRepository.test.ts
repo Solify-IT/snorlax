@@ -2,7 +2,7 @@ import { Pool } from 'pg';
 import { wrapError } from 'src/@types';
 import Datastore from 'src/infrastructure/datastore/datastore';
 import { givenALibrary } from 'src/infrastructure/factories/libraryFactory';
-import UserFactory, { givenARole, RoleFactory } from 'src/infrastructure/factories/userFactory';
+import UserFactory, { givenARole, givenAUser, RoleFactory } from 'src/infrastructure/factories/userFactory';
 import UserRepository from 'src/interface/repository/userRepository';
 import { createLogger } from 'winston';
 
@@ -105,5 +105,21 @@ describe('listAllRoles', () => {
     expect(error).toBe(null);
     expect(result).not.toBe(null);
     expect(result).toHaveLength(LIBRARIES_LENGTH);
+  });
+});
+
+describe('listUsers', () => {
+  it('should return all the users from the database', async () => {
+    expect.assertions(3);
+    const USERS_LENGTH = 5;
+    await givenAUser(
+      datastore, UserFactory.buildList(USERS_LENGTH),
+    );
+
+    const [result, error] = await wrapError(repository.listUsers());
+
+    expect(error).toBe(null);
+    expect(result).not.toBe(null);
+    expect(result).toHaveLength(USERS_LENGTH);
   });
 });
