@@ -55,4 +55,18 @@ export default class UserController {
 
     context.response.status(200).json({ roles });
   }
+
+  // GET /users
+  async listUsers(context: IContext): Promise<void> {
+    const [users, error] = await wrapError(
+      this.userInteractor.listUsers(),
+    );
+
+    if (error) {
+      context.next(error);
+      return;
+    }
+
+    context.response.status(200).json({ users });
+  }
 }
