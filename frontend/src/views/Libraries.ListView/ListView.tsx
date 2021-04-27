@@ -36,7 +36,6 @@ const LibrariesListView: React.FC<Props> = ({ libraries, isLoading }) => {
   return (
     <Table
       rowKey="id"
-      pagination={{ disabled: true }}
       columns={columns}
       dataSource={libraries}
       loading={isLoading}

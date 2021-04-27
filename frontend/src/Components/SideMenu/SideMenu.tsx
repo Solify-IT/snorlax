@@ -7,7 +7,6 @@ import {
   LIBRARIES,
   LIST_LOCAL_BOOKS,
   LIST_USERS,
-  NEW_BOOK,
   sideMenuItems,
   sideMenuItemsOpen,
 } from '../Router/routes';
@@ -22,12 +21,6 @@ const SideMenu: React.FC<{ goTo(path: string): () => void }> = ({ goTo }) => {
     >
       {pathname.includes(INVENTORY) && (
         <Menu.SubMenu key={sideMenuItemsOpen.inventory.books} title="Libros">
-          <Menu.Item
-            key={sideMenuItems.inventory.books.newBook}
-            onClick={goTo(NEW_BOOK)}
-          >
-            Registrar Libros
-          </Menu.Item>
           <Menu.Item
             key={sideMenuItems.inventory.books.list}
             onClick={goTo(LIST_LOCAL_BOOKS)}
