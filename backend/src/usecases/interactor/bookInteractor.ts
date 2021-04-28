@@ -122,8 +122,6 @@ export default class BookInteractor {
         books.push({
           ...book, ...remoteBook,
         });
-      } else {
-        console.log(book.isbn);
       }
     }
 

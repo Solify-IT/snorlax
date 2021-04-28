@@ -15,7 +15,6 @@ export default class BookRepository implements IBookRepository {
     this.datastore = datastore;
   }
 
-  // regresar
   async listBooksByLibrary(
     libraryId: string, page: number, perPage: number,
   ): Promise<{ localBooks: LocalBook[], total: number }> {
