@@ -220,7 +220,9 @@ describe('listBooksByLibrary', () => {
       metadataProvider, 'getOneByISBN',
     ).mockImplementation(getOneByISBNMock);
 
-    const [res, err] = await wrapError(interactor.listBooksByLibrary());
+    const [res, err] = await wrapError(
+      interactor.listBooksByLibrary(undefined, undefined, library.id),
+    );
 
     expect(err).toBe(null);
     expect(res).not.toBe(null);
@@ -241,7 +243,9 @@ describe('listBooksByLibrary', () => {
       metadataProvider, 'getOneByISBN',
     ).mockImplementation(getOneByISBNMock);
 
-    const [res, err] = await wrapError(interactor.listBooksByLibrary());
+    const [res, err] = await wrapError(
+      interactor.listBooksByLibrary(undefined, undefined, 'anUUID'),
+    );
 
     expect(err).toBe(null);
     expect(res).not.toBe(null);

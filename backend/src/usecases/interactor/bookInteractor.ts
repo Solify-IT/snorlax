@@ -1,4 +1,3 @@
-// import
 import { LocalBook, Book } from 'src/domain/model';
 import { IBookRepository } from '..';
 import { UnknownError } from '../errors';
@@ -123,8 +122,6 @@ export default class BookInteractor {
         books.push({
           ...book, ...remoteBook,
         });
-      } else {
-        console.log(book.isbn);
       }
     }
 
@@ -148,8 +145,6 @@ export default class BookInteractor {
         books.push({
           ...book, ...remoteBook,
         });
-      } else {
-        console.log(book.isbn);
       }
     }
 
