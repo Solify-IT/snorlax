@@ -13,6 +13,7 @@ import HOME, {
 
 const RegisterFormView = React.lazy(() => import('src/views/Books.RegisterForm'));
 const LocalBooksListView = React.lazy(() => import('src/views/Inventory.LocalBooksList'));
+const SearchBooksListView = React.lazy(() => import('src/views/Search.LocalBooksList'));
 const LibrariesListView = React.lazy(() => import('src/views/Libraries.ListView'));
 const ListUsers = React.lazy(() => import('src/views/Users.List'));
 const RegisterUser = React.lazy(() => import('src/views/Users.CreateForm'));
