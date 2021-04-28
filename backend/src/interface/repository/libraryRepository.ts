@@ -15,8 +15,4 @@ export default class LibraryRepository implements ILibraryRepository {
 
     return library;
   }
-
-  async listAll(): Promise<Library[]> {
-    return this.datastore.get(`SELECT * FROM ${LIBRARY_TABLE_NAME}`);
-  }
 }

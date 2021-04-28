@@ -54,7 +54,6 @@ const LocalBooksList: React.FC<Props> = ({
 
   return (
     <Table
-      rowKey="id"
       loading={isLoading}
       dataSource={books}
       columns={columns}

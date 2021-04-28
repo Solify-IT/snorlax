@@ -2,7 +2,7 @@ import Api from './api';
 
 export default class CRUD<T, C = any, U = any> extends Api {
   public getAll = <A = T[]>(filter: string = '') => this.get<A>(
-    `/${filter !== '' ? '?' : ''}${filter || ''}`,
+    `/${filter !== '' && '?'}${filter || ''}`,
   );
 
   // TODO: Create new class to separate this method, since it is just used for establishments

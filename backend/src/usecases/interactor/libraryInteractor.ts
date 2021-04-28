@@ -18,8 +18,4 @@ export default class LibraryInteractor {
 
     return result;
   }
-
-  async listAll(): Promise<Library[]> {
-    return this.libraryRepository.listAll();
-  }
 }

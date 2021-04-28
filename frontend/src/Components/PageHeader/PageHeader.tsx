@@ -1,16 +1,14 @@
 import React from 'react';
 import {
-  Layout, Menu, PageHeader as PageHeaderAntd,
+  Menu, Layout, PageHeader as PageHeaderAntd,
 } from 'antd';
 import { useHistory } from 'react-router-dom';
 import useNavigation from 'src/hooks/navigation';
 import './styles.css';
 import { LIST_LOCAL_BOOKS,SEARCH_LOCAL_BOOKS, NEW_BOOK } from '../Router/routes';
-import NavHeader from '../NavHeader';
-import SideMenu from '../SideMenu';
-import SubMenu from 'antd/lib/menu/SubMenu';
 
-const { Content, Sider } = Layout;
+const { SubMenu } = Menu;
+const { Header, Content, Sider } = Layout;
 
 const PageHeader: React.FC = ({ children }) => {
   const { title, subtitle, extra } = useNavigation();
@@ -20,7 +18,14 @@ const PageHeader: React.FC = ({ children }) => {
 
   return (
     <Layout id="components-layout">
-      <NavHeader goTo={goTo} />
+      <Header className="header">
+        <div className="logo" />
+        <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['1']}>
+          <Menu.Item key="1">Inventario</Menu.Item>
+          <Menu.Item key="2">Punto de venta</Menu.Item>
+          <Menu.Item key="3">Administración</Menu.Item>
+        </Menu>
+      </Header>
       <Layout>
         <Sider width={200} className="site-layout-background">
           <Menu
