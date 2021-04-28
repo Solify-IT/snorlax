@@ -1,6 +1,8 @@
-import { notification } from 'antd';
+import { Button, notification } from 'antd';
 import React, { useCallback, useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { Book } from 'src/@types';
+import { NEW_BOOK } from 'src/Components/Router/routes';
 import useNavigation from 'src/hooks/navigation';
 import { useBackend } from 'src/integrations/backend';
 import LocalBooksListComp from './LocalBooksList';
@@ -13,6 +15,7 @@ const LocalBooksList: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { setTitles } = useNavigation();
   const LIBRARY_ID = 'e11e5635-094c-4224-836f-b0caa13986f3';
+  const history = useHistory();
 
   const fetchBooks = useCallback(async () => {
     setIsLoading(true);
@@ -33,8 +36,15 @@ const LocalBooksList: React.FC = () => {
 
   useEffect(() => {
     fetchBooks();
-    setTitles({ title: 'Libros en el inventario' });
-  }, [fetchBooks, setTitles]);
+    setTitles({
+      title: 'Libros en el inventario',
+      extra: [
+        <Button type="primary" onClick={() => history.push(NEW_BOOK)}>
+          Registrar Entrada de Libros
+        </Button>,
+      ],
+    });
+  }, [fetchBooks, setTitles, history]);
 
   return (
     <LocalBooksListComp
