@@ -14,6 +14,11 @@ export default class Router {
         { request, response, next },
       );
     });
+    app.put('/books', async (request, response, next) => {
+      await controller.books.updateBookAmount(
+        { request, response, next },
+      );
+    });
 
     app.get('/users/roles', async (request, response, next) => {
       await controller.users.listAllRoles({ request, response, next });
