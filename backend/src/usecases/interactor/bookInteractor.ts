@@ -77,7 +77,7 @@ export default class BookInteractor {
     // Register the inventory movement
     // TODO: also save the user and turn in which the movement was registered
     await this.movementInteractor.registerMovement({
-      amount: bookData.amount, localBookId: result, isLoan: bookData.isLoan,
+      amount: bookData.amount, localBookId: result, isLoan: bookData.isLoan, type:'in',
     });
 
     if (result !== '') return result;
@@ -103,6 +103,33 @@ export default class BookInteractor {
       );
       throw new InvalidDataError(message);
     }
+  }
+
+  async updateBookAmount(libraryId: string, isbn: string, amount: number): Promise<LocalBook>{
+    // TODO: Agregar movement type(Entrada o salida) a tabla de movimientos 
+
+    //Check if book exists in library
+    const [bookResult] = await Promise.all([
+      this.bookRepository.getBookInLibrary(libraryId, isbn),
+    ]);
+
+    if (!bookResult){
+      const message = 'Book not found in library';
+      this.logger.error(
+        message, {
+          libraryId, logger: 'BookInteractor:updateBookAmount',
+        }
+      )
+      throw new NotFoundError(message);
+    }
+
+    const result = await this.movementInteractor.registerMovement({amount,isLoan:false,localBookId:bookResult.id,type:'fix'});
+
+    if (result) {
+      return bookResult;
+    }
+
+      throw new UnknownError('unknown');
   }
 
   async listBooksByLibrary(
