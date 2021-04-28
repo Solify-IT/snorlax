@@ -1,5 +1,5 @@
 import { wrapError } from 'src/@types';
-import User, { StoredRole, UserInput } from 'src/domain/model/user';
+import User, { StoredRole, StoredUser, UserInput } from 'src/domain/model/user';
 import { v4 as uuidv4 } from 'uuid';
 import { InvalidDataError } from '../errors';
 import IFirebaseApp from '../interfaces/firebase';
@@ -50,6 +50,10 @@ export default class UserInteractor {
 
   async listAllRoles(): Promise<StoredRole[]> {
     return this.userRepository.listAllRoles();
+  }
+
+  async listUsers(): Promise<StoredUser[]> {
+    return this.userRepository.listUsers();
   }
 
   private validateUserData(userData: UserInput) {

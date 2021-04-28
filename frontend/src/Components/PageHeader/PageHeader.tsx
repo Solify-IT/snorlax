@@ -1,14 +1,14 @@
 import React from 'react';
 import {
-  Menu, Layout, PageHeader as PageHeaderAntd,
+  Layout, PageHeader as PageHeaderAntd,
 } from 'antd';
 import { useHistory } from 'react-router-dom';
 import useNavigation from 'src/hooks/navigation';
 import './styles.css';
-import { LIST_LOCAL_BOOKS, LIST_USERS, NEW_BOOK } from '../Router/routes';
+import NavHeader from '../NavHeader';
+import SideMenu from '../SideMenu';
 
-const { SubMenu } = Menu;
-const { Header, Content, Sider } = Layout;
+const { Content, Sider } = Layout;
 
 const PageHeader: React.FC = ({ children }) => {
   const { title, subtitle, extra } = useNavigation();
@@ -18,35 +18,10 @@ const PageHeader: React.FC = ({ children }) => {
 
   return (
     <Layout id="components-layout">
-      <Header className="header">
-        <div className="logo" />
-        <Menu theme="dark" mode="horizontal">
-          <Menu.Item key="1">Inventario</Menu.Item>
-          <Menu.Item key="2">Punto de venta</Menu.Item>
-          <Menu.Item key="3">Administración</Menu.Item>
-        </Menu>
-      </Header>
+      <NavHeader goTo={goTo} />
       <Layout>
         <Sider width={200} className="site-layout-background">
-          <Menu
-            mode="inline"
-            defaultOpenKeys={['books']}
-            style={{ height: '100%', borderRight: 0 }}
-          >
-            <SubMenu key="books" title="Libros">
-              <Menu.Item key="1" onClick={goTo(NEW_BOOK)}>
-                Registrar Libros
-              </Menu.Item>
-              <Menu.Item key="2" onClick={goTo(LIST_LOCAL_BOOKS)}>
-                Libros disponibles
-              </Menu.Item>
-            </SubMenu>
-            <SubMenu key="users" title="Usuarios">
-              <Menu.Item key="3" onClick={goTo(LIST_USERS)}>
-                Lista de usuarios
-              </Menu.Item>
-            </SubMenu>
-          </Menu>
+          <SideMenu goTo={goTo} />
         </Sider>
         <Layout style={{ padding: '24px 24px' }}>
           <Content
