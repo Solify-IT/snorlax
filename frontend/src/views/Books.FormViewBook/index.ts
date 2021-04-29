@@ -1,1 +1,1 @@
-export { default } from './Books.FormViewBook';
+export { default } from './FormViewBook';
