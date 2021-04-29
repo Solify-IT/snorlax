@@ -19,6 +19,7 @@ export class Backend {
   users: CRUD<User, UserInput, UserInput>;
 
   libraries: CRUD<Library, unknown, unknown>;
+  book: any;
 
   public constructor(rootEndpoint: string, config?: AxiosRequestConfig) {
     this.rootEndpoint = rootEndpoint;
