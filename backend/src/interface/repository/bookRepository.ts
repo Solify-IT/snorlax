@@ -5,15 +5,9 @@ import {
 } from 'src/domain/model';
 import { IBookRepository } from 'src/usecases';
 import { InvalidDataError } from 'src/usecases/errors';
-import IDatastore from './datastore';
+import BaseRepository from './BaseRepository';
 
-export default class BookRepository implements IBookRepository {
-  datastore: IDatastore;
-
-  constructor(datastore: IDatastore) {
-    this.datastore = datastore;
-  }
-
+export default class BookRepository extends BaseRepository implements IBookRepository {
   async listBooksByLibrary(
     libraryId: string, page: number, perPage: number,
   ): Promise<{ localBooks: LocalBook[], total: number }> {
