@@ -72,7 +72,9 @@ export async function up(pgm: MigrationBuilder): Promise<void> {
     },
   });
 
-  pgm.createIndex('catalogue', ['isbn', 'title', 'author']);
+  pgm.createIndex('catalogue', 'isbn');
+  pgm.createIndex('catalogue', 'title');
+  pgm.createIndex('catalogue', 'author');
 
   pgm.addConstraint('local_books', 'catalogue_book_local_book_fk', {
     foreignKeys: {
@@ -85,7 +87,9 @@ export async function up(pgm: MigrationBuilder): Promise<void> {
 export async function down(pgm: MigrationBuilder): Promise<void> {
   pgm.dropConstraint('local_books', 'catalogue_book_local_book_fk');
 
-  pgm.dropIndex('catalogue', ['isbn', 'title', 'author']);
+  pgm.dropIndex('catalogue', 'author');
+  pgm.dropIndex('catalogue', 'title');
+  pgm.dropIndex('catalogue', 'isbn');
 
   pgm.dropTable('catalogue');
 }
