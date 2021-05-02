@@ -2,17 +2,28 @@ import { Pool } from 'pg';
 import winston from 'winston';
 import { wrapError } from 'src/@types';
 import BookRepository from 'src/interface/repository/bookRepository';
-import { BookInteractor, LibraryInteractor, MovementInteractor } from 'src/usecases/interactor';
+import {
+  BookInteractor,
+  CatalogueInteractor,
+  LibraryInteractor,
+  MovementInteractor,
+} from 'src/usecases/interactor';
 import Datastore from 'src/infrastructure/datastore/datastore';
 import { UnknownError, InvalidDataError } from 'src/usecases/errors';
 import LibraryRepository from 'src/interface/repository/libraryRepository';
 import LibraryFactory from 'src/infrastructure/factories/libraryFactory';
-import { ExternalBookFactory, LocalBookFactory } from 'src/infrastructure/factories';
+import {
+  ExternalBookFactory,
+  LocalBookFactory,
+  CatalogueFactory,
+} from 'src/infrastructure/factories';
 import MovementRepository from 'src/interface/repository/movementRepository';
 import NotFoundError from 'src/usecases/errors/notFoundError';
 import { GoogleBooksService } from 'src/infrastructure/integrations';
+import CatalogueRepository from 'src/interface/repository/catalogueRepository';
 
 jest.mock('src/interface/repository/bookRepository');
+jest.mock('src/interface/repository/catalogueRepository');
 jest.mock('src/infrastructure/datastore/datastore');
 jest.mock('src/infrastructure/integrations');
 jest.mock('winston', () => ({
@@ -31,33 +42,46 @@ jest.mock('pg', () => {
 });
 
 const logger = winston.createLogger();
-const bookRepository = new BookRepository(new Datastore(new Pool(), logger));
-const libraryRepository = new LibraryRepository(new Datastore(new Pool(), logger));
-const movementRepository = new MovementRepository(new Datastore(new Pool(), logger));
-const libraryInteractor = new LibraryInteractor(libraryRepository, logger);
-const movementInteractor = new MovementInteractor(movementRepository, logger);
 const metadataProvider = new GoogleBooksService();
+const datastore = new Datastore(new Pool(), logger);
+
+const bookRepository = new BookRepository(datastore);
+const libraryRepository = new LibraryRepository(datastore);
+const movementRepository = new MovementRepository(datastore);
+const catalogueRepository = new CatalogueRepository(datastore);
+const libraryInteractor = new LibraryInteractor(libraryRepository, logger);
+const catalogueInteractor = new CatalogueInteractor(catalogueRepository, logger);
+const movementInteractor = new MovementInteractor(movementRepository, logger);
 
 const interactor = new BookInteractor(
   bookRepository,
   libraryInteractor,
   movementInteractor,
+  catalogueInteractor,
   metadataProvider,
   logger,
 );
+
 describe('registerBook', () => {
   it('should return book id when valid data is passed', async () => {
     const expectedID = 'expected';
     const library = LibraryFactory.build();
+    const catalogue = CatalogueFactory.build();
     jest.spyOn(
       bookRepository, 'registerBook',
-    ).mockImplementation(async () => expectedID);
+    ).mockImplementationOnce(async () => expectedID);
+    jest.spyOn(
+      catalogueRepository, 'findByISBNOrNull',
+    ).mockImplementationOnce(async () => null);
+    jest.spyOn(
+      catalogueRepository, 'registerCatalogue',
+    ).mockImplementationOnce(async () => catalogue);
     jest.spyOn(
       libraryRepository, 'findOneByID',
-    ).mockImplementation(async () => library);
+    ).mockImplementationOnce(async () => library);
     jest.spyOn(
       movementRepository, 'registerMovement',
-    ).mockImplementation(async () => expectedID);
+    ).mockImplementationOnce(async () => expectedID);
 
     const [res, error] = await wrapError(
       interactor.registerBook({
@@ -84,10 +108,10 @@ describe('registerBook', () => {
     const library = LibraryFactory.build();
     jest.spyOn(
       bookRepository, 'registerBook',
-    ).mockImplementation(async () => { throw new UnknownError('unknown'); });
+    ).mockImplementationOnce(async () => { throw new UnknownError('unknown'); });
     jest.spyOn(
       libraryRepository, 'findOneByID',
-    ).mockImplementation(async () => library);
+    ).mockImplementationOnce(async () => library);
 
     const [result, error] = await wrapError(interactor.registerBook(
       {
@@ -105,16 +129,16 @@ describe('registerBook', () => {
     existingBooks[0].libraryId = library.id;
     jest.spyOn(
       bookRepository, 'registerBook',
-    ).mockImplementation(async () => existingBooks[0].id);
+    ).mockImplementationOnce(async () => existingBooks[0].id);
     jest.spyOn(
       bookRepository, 'findByISBN',
-    ).mockImplementation(async () => existingBooks);
+    ).mockImplementationOnce(async () => existingBooks);
     jest.spyOn(
       libraryRepository, 'findOneByID',
-    ).mockImplementation(async () => library);
+    ).mockImplementationOnce(async () => library);
     jest.spyOn(
       movementRepository, 'registerMovement',
-    ).mockImplementation(async () => 'movementID');
+    ).mockImplementationOnce(async () => 'movementID');
 
     const [result, error] = await wrapError(interactor.registerBook(
       {
@@ -132,13 +156,13 @@ describe('registerBook', () => {
     existingBooks[0].libraryId = library.id;
     jest.spyOn(
       bookRepository, 'registerBook',
-    ).mockImplementation(async () => existingBooks[0].id);
+    ).mockImplementationOnce(async () => existingBooks[0].id);
     jest.spyOn(
       bookRepository, 'findByISBN',
-    ).mockImplementation(async () => existingBooks);
+    ).mockImplementationOnce(async () => existingBooks);
     jest.spyOn(
       libraryRepository, 'findOneByID',
-    ).mockImplementation(async () => library);
+    ).mockImplementationOnce(async () => library);
 
     const [result, error] = await wrapError(interactor.registerBook(
       {
@@ -156,13 +180,13 @@ describe('registerBook', () => {
     existingBooks[0].libraryId = library.id;
     jest.spyOn(
       bookRepository, 'registerBook',
-    ).mockImplementation(async () => existingBooks[0].id);
+    ).mockImplementationOnce(async () => existingBooks[0].id);
     jest.spyOn(
       bookRepository, 'findByISBN',
-    ).mockImplementation(async () => existingBooks);
+    ).mockImplementationOnce(async () => existingBooks);
     jest.spyOn(
       libraryRepository, 'findOneByID',
-    ).mockImplementation(async () => library);
+    ).mockImplementationOnce(async () => library);
 
     const [result, error] = await wrapError(interactor.registerBook(
       {
@@ -178,10 +202,10 @@ describe('registerBook', () => {
     const expectedID = 'expected';
     jest.spyOn(
       bookRepository, 'registerBook',
-    ).mockImplementation(async () => expectedID);
+    ).mockImplementationOnce(async () => expectedID);
     jest.spyOn(
       libraryRepository, 'findOneByID',
-    ).mockImplementation(async () => null);
+    ).mockImplementationOnce(async () => null);
 
     const [res, error] = await wrapError(
       interactor.registerBook({
@@ -215,10 +239,10 @@ describe('listBooksByLibrary', () => {
 
     jest.spyOn(
       bookRepository, 'listBooksByLibrary',
-    ).mockImplementation(listBooksByLibraryMock);
+    ).mockImplementationOnce(listBooksByLibraryMock);
     jest.spyOn(
       metadataProvider, 'getOneByISBN',
-    ).mockImplementation(getOneByISBNMock);
+    ).mockImplementationOnce(getOneByISBNMock);
 
     const [res, err] = await wrapError(interactor.listBooksByLibrary(library.id));
 
@@ -236,10 +260,10 @@ describe('listBooksByLibrary', () => {
 
     jest.spyOn(
       bookRepository, 'listBooksByLibrary',
-    ).mockImplementation(listBooksByLibraryMock);
+    ).mockImplementationOnce(listBooksByLibraryMock);
     jest.spyOn(
       metadataProvider, 'getOneByISBN',
-    ).mockImplementation(getOneByISBNMock);
+    ).mockImplementationOnce(getOneByISBNMock);
 
     const [res, err] = await wrapError(interactor.listBooksByLibrary('anUUID'));
 
