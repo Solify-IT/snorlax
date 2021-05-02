@@ -1,6 +1,7 @@
+import { Maybe } from 'src/@types';
 import { Catalogue, CatalogueInputData } from 'src/domain/model';
 
 export default interface ICatalogueRepository {
-  findByISBNOrNone(isbn: string): Promise<Catalogue>;
+  findByISBNOrNull(isbn: string): Promise<Maybe<Catalogue>>;
   registerCatalogue(catalogueData: CatalogueInputData): Promise<Catalogue>;
 }

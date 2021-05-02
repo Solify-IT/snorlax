@@ -1,9 +1,10 @@
+import { Maybe } from 'src/@types';
 import { Catalogue, CatalogueInputData } from 'src/domain/model';
 import ICatalogueRepository from 'src/usecases/repository/catalogueRepository';
 import BaseRepository from './BaseRepository';
 
 export default class CatalogueRepository extends BaseRepository implements ICatalogueRepository {
-  findByISBNOrNone(isbn: string): Promise<Catalogue> {
+  findByISBNOrNull(isbn: string): Promise<Maybe<Catalogue>> {
     throw new Error('Method not implemented.');
   }
 

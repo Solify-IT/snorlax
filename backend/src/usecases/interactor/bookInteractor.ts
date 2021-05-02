@@ -7,6 +7,7 @@ import { ILogger } from '../interfaces/logger';
 import IMetadataProviderCore from '../interfaces/metadataProvider';
 import LibraryInteractor from './libraryInteractor';
 import MovementInteractor from './movementInteractor';
+import CatalogueInteractor from './catalogueInteractor';
 
 export type RegisterBookInputData = Omit<LocalBook & {
   isLoan: boolean, amount: number,
@@ -19,6 +20,8 @@ export default class BookInteractor {
 
   private movementInteractor: MovementInteractor;
 
+  catalogueInteractor: CatalogueInteractor;
+
   private metadataProvider: IMetadataProviderCore;
 
   private logger: ILogger;
@@ -27,6 +30,7 @@ export default class BookInteractor {
     bookRepository: IBookRepository,
     libraryInteractor: LibraryInteractor,
     movementInteractor: MovementInteractor,
+    catalogueInteractor: CatalogueInteractor,
     metadataProvider: IMetadataProviderCore,
     logger: ILogger,
   ) {
