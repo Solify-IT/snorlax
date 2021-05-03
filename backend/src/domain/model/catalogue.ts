@@ -13,7 +13,7 @@ export type CatalogueInputData = {
   provider: string;
   type: string;
   coverType: string;
-  coverImageURL: string;
+  coverImageUrl: string;
   subCategory: string;
   distribuitor: string
   synopsis: string

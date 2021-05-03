@@ -55,8 +55,11 @@ export async function up(pgm: MigrationBuilder): Promise<void> {
     type: {
       type: 'varchar(20)',
     },
-    cover: {
+    cover_type: {
       type: 'varchar(20)',
+    },
+    cover_image_url: {
+      type: 'text',
     },
     sub_category: {
       type: 'varchar(20)',
