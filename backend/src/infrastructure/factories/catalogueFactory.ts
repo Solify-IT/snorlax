@@ -13,13 +13,13 @@ const CatalogueFactory = Sync.makeFactory<Catalogue>({
   isbn: each(() => faker.random.alpha({ count: 13 })),
   pages: each(() => faker.datatype.number(2000)),
   provider: each(() => faker.company.companyName()),
-  sub_category: each(() => faker.random.alpha({ count: 13 })),
-  sub_theme: each(() => faker.random.alpha({ count: 13 })),
+  subCategory: each(() => faker.random.alpha({ count: 13 })),
+  subTheme: each(() => faker.random.alpha({ count: 13 })),
   synopsis: each(() => faker.random.words(30)),
   theme: each(() => faker.random.words(1)),
   title: each(() => faker.random.words(5)),
   type: each(() => faker.random.words(5)),
-  unitary_cost: each(() => faker.datatype.float(5000)),
+  unitaryCost: each(() => faker.datatype.float(5000)),
 });
 
 export default CatalogueFactory;

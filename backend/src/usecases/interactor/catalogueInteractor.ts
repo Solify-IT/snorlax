@@ -1,3 +1,4 @@
+import { Maybe } from 'src/@types';
 import { Catalogue, CatalogueInputData } from 'src/domain/model';
 import { CatalogueRepository } from 'src/interface/repository';
 import { ILogger } from '../interfaces/logger';
@@ -12,7 +13,7 @@ export default class CatalogueInteractor {
     this.logger = logger;
   }
 
-  findByISBNOrNone(isbn: string): Promise<Catalogue> {
+  findByISBNOrNull(isbn: string): Promise<Maybe<Catalogue>> {
     throw new Error('Method not implemented.');
   }
 

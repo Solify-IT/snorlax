@@ -1,4 +1,7 @@
-import { LocalBook, Book, CatalogueInputData } from 'src/domain/model';
+import {
+  LocalBook, Book, CatalogueInputData, Catalogue,
+} from 'src/domain/model';
+import { Maybe } from 'src/@types';
 import { IBookRepository } from '..';
 import { UnknownError } from '../errors';
 import InvalidDataError from '../errors/invalidDataError';
@@ -37,6 +40,7 @@ export default class BookInteractor {
     this.bookRepository = bookRepository;
     this.libraryInteractor = libraryInteractor;
     this.movementInteractor = movementInteractor;
+    this.catalogueInteractor = catalogueInteractor;
     this.metadataProvider = metadataProvider;
     this.logger = logger;
   }
@@ -47,10 +51,13 @@ export default class BookInteractor {
     this.validateRegisterBookData(bookData);
 
     // Check if the library exists and if already is registered the book in the library
-    const [libraryResult, existLocalBook] = await Promise.all([
+    const [libraryResult, existLocalBook, catalogue] = await Promise.all([
       this.libraryInteractor.getOneById(bookData.libraryId),
       this.bookRepository.findByISBN(bookData.isbn),
+      this.catalogueInteractor.findByISBNOrNull(bookData.isbn),
     ]);
+
+    this.createInCatalogueIfNotExists(catalogue, bookData);
 
     if (!libraryResult) {
       const message = 'Library not found';
@@ -130,5 +137,30 @@ export default class BookInteractor {
     }
 
     return { books, total };
+  }
+
+  private createInCatalogueIfNotExists(
+    catalogue: Maybe<Catalogue>, bookData: RegisterBookInputData,
+  ): void {
+    if (!catalogue) {
+      this.catalogueInteractor.registerCatalogue({
+        area: bookData.area,
+        author: bookData.area,
+        collection: bookData.collection,
+        cover: bookData.collection,
+        distribuitor: bookData.distribuitor,
+        editoral: bookData.editoral,
+        isbn: bookData.isbn,
+        pages: bookData.pages,
+        provider: bookData.provider,
+        subCategory: bookData.subCategory,
+        subTheme: bookData.subTheme,
+        synopsis: bookData.synopsis,
+        theme: bookData.theme,
+        title: bookData.title,
+        type: bookData.type,
+        unitaryCost: bookData.unitaryCost,
+      });
+    }
   }
 }

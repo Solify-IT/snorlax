@@ -4,10 +4,10 @@ import { wrapError } from 'src/@types';
 import BookRepository from 'src/interface/repository/bookRepository';
 import {
   BookInteractor,
-  CatalogueInteractor,
   LibraryInteractor,
   MovementInteractor,
 } from 'src/usecases/interactor';
+import CatalogueInteractor from 'src/usecases/interactor/catalogueInteractor';
 import Datastore from 'src/infrastructure/datastore/datastore';
 import { UnknownError, InvalidDataError } from 'src/usecases/errors';
 import LibraryRepository from 'src/interface/repository/libraryRepository';
@@ -24,6 +24,7 @@ import CatalogueRepository from 'src/interface/repository/catalogueRepository';
 
 jest.mock('src/interface/repository/bookRepository');
 jest.mock('src/interface/repository/catalogueRepository');
+jest.mock('src/usecases/interactor/catalogueInteractor');
 jest.mock('src/infrastructure/datastore/datastore');
 jest.mock('src/infrastructure/integrations');
 jest.mock('winston', () => ({
@@ -71,10 +72,10 @@ describe('registerBook', () => {
       bookRepository, 'registerBook',
     ).mockImplementationOnce(async () => expectedID);
     jest.spyOn(
-      catalogueRepository, 'findByISBNOrNull',
+      catalogueInteractor, 'findByISBNOrNull',
     ).mockImplementationOnce(async () => null);
     jest.spyOn(
-      catalogueRepository, 'registerCatalogue',
+      catalogueInteractor, 'registerCatalogue',
     ).mockImplementationOnce(async () => validCatalogue);
     jest.spyOn(
       libraryRepository, 'findOneByID',
@@ -107,10 +108,10 @@ describe('registerBook', () => {
       bookRepository, 'registerBook',
     ).mockImplementationOnce(async () => expectedID);
     jest.spyOn(
-      catalogueRepository, 'findByISBNOrNull',
+      catalogueInteractor, 'findByISBNOrNull',
     ).mockImplementationOnce(findByISBNOrNullFn);
     jest.spyOn(
-      catalogueRepository, 'registerCatalogue',
+      catalogueInteractor, 'registerCatalogue',
     ).mockImplementationOnce(registerCatalogueFn);
     jest.spyOn(
       libraryRepository, 'findOneByID',
@@ -135,6 +136,44 @@ describe('registerBook', () => {
     expect(registerCatalogueFn).toBeCalledTimes(1);
   });
 
+  it('should not create new book catalogue when bookRepository.findByISBNOrNull returns a catalogue', async () => {
+    expect.assertions(4);
+    const expectedID = 'expected';
+    const library = LibraryFactory.build();
+    const registerCatalogueFn = jest.fn(async () => validCatalogue);
+    const findByISBNOrNullFn = jest.fn(async () => validCatalogue);
+    jest.spyOn(
+      bookRepository, 'registerBook',
+    ).mockImplementationOnce(async () => expectedID);
+    jest.spyOn(
+      catalogueInteractor, 'findByISBNOrNull',
+    ).mockImplementationOnce(findByISBNOrNullFn);
+    jest.spyOn(
+      catalogueInteractor, 'registerCatalogue',
+    ).mockImplementationOnce(registerCatalogueFn);
+    jest.spyOn(
+      libraryRepository, 'findOneByID',
+    ).mockImplementationOnce(async () => library);
+    jest.spyOn(
+      movementRepository, 'registerMovement',
+    ).mockImplementationOnce(async () => expectedID);
+
+    const [res, error] = await wrapError(
+      interactor.registerBook({
+        price: 10,
+        isLoan: false,
+        libraryId: library.id,
+        amount: 10,
+        ...validCatalogue,
+      }),
+    );
+
+    expect(error).toBe(null);
+    expect(res).toBe(expectedID);
+    expect(findByISBNOrNullFn).toBeCalledTimes(1);
+    expect(registerCatalogueFn).not.toBeCalled();
+  });
+
   it('should throw InvalidDataError with negative price', async () => {
     const [res, error] = await wrapError(interactor.registerBook(
       {
@@ -152,6 +191,15 @@ describe('registerBook', () => {
 
   it('should throw UnknownError when no result got from interactor', async () => {
     const library = LibraryFactory.build();
+    const registerCatalogueFn = jest.fn(async () => validCatalogue);
+    const findByISBNOrNullFn = jest.fn(async () => null);
+
+    jest.spyOn(
+      catalogueInteractor, 'findByISBNOrNull',
+    ).mockImplementationOnce(findByISBNOrNullFn);
+    jest.spyOn(
+      catalogueInteractor, 'registerCatalogue',
+    ).mockImplementationOnce(registerCatalogueFn);
     jest.spyOn(
       bookRepository, 'registerBook',
     ).mockImplementationOnce(async () => { throw new UnknownError('unknown'); });
@@ -177,6 +225,15 @@ describe('registerBook', () => {
     const library = LibraryFactory.build();
     const existingBooks = LocalBookFactory.buildList(2);
     existingBooks[0].libraryId = library.id;
+    const registerCatalogueFn = jest.fn(async () => validCatalogue);
+    const findByISBNOrNullFn = jest.fn(async () => null);
+
+    jest.spyOn(
+      catalogueInteractor, 'findByISBNOrNull',
+    ).mockImplementationOnce(findByISBNOrNullFn);
+    jest.spyOn(
+      catalogueInteractor, 'registerCatalogue',
+    ).mockImplementationOnce(registerCatalogueFn);
     jest.spyOn(
       bookRepository, 'registerBook',
     ).mockImplementationOnce(async () => existingBooks[0].id);

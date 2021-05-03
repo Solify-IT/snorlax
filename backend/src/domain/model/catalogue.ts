@@ -3,17 +3,17 @@ import CommonType from './common';
 export type CatalogueInputData = {
   title: string;
   isbn: string;
-  unitary_cost: number;
+  unitaryCost: number;
   author: string;
   editoral: string
   area: string;
   theme: string;
-  sub_theme: string;
+  subTheme: string;
   collection: string;
   provider: string;
   type: string;
   cover: string;
-  sub_category: string;
+  subCategory: string;
   distribuitor: string
   synopsis: string
   pages: number;
