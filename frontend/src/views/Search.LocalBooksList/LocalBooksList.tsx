@@ -56,7 +56,9 @@ const LocalBooksList: React.FC<Props> = ({
       key: 'price',
       render: (price: string) => (
         <Typography.Text>
-          1
+
+          {price}
+          pz
         </Typography.Text>
       ),
       width: 100,

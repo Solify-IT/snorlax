@@ -25,7 +25,6 @@ const Router: React.FC = () => (
         <Route exact path={NEW_BOOK} component={RegisterFormView} />
         <Route exact path={LIST_LOCAL_BOOKS} component={SearchLocalBooksView} />
         <Route exact path={LIBRARIES} component={LibrariesListView} />
-        {/* <Route exact path={LIST_LOCAL_BOOKS} component={LocalBooksListView} /> */}
         <Route exact path={NEW_USER} component={RegisterUser} />
         <Route exact path={LIST_USERS} component={ListUsers} />
       </React.Suspense>

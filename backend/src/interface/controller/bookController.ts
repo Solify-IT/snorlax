@@ -58,22 +58,4 @@ export default class BookController {
 
     context.response.status(200).json({ ...books });
   }
-
-  // recibe GET /books?isbn=<?>
-  async listBooksByIsbn(context: IContext): Promise<void> {
-    const { isbn, page, perPage } = context.request.query;
-    const pageNumber = page ? parseInt(page as string, 10) : undefined;
-    const perPageNumber = perPage ? parseInt(perPage as string, 10) : undefined;
-    const [books, error] = await wrapError(
-      this.bookInteractor.listBooksByIsbn(
-        isbn as string, pageNumber, perPageNumber,
-      ),
-    );
-
-    if (error) {
-      context.next(error);
-    }
-
-    context.response.status(200).json({ ...books });
-  }
 }

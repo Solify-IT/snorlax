@@ -7,7 +7,4 @@ export interface IBookRepository {
   listBooksByLibrary(
     page: number, perPage: number, libraryId?: string, isbn?:string,
   ): Promise<{ localBooks: LocalBook[], total: number }>;
-  listBooksByIsbn(
-    isbnId: string, page: number, perPage: number,
-  ): Promise<{ localBooks: LocalBook[], total: number }>;
 }
