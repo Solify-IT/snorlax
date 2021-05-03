@@ -8,28 +8,30 @@ import HOME, {
   LIBRARIES,
   NEW_USER,
   LIST_USERS,
+  MODIFY_BOOK,
 } from './routes';
 
 const RegisterFormView = React.lazy(() => import('src/views/Books.RegisterForm'));
+const UpdateFormView = React.lazy(() => import('src/views/Books.UpdateForm'));
 const LocalBooksListView = React.lazy(() => import('src/views/Inventory.LocalBooksList'));
 const LibrariesListView = React.lazy(() => import('src/views/Libraries.ListView'));
 const ListUsers = React.lazy(() => import('src/views/Users.List'));
 const RegisterUser = React.lazy(() => import('src/views/Users.CreateForm'));
 
 const Router: React.FC = () => (
-  <Switch>
-    {/* {} es para ingresar código de JS o TS */}
-    <Route exact path={HOME} />
-    <PageHeader>
+  <PageHeader>
+    <Switch>
       <React.Suspense fallback={<Loader isLoading />}>
         <Route exact path={NEW_BOOK} component={RegisterFormView} />
         <Route exact path={LIBRARIES} component={LibrariesListView} />
         <Route exact path={LIST_LOCAL_BOOKS} component={LocalBooksListView} />
         <Route exact path={NEW_USER} component={RegisterUser} />
         <Route exact path={LIST_USERS} component={ListUsers} />
+        <Route exact path={MODIFY_BOOK} component={UpdateFormView} />
+        <Route exact path={HOME} />
       </React.Suspense>
-    </PageHeader>
-  </Switch>
+    </Switch>
+  </PageHeader>
 );
 
 export default Router;
