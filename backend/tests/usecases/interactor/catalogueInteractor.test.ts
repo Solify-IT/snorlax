@@ -71,7 +71,7 @@ describe('findByISBNOrNull', () => {
 describe('registerCatalogue', () => {
   it('should save the catalogue if data is valid', async () => {
     expect.assertions(4);
-    const registerCatalogueFn = jest.fn(async () => validCatalogue);
+    const registerCatalogueFn = jest.fn(async () => validCatalogue.id);
     jest.spyOn(
       catalogueRepository, 'registerCatalogue',
     ).mockImplementationOnce(registerCatalogueFn);

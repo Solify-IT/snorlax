@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Pool, QueryResult } from 'pg';
 import loadash from 'lodash';
-import { wrapError } from 'src/@types';
+import { Maybe, wrapError } from 'src/@types';
 import { CommonType } from 'src/domain/model';
 import { IDatastore } from 'src/interface/repository';
 import NotFoundError from 'src/usecases/errors/notFoundError';
@@ -57,8 +57,9 @@ export default class Datastore implements IDatastore {
     throw new Error('Method not implemented.');
   }
 
-  getOneOrNull<T>(queryText: string, values?: any[]): Promise<T> {
-    throw new Error('Method not implemented.');
+  async getOneOrNull<T>(queryText: string, values?: any[]): Promise<Maybe<T>> {
+    const result = await this.dbPool.query<T>(queryText, values);
+    return result.rowCount === 1 ? result.rows[0] : null;
   }
 
   async insert<T extends CommonType>(

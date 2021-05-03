@@ -20,7 +20,8 @@ export default class CatalogueInteractor {
 
   async registerCatalogue(catalogueData: CatalogueInputData): Promise<Catalogue> {
     this.validateRegisterData(catalogueData);
-    return this.catalogueRepository.registerCatalogue(catalogueData);
+    const id = await this.catalogueRepository.registerCatalogue(catalogueData);
+    return { ...catalogueData, id };
   }
 
   private validateRegisterData(catalogueData: CatalogueInputData): void {
