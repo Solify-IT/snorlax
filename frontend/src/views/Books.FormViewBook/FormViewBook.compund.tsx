@@ -27,7 +27,6 @@ const FormViewBook: React.FC = () => {
       setIsLoading(false);
       return;
     }
-    console.log(result.data);
     const [metadata, metadataError] = await metadataClient.getByISBN(result.data.books.isbn);
     if (metadataError || !metadata) {
       notification.error({
@@ -37,7 +36,6 @@ const FormViewBook: React.FC = () => {
       setIsLoading(false);
       return;
     }
-    console.log(metadata);
     setBook(result.data.books);
     setIsLoading(false);
   }, [backend.books]);

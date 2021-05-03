@@ -19,8 +19,6 @@ const layout = {
 };
 
 const FormViewBook: React.FC<Props> = ({ book }) => {
-  console.log(book.id);
-
   const { setTitles } = useNavigation();
   const [selectedISBN] = useState(book.isbn);
   const [form] = Form.useForm();
