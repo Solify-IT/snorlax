@@ -308,7 +308,7 @@ describe('listBooksByLibrary', () => {
     ).mockImplementationOnce(listBooksByLibraryMock);
     jest.spyOn(
       metadataProvider, 'getOneByISBN',
-    ).mockImplementationOnce(getOneByISBNMock);
+    ).mockImplementation(getOneByISBNMock);
 
     const [res, err] = await wrapError(interactor.listBooksByLibrary(library.id));
 
