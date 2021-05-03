@@ -1,6 +1,6 @@
 import { Book } from 'src/@types';
 
 export default interface Props {
-  book: Book | undefined;
+  book: Book ;
   isLoading:boolean;
 }

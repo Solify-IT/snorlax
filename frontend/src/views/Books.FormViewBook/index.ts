@@ -1,1 +1,1 @@
-export { default } from './FormViewBook';
+export { default } from './FormViewBook.compund';
