@@ -12,7 +12,8 @@ export type CatalogueInputData = {
   collection: string;
   provider: string;
   type: string;
-  cover: string;
+  coverType: string;
+  coverImageURL: string;
   subCategory: string;
   distribuitor: string
   synopsis: string
@@ -20,5 +21,7 @@ export type CatalogueInputData = {
 };
 
 type Catalogue = CommonType & CatalogueInputData;
+
+export const CATALOGUE_TABLE_NAME = 'catalogue';
 
 export default Catalogue;

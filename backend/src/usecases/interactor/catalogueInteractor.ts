@@ -1,6 +1,7 @@
 import { Maybe } from 'src/@types';
 import { Catalogue, CatalogueInputData } from 'src/domain/model';
 import { CatalogueRepository } from 'src/interface/repository';
+import { InvalidDataError } from '../errors';
 import { ILogger } from '../interfaces/logger';
 
 export default class CatalogueInteractor {
@@ -14,10 +15,38 @@ export default class CatalogueInteractor {
   }
 
   findByISBNOrNull(isbn: string): Promise<Maybe<Catalogue>> {
-    throw new Error('Method not implemented.');
+    return this.catalogueRepository.findByISBNOrNull(isbn);
   }
 
   registerCatalogue(catalogueData: CatalogueInputData): Promise<Catalogue> {
-    throw new Error('Method not implemented.');
+    this.validateRegisterData(catalogueData);
+    return this.catalogueRepository.registerCatalogue(catalogueData);
+  }
+
+  private validateRegisterData(catalogueData: CatalogueInputData): void {
+    let message = '';
+
+    if (!catalogueData.isbn || catalogueData.isbn.length !== 13) {
+      message += 'El item del catálogo debe tener un ISBN válido. ';
+    }
+
+    if (!catalogueData.title) {
+      message += 'El item del catálogo debe tener título. ';
+    }
+
+    if (!catalogueData.author) {
+      message += 'El item del catálogo debe tener autor. ';
+    }
+
+    if (catalogueData.pages < 0) {
+      message += 'El item del catálogo debe tener páginas válidas. ';
+    }
+
+    if (message !== '') {
+      this.logger.error({
+        message, logger: 'CatalogueInteractor', event: 'validateRegisterData:InvalidDataError',
+      });
+      throw new InvalidDataError(message);
+    }
   }
 }

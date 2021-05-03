@@ -9,13 +9,14 @@ import CommonType from './common';
 
 import Movement, { MovementInputData, MOVEMENT_TABLE_NAME } from './movement';
 
-import Catalogue, { CatalogueInputData } from './catalogue';
+import Catalogue, { CatalogueInputData, CATALOGUE_TABLE_NAME } from './catalogue';
 
 export {
   Book,
   BOOK_TABLE_NAME,
   Catalogue,
   CatalogueInputData,
+  CATALOGUE_TABLE_NAME,
   CommonType,
   ExternalBook,
   Library,
