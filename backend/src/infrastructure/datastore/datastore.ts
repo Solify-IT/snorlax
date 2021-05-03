@@ -19,28 +19,18 @@ export default class Datastore implements IDatastore {
   }
 
   async get<T>(queryText: string, values?: any[]): Promise<T[]> {
-    const [result, error] = await wrapError(
-      this.dbPool.query(queryText, values),
-    );
+    const result = await this.dbPool.query(queryText, values);
 
-    if (error) {
-      throw error;
-    }
-
-    if (!result) return [];
+    if (result.rowCount === 0) return [];
 
     return result.rows.map((el) => this.toCamel<T>(el));
   }
 
   async getById<T>(tableName: string, id: string): Promise<T> {
     const query = `SELECT * FROM ${tableName} WHERE id = $1`;
-    const [result, error] = await wrapError(this.dbPool.query<T>(query, [id]));
+    const result = await this.dbPool.query<T>(query, [id]);
 
-    if (error) {
-      throw error;
-    }
-
-    if (!result) {
+    if (result.rowCount === 0) {
       const message = 'The object searched was not found';
       this.logger.error(message, {
         logger: 'datasotre:getById',
