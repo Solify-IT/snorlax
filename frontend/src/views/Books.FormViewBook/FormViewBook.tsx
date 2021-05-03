@@ -33,7 +33,7 @@ const FormViewBook: React.FC<Props> = ({ book }) => {
   }, [INITIAL_STATE]);
 
   return (
-    <Row>
+    <Row justify="space-around" align="middle">
       <Col span={12}>
         <Form
           {...layout}
@@ -61,7 +61,6 @@ const FormViewBook: React.FC<Props> = ({ book }) => {
           >
             <Input name="price" readOnly style={{ width: '120%', textAlign: 'center' }} />
           </Form.Item>
-
         </Form>
       </Col>
       <Col style={{ position: 'relative' }} span={12}>
