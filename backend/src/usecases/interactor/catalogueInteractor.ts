@@ -18,7 +18,7 @@ export default class CatalogueInteractor {
     return this.catalogueRepository.findByISBNOrNull(isbn);
   }
 
-  registerCatalogue(catalogueData: CatalogueInputData): Promise<Catalogue> {
+  async registerCatalogue(catalogueData: CatalogueInputData): Promise<Catalogue> {
     this.validateRegisterData(catalogueData);
     return this.catalogueRepository.registerCatalogue(catalogueData);
   }
