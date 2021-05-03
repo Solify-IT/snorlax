@@ -28,10 +28,13 @@ describe('registerBook', () => {
   it('should save the book with valid data', async () => {
     expect.assertions(1);
     const libraryData = LibraryFactory.build();
-    await datastore.insert(LIBRARY_TABLE_NAME, libraryData);
     const bookData = LocalBookFactory.build({
       library: libraryData, libraryId: libraryData.id,
     });
+    await Promise.all([
+      datastore.insert(LIBRARY_TABLE_NAME, libraryData),
+      givenACatalogueItem(datastore, CatalogueFactory.build({ isbn: bookData.isbn })),
+    ]);
     const res = await repository.registerBook({
       isbn: bookData.isbn,
       libraryId: bookData.libraryId,
