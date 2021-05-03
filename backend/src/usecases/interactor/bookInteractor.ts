@@ -1,4 +1,4 @@
-import { LocalBook, Book } from 'src/domain/model';
+import { LocalBook, Book, CatalogueInputData } from 'src/domain/model';
 import { IBookRepository } from '..';
 import { UnknownError } from '../errors';
 import InvalidDataError from '../errors/invalidDataError';
@@ -11,7 +11,7 @@ import CatalogueInteractor from './catalogueInteractor';
 
 export type RegisterBookInputData = Omit<LocalBook & {
   isLoan: boolean, amount: number,
-}, 'id' | 'library'>;
+} & CatalogueInputData, 'id' | 'library'>;
 
 export default class BookInteractor {
   private bookRepository: IBookRepository;

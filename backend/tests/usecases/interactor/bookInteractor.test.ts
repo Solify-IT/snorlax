@@ -41,6 +41,7 @@ jest.mock('pg', () => {
   return { Pool: jest.fn(() => mPool) };
 });
 
+const validCatalogue = CatalogueFactory.build();
 const logger = winston.createLogger();
 const metadataProvider = new GoogleBooksService();
 const datastore = new Datastore(new Pool(), logger);
@@ -66,7 +67,6 @@ describe('registerBook', () => {
   it('should return book id when valid data is passed', async () => {
     const expectedID = 'expected';
     const library = LibraryFactory.build();
-    const catalogue = CatalogueFactory.build();
     jest.spyOn(
       bookRepository, 'registerBook',
     ).mockImplementationOnce(async () => expectedID);
@@ -75,7 +75,7 @@ describe('registerBook', () => {
     ).mockImplementationOnce(async () => null);
     jest.spyOn(
       catalogueRepository, 'registerCatalogue',
-    ).mockImplementationOnce(async () => catalogue);
+    ).mockImplementationOnce(async () => validCatalogue);
     jest.spyOn(
       libraryRepository, 'findOneByID',
     ).mockImplementationOnce(async () => library);
@@ -85,7 +85,11 @@ describe('registerBook', () => {
 
     const [res, error] = await wrapError(
       interactor.registerBook({
-        isbn: '123', price: 10, isLoan: false, libraryId: library.id, amount: 10,
+        price: 10,
+        isLoan: false,
+        libraryId: library.id,
+        amount: 10,
+        ...validCatalogue,
       }),
     );
 
@@ -93,10 +97,52 @@ describe('registerBook', () => {
     expect(res).toBe(expectedID);
   });
 
+  it('should create new book catalogue when bookRepository.findByISBNOrNull returns null', async () => {
+    expect.assertions(4);
+    const expectedID = 'expected';
+    const library = LibraryFactory.build();
+    const registerCatalogueFn = jest.fn(async () => validCatalogue);
+    const findByISBNOrNullFn = jest.fn(async () => null);
+    jest.spyOn(
+      bookRepository, 'registerBook',
+    ).mockImplementationOnce(async () => expectedID);
+    jest.spyOn(
+      catalogueRepository, 'findByISBNOrNull',
+    ).mockImplementationOnce(findByISBNOrNullFn);
+    jest.spyOn(
+      catalogueRepository, 'registerCatalogue',
+    ).mockImplementationOnce(registerCatalogueFn);
+    jest.spyOn(
+      libraryRepository, 'findOneByID',
+    ).mockImplementationOnce(async () => library);
+    jest.spyOn(
+      movementRepository, 'registerMovement',
+    ).mockImplementationOnce(async () => expectedID);
+
+    const [res, error] = await wrapError(
+      interactor.registerBook({
+        price: 10,
+        isLoan: false,
+        libraryId: library.id,
+        amount: 10,
+        ...validCatalogue,
+      }),
+    );
+
+    expect(error).toBe(null);
+    expect(res).toBe(expectedID);
+    expect(findByISBNOrNullFn).toBeCalledTimes(1);
+    expect(registerCatalogueFn).toBeCalledTimes(1);
+  });
+
   it('should throw InvalidDataError with negative price', async () => {
     const [res, error] = await wrapError(interactor.registerBook(
       {
-        isbn: '123', price: -10, isLoan: false, libraryId: 'id_library', amount: 10,
+        price: -10,
+        isLoan: false,
+        libraryId: 'id_library',
+        amount: 10,
+        ...validCatalogue,
       },
     ));
 
@@ -115,7 +161,11 @@ describe('registerBook', () => {
 
     const [result, error] = await wrapError(interactor.registerBook(
       {
-        isbn: '123', price: 10, isLoan: false, libraryId: library.id, amount: 10,
+        price: 10,
+        isLoan: false,
+        libraryId: library.id,
+        amount: 10,
+        ...validCatalogue,
       },
     ));
 
@@ -142,7 +192,11 @@ describe('registerBook', () => {
 
     const [result, error] = await wrapError(interactor.registerBook(
       {
-        isbn: '123', price: 10, isLoan: false, libraryId: library.id, amount: 10,
+        price: 10,
+        isLoan: false,
+        libraryId: library.id,
+        amount: 10,
+        ...validCatalogue,
       },
     ));
 
@@ -166,7 +220,11 @@ describe('registerBook', () => {
 
     const [result, error] = await wrapError(interactor.registerBook(
       {
-        isbn: '123', price: 10, isLoan: false, libraryId: library.id, amount: 0,
+        price: 10,
+        isLoan: false,
+        libraryId: library.id,
+        amount: 0,
+        ...validCatalogue,
       },
     ));
 
@@ -190,7 +248,11 @@ describe('registerBook', () => {
 
     const [result, error] = await wrapError(interactor.registerBook(
       {
-        isbn: '123', price: 10, isLoan: false, libraryId: library.id, amount: -10,
+        price: 10,
+        isLoan: false,
+        libraryId: library.id,
+        amount: -10,
+        ...validCatalogue,
       },
     ));
 
@@ -209,7 +271,11 @@ describe('registerBook', () => {
 
     const [res, error] = await wrapError(
       interactor.registerBook({
-        isbn: '123', price: 10, isLoan: false, libraryId: 'notfound', amount: 10,
+        price: 10,
+        isLoan: false,
+        libraryId: 'notfound',
+        amount: 10,
+        ...validCatalogue,
       }),
     );
 
