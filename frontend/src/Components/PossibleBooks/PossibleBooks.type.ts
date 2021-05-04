@@ -7,4 +7,5 @@ export default interface PassedProps {
 export interface Props {
   externalBooks: ExternalBook[];
   internalBook: Catalogue | undefined;
+  isLoading: boolean;
 }

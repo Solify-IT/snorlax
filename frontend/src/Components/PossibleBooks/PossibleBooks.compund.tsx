@@ -5,7 +5,6 @@ import { useBackend } from 'src/integrations/backend';
 import useMetadataProvider from 'src/integrations/metadataProvider';
 import PassedProps from './PossibleBooks.type';
 import PossibleBooksComponent from './PossibleBooks';
-import Loader from '../Loader';
 
 const PossibleBooks: React.FC<PassedProps> = ({ isbn }) => {
   const [externalBooks, setExternalBooks] = useState<ExternalBook[]>([]);
@@ -49,12 +48,11 @@ const PossibleBooks: React.FC<PassedProps> = ({ isbn }) => {
 
   if (isbn.length !== 13) return null;
 
-  if (isLoading) return <Loader isLoading={isLoading} />;
-
   return (
     <PossibleBooksComponent
       internalBook={internalBooks}
       externalBooks={externalBooks}
+      isLoading={isLoading}
     />
   );
 };
