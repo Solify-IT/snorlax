@@ -1,7 +1,7 @@
 import React from 'react';
 import { AxiosRequestConfig } from 'axios';
 import {
-  Library, LocalBook, LocalBookInput, MovementInputData,
+  BookFormType, Library, LocalBook,
 } from 'src/@types';
 import {
   BACKEND_MAIN_EP, BOOKS_ROOT, LIBRARIES_ROOT, USERS_ROOT,
@@ -9,7 +9,7 @@ import {
 import User, { UserInput } from 'src/@types/user';
 import CRUD from './crud';
 
-export type RegisterBook = Omit<LocalBookInput & MovementInputData, 'id' | 'localBookId'>;
+export type RegisterBook = BookFormType & { libraryId: Library['id'] };
 
 export class Backend {
   rootEndpoint: string;

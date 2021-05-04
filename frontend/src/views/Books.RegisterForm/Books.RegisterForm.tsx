@@ -1,27 +1,35 @@
 import {
-  Button, Col, Form, Input, InputNumber, notification, Row, Switch,
+  Button, Col, Form, notification, Row,
 } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import { BookFormType } from 'src/@types';
+import BookForm from 'src/Components/Book.Form';
 import PossibleBooks from 'src/Components/PossibleBooks';
 import useNavigation from 'src/hooks/navigation';
 import { useBackend } from 'src/integrations/backend';
-import { StateType } from './Books.RegisterForm.type';
 
 const INITIAL_STATE = {
   isbn: '',
   price: 0,
   amount: 1,
   isLoan: false,
-};
-
-const layout = {
-  labelCol: { span: 6 },
-  wrapperCol: { span: 18 },
-};
-
-const tailLayout = {
-  wrapperCol: { offset: 6, span: 18 },
+  title: '',
+  unitaryCost: 0,
+  author: '',
+  editoral: '',
+  area: '',
+  theme: '',
+  subTheme: '',
+  collection: '',
+  provider: '',
+  type: '',
+  coverType: '',
+  coverImageUrl: '',
+  subCategory: '',
+  distribuitor: '',
+  synopsis: '',
+  pages: 0,
 };
 
 const RegisterForm: React.FC = () => {
@@ -39,7 +47,7 @@ const RegisterForm: React.FC = () => {
     // eslint-disable-next-line
   }, [INITIAL_STATE]);
 
-  const onFinish = async (values: StateType) => {
+  const onFinish = async (values: BookFormType) => {
     setIsLoading(true);
     const [result, error] = await backend.books.createOne({
       ...values, libraryId: 'e11e5635-094c-4224-836f-b0caa13986f3',
@@ -83,63 +91,14 @@ const RegisterForm: React.FC = () => {
   return (
     <Row>
       <Col span={12}>
-        <Form
-          {...layout}
-          form={form}
-          name="registerBook"
-          initialValues={INITIAL_STATE}
+        <BookForm
           onFinish={onFinish}
           onFinishFailed={onFinishFailed}
-          size="large"
-        >
-          <Form.Item
-            label="ISBN"
-            name="isbn"
-            rules={[{
-              required: true,
-              message: 'Debes ingresar un ISBN válido',
-              len: 13,
-            }]}
-          >
-            <Input onChange={onISBNChange} />
-          </Form.Item>
-
-          <Form.Item
-            label="Precio"
-            name="price"
-            rules={[{
-              required: true,
-              message: 'Debes ingresar un precio válido',
-            }]}
-          >
-            <InputNumber />
-          </Form.Item>
-
-          <Form.Item
-            label="Cantidad"
-            name="amount"
-            rules={[{
-              required: true,
-              message: 'Debes ingresar una cantidad válida',
-            }]}
-          >
-            <InputNumber />
-          </Form.Item>
-
-          <Form.Item label="¿Es consigna?" name="isLoan">
-            <Switch />
-          </Form.Item>
-
-          <Form.Item {...tailLayout}>
-            <Button
-              loading={isLoading}
-              type="primary"
-              htmlType="submit"
-            >
-              Guardar
-            </Button>
-          </Form.Item>
-        </Form>
+          onISBNChange={onISBNChange}
+          form={form}
+          initialState={INITIAL_STATE}
+          isLoading={isLoading}
+        />
       </Col>
       <Col style={{ position: 'relative' }} span={12}>
         <PossibleBooks isbn={selectedISBN || ''} />
