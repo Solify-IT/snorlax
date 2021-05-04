@@ -22,7 +22,7 @@ const tailLayout = {
   wrapperCol: { offset: 6, span: 18 },
 };
 
-const UpdateForm: React.FC<Props> = ({ book }) => {
+const UpdateForm: React.FC<Props> = ({ book, onFinish, onFinishFailed }) => {
   const { setTitles } = useNavigation();
   const [selectedISBN] = useState(book.isbn);
   const [form] = Form.useForm();
@@ -42,6 +42,8 @@ const UpdateForm: React.FC<Props> = ({ book }) => {
             form={form}
             name="modifyBook"
             initialValues={book}
+            onFinish={onFinish}
+            onFinishFailed={onFinishFailed}
           >
             <Row>
               <Col span={12}>

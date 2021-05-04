@@ -5,7 +5,9 @@ import useNavigation from 'src/hooks/navigation';
 import { useBackend } from 'src/integrations/backend';
 import { Book } from 'src/@types';
 import useMetadataProvider from 'src/integrations/metadataProvider';
+import { LIST_LOCAL_BOOKS } from 'src/Components/Router/routes';
 import BooksUpdateForm from './Books.UpdateForm';
+import { StateType } from './Books.Update.type';
 
 const UpdateForm: React.FC = () => {
   const metadataClient = useMetadataProvider();
@@ -44,15 +46,54 @@ const UpdateForm: React.FC = () => {
     setIsLoading(false);
   }, [backend.books]);
 
+  const onFinish = async (values: StateType) => {
+    setIsLoading(true);
+    const [, error] = await backend.books.createOne({
+      ...values,
+      libraryId: 'e11e5635-094c-4224-836f-b0caa13986f3',
+      amount: Math.abs(values.amount - values.newAmount),
+    });
+
+    if (error) {
+      notification.error({
+        message: '¡Ocurrió un error al guardar!',
+        description: 'Intentalo después.',
+      });
+    } else {
+      notification.success({
+        message: '¡Cambios guardados!',
+        description: '',
+      });
+      history.push(LIST_LOCAL_BOOKS);
+    }
+
+    setIsLoading(false);
+  };
+
+  const onFinishFailed = () => {
+    notification.error({
+      message: '¡Ocurrió un error al guardar!',
+      description: 'Intentalo después.',
+    });
+  };
+
   useEffect(() => {
     setTitles({
       title: 'Modificar Libro en Inventario',
     });
     fetchBook();
   }, [setTitles, history, fetchBook]);
+  if (!book) {
+    return null;
+  }
 
   return (
-    <BooksUpdateForm book={book} isloading={isLoading} />
+    <BooksUpdateForm
+      book={book}
+      isLoading={isLoading}
+      onFinish={onFinish}
+      onFinishFailed={onFinishFailed}
+    />
   );
 };
 
