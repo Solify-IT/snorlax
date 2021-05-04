@@ -38,34 +38,34 @@ export async function up(pgm: MigrationBuilder): Promise<void> {
       type: 'varchar(50)',
     },
     area: {
-      type: 'varchar(20)',
+      type: 'varchar(50)',
     },
     theme: {
-      type: 'varchar(20)',
+      type: 'varchar(50)',
     },
     sub_theme: {
-      type: 'varchar(20)',
+      type: 'varchar(50)',
     },
     collection: {
-      type: 'varchar(20)',
+      type: 'varchar(50)',
     },
     provider: {
-      type: 'varchar(20)',
+      type: 'varchar(50)',
     },
     type: {
-      type: 'varchar(20)',
+      type: 'varchar(50)',
     },
     cover_type: {
-      type: 'varchar(20)',
+      type: 'varchar(50)',
     },
     cover_image_url: {
       type: 'text',
     },
     sub_category: {
-      type: 'varchar(20)',
+      type: 'varchar(50)',
     },
     distribuitor: {
-      type: 'varchar(20)',
+      type: 'varchar(50)',
     },
     synopsis: {
       type: 'text',

@@ -1,6 +1,7 @@
 import { Maybe } from 'src/@types';
 import { Catalogue, CatalogueInputData, CATALOGUE_TABLE_NAME } from 'src/domain/model';
 import ICatalogueRepository from 'src/usecases/repository/catalogueRepository';
+import { v4 as uuid } from 'uuid';
 import BaseRepository from './BaseRepository';
 
 export default class CatalogueRepository extends BaseRepository implements ICatalogueRepository {
@@ -10,7 +11,8 @@ export default class CatalogueRepository extends BaseRepository implements ICata
     );
   }
 
-  registerCatalogue(catalogueData: CatalogueInputData): Promise<Catalogue['id']> {
-    throw new Error('Method not implemented.');
+  async registerCatalogue(catalogueData: CatalogueInputData): Promise<Catalogue['id']> {
+    const id = uuid();
+    return this.datastore.insert(CATALOGUE_TABLE_NAME, { ...catalogueData, id });
   }
 }
