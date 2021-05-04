@@ -16,10 +16,10 @@ import {
   ExternalBookFactory,
   LocalBookFactory,
   CatalogueFactory,
+  BookFactory,
 } from 'src/infrastructure/factories';
 import MovementRepository from 'src/interface/repository/movementRepository';
 import NotFoundError from 'src/usecases/errors/notFoundError';
-import { GoogleBooksService } from 'src/infrastructure/integrations';
 import CatalogueRepository from 'src/interface/repository/catalogueRepository';
 
 jest.mock('src/interface/repository/bookRepository');
@@ -44,7 +44,6 @@ jest.mock('pg', () => {
 
 const validCatalogue = CatalogueFactory.build();
 const logger = winston.createLogger();
-const metadataProvider = new GoogleBooksService();
 const datastore = new Datastore(new Pool(), logger);
 
 const bookRepository = new BookRepository(datastore);
@@ -60,7 +59,6 @@ const interactor = new BookInteractor(
   libraryInteractor,
   movementInteractor,
   catalogueInteractor,
-  metadataProvider,
   logger,
 );
 
@@ -349,23 +347,17 @@ describe('listBooksByLibrary', () => {
   it('should return the books and call the metadata provider for book information', async () => {
     const library = LibraryFactory.build();
     const LOCAL_BOOKS_AMOUNT = 3;
-    const localBooksMock = LocalBookFactory.buildList(
+    const localBooksMock = BookFactory.buildList(
       LOCAL_BOOKS_AMOUNT, { library, libraryId: library.id },
     );
 
     const listBooksByLibraryMock = jest.fn(async () => ({
       localBooks: localBooksMock, total: localBooksMock.length,
     }));
-    const getOneByISBNMock = jest.fn(
-      async (isbn: string) => ExternalBookFactory.build({ isbn }),
-    );
 
     jest.spyOn(
       bookRepository, 'listBooksByLibrary',
     ).mockImplementationOnce(listBooksByLibraryMock);
-    jest.spyOn(
-      metadataProvider, 'getOneByISBN',
-    ).mockImplementation(getOneByISBNMock);
 
     const [res, err] = await wrapError(
       interactor.listBooksByLibrary(undefined, undefined, library.id),
@@ -374,7 +366,6 @@ describe('listBooksByLibrary', () => {
     expect(err).toBe(null);
     expect(res).not.toBe(null);
     expect(listBooksByLibraryMock).toBeCalled();
-    expect(getOneByISBNMock).toBeCalledTimes(LOCAL_BOOKS_AMOUNT);
   });
 
   it('should return empty array when no book is associated with the library id', async () => {
@@ -386,9 +377,6 @@ describe('listBooksByLibrary', () => {
     jest.spyOn(
       bookRepository, 'listBooksByLibrary',
     ).mockImplementationOnce(listBooksByLibraryMock);
-    jest.spyOn(
-      metadataProvider, 'getOneByISBN',
-    ).mockImplementationOnce(getOneByISBNMock);
 
     const [res, err] = await wrapError(
       interactor.listBooksByLibrary(undefined, undefined, 'anUUID'),

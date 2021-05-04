@@ -7,7 +7,6 @@ import { UnknownError } from '../errors';
 import InvalidDataError from '../errors/invalidDataError';
 import NotFoundError from '../errors/notFoundError';
 import { ILogger } from '../interfaces/logger';
-import IMetadataProviderCore from '../interfaces/metadataProvider';
 import LibraryInteractor from './libraryInteractor';
 import MovementInteractor from './movementInteractor';
 import CatalogueInteractor from './catalogueInteractor';
@@ -25,8 +24,6 @@ export default class BookInteractor {
 
   catalogueInteractor: CatalogueInteractor;
 
-  private metadataProvider: IMetadataProviderCore;
-
   private logger: ILogger;
 
   constructor(
@@ -34,14 +31,12 @@ export default class BookInteractor {
     libraryInteractor: LibraryInteractor,
     movementInteractor: MovementInteractor,
     catalogueInteractor: CatalogueInteractor,
-    metadataProvider: IMetadataProviderCore,
     logger: ILogger,
   ) {
     this.bookRepository = bookRepository;
     this.libraryInteractor = libraryInteractor;
     this.movementInteractor = movementInteractor;
     this.catalogueInteractor = catalogueInteractor;
-    this.metadataProvider = metadataProvider;
     this.logger = logger;
   }
 

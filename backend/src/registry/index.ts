@@ -1,7 +1,6 @@
 import { credential, initializeApp } from 'firebase-admin';
 import IAppController, { BookController, CatalogueController, LibraryController } from 'src/interface/controller';
 import UserController from 'src/interface/controller/userController';
-import { GoogleBooksService } from 'src/infrastructure/integrations';
 import { BookRepository, CatalogueRepository, IDatastore } from 'src/interface/repository';
 import LibraryRepository from 'src/interface/repository/libraryRepository';
 import MovementRepository from 'src/interface/repository/movementRepository';
@@ -31,7 +30,6 @@ export default class Registry {
     const userRepository = new UserRepository(this.datastore);
     const catalogueRepository = new CatalogueRepository(this.datastore);
 
-    const metadataProvider = new GoogleBooksService();
     const firebase = initializeApp({
       credential: credential.cert({
         clientEmail: FIREBASE_CLIENT_EMAIL,
@@ -48,7 +46,6 @@ export default class Registry {
       libraryInteractor,
       movementInteractor,
       catalogueInteractor,
-      metadataProvider,
       this.logger,
     );
     const userInteractor = new UserInteractor(userRepository, firebase, this.logger);
