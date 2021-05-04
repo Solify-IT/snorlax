@@ -45,8 +45,8 @@ export default class BookRepository extends BaseRepository implements IBookRepos
         WHERE
           c.isbn = b.isbn
           AND price > 0 ${isbn == null && libraryId != null ? ' AND library_id = $3' : ''} 
-          ${isbn != null && libraryId == null ? ' AND isbn = $3' : ''}
-          ${isbn != null && libraryId != null ? ' AND library_id = $3  AND isbn = $4' : ''}
+          ${isbn != null && libraryId == null ? ' AND b.isbn = $3' : ''}
+          ${isbn != null && libraryId != null ? ' AND library_id = $3  AND b.isbn = $4' : ''}
         OFFSET $1 LIMIT $2`,
         valuesQuery1,
       ),
