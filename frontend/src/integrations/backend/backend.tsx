@@ -1,10 +1,10 @@
 import React from 'react';
 import { AxiosRequestConfig } from 'axios';
 import {
-  BookFormType, Library, LocalBook,
+  BookFormType, Catalogue, Library, LocalBook,
 } from 'src/@types';
 import {
-  BACKEND_MAIN_EP, BOOKS_ROOT, LIBRARIES_ROOT, USERS_ROOT,
+  BACKEND_MAIN_EP, BOOKS_ROOT, LIBRARIES_ROOT, USERS_ROOT, CATALOGUE_ROOT,
 } from 'src/settings';
 import User, { UserInput } from 'src/@types/user';
 import CRUD from './crud';
@@ -20,6 +20,8 @@ export class Backend {
 
   libraries: CRUD<Library, unknown, unknown>;
 
+  catalogue: CRUD<Catalogue, unknown, unknown>;
+
   public constructor(rootEndpoint: string, config?: AxiosRequestConfig) {
     this.rootEndpoint = rootEndpoint;
     this.books = new CRUD(
@@ -30,6 +32,9 @@ export class Backend {
     );
     this.libraries = new CRUD(
       `${this.rootEndpoint}${LIBRARIES_ROOT}`, config,
+    );
+    this.catalogue = new CRUD(
+      `${this.rootEndpoint}${CATALOGUE_ROOT}`, config,
     );
   }
 }

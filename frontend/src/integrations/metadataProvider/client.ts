@@ -16,7 +16,7 @@ export default class Client {
 
   async getByISBN(
     isbn: string, max: number = 3,
-  ): Promise<WithError<ExternalBook[], AxiosError>> {
+  ): WithError<ExternalBook[], AxiosError> {
     const [res, error] = await this.get<{ items: any[] }>(
       `${isbn}+isbn&maxResults=${max}`,
     );
