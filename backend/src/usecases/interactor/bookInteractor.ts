@@ -57,7 +57,7 @@ export default class BookInteractor {
       this.catalogueInteractor.findByISBNOrNull(bookData.isbn),
     ]);
 
-    this.createInCatalogueIfNotExists(catalogue, bookData);
+    await this.createInCatalogueIfNotExists(catalogue, bookData);
 
     if (!libraryResult) {
       const message = 'Library not found';
@@ -139,11 +139,11 @@ export default class BookInteractor {
     return { books, total };
   }
 
-  private createInCatalogueIfNotExists(
+  private async createInCatalogueIfNotExists(
     catalogue: Maybe<Catalogue>, bookData: RegisterBookInputData,
-  ): void {
+  ): Promise<void> {
     if (!catalogue) {
-      this.catalogueInteractor.registerCatalogue({
+      await this.catalogueInteractor.registerCatalogue({
         area: bookData.area,
         author: bookData.area,
         collection: bookData.collection,
