@@ -7,7 +7,8 @@ export const ADMIN = '/admin';
 export const BOOKS = `${INVENTORY}/libros`;
 export const NEW_BOOK = `${BOOKS}/nuevo`;
 export const MODIFY_BOOK = `${BOOKS}/:id/modificar`;
-export const LIST_LOCAL_BOOKS = `${BOOKS}/lista-local`;
+export const LIST_LOCAL_BOOKS = `${BOOKS}/buscar`;
+
 export const toBookDetail = (
   uuid: string,
 ) => `${BOOKS}/${uuid}`;

@@ -1,16 +1,19 @@
-import { LocalBook, Book } from 'src/domain/model';
+import {
+  LocalBook, Book, CatalogueInputData, Catalogue,
+} from 'src/domain/model';
+import { Maybe } from 'src/@types';
 import { IBookRepository } from '..';
 import { UnknownError } from '../errors';
 import InvalidDataError from '../errors/invalidDataError';
 import NotFoundError from '../errors/notFoundError';
 import { ILogger } from '../interfaces/logger';
-import IMetadataProviderCore from '../interfaces/metadataProvider';
 import LibraryInteractor from './libraryInteractor';
 import MovementInteractor from './movementInteractor';
+import CatalogueInteractor from './catalogueInteractor';
 
 export type RegisterBookInputData = Omit<LocalBook & {
   isLoan: boolean, amount: number,
-}, 'id' | 'library'>;
+} & CatalogueInputData, 'id' | 'library'>;
 
 export default class BookInteractor {
   private bookRepository: IBookRepository;
@@ -19,7 +22,7 @@ export default class BookInteractor {
 
   private movementInteractor: MovementInteractor;
 
-  private metadataProvider: IMetadataProviderCore;
+  catalogueInteractor: CatalogueInteractor;
 
   private logger: ILogger;
 
@@ -27,13 +30,13 @@ export default class BookInteractor {
     bookRepository: IBookRepository,
     libraryInteractor: LibraryInteractor,
     movementInteractor: MovementInteractor,
-    metadataProvider: IMetadataProviderCore,
+    catalogueInteractor: CatalogueInteractor,
     logger: ILogger,
   ) {
     this.bookRepository = bookRepository;
     this.libraryInteractor = libraryInteractor;
     this.movementInteractor = movementInteractor;
-    this.metadataProvider = metadataProvider;
+    this.catalogueInteractor = catalogueInteractor;
     this.logger = logger;
   }
 
@@ -43,10 +46,13 @@ export default class BookInteractor {
     this.validateRegisterBookData(bookData);
 
     // Check if the library exists and if already is registered the book in the library
-    const [libraryResult, existLocalBook] = await Promise.all([
+    const [libraryResult, existLocalBook, catalogue] = await Promise.all([
       this.libraryInteractor.getOneById(bookData.libraryId),
       this.bookRepository.findByISBN(bookData.isbn),
+      this.catalogueInteractor.findByISBNOrNull(bookData.isbn),
     ]);
+
+    await this.createInCatalogueIfNotExists(catalogue, bookData);
 
     if (!libraryResult) {
       const message = 'Library not found';
@@ -135,25 +141,38 @@ export default class BookInteractor {
   }
 
   async listBooksByLibrary(
-    libraryId: string, page: number = 1, perPage: number = 10,
+    page: number = 1, perPage: number = 10, libraryId?: string, isbn?: string,
   ): Promise<{ books: Book[], total: number }> {
     const { localBooks, total } = await this.bookRepository.listBooksByLibrary(
-      libraryId, page, perPage,
+      page, perPage, libraryId, isbn,
     );
-    const books: Book[] = [];
 
-    // eslint-disable-next-line no-restricted-syntax
-    for (const book of localBooks) {
-      // eslint-disable-next-line no-await-in-loop
-      const remoteBook = await this.metadataProvider.getOneByISBN(book.isbn);
+    return { books: localBooks, total };
+  }
 
-      if (remoteBook) {
-        books.push({
-          ...book, ...remoteBook,
-        });
-      }
+  private async createInCatalogueIfNotExists(
+    catalogue: Maybe<Catalogue>, bookData: RegisterBookInputData,
+  ): Promise<void> {
+    if (!catalogue) {
+      await this.catalogueInteractor.registerCatalogue({
+        area: bookData.area,
+        author: bookData.author,
+        collection: bookData.collection,
+        coverType: bookData.coverType,
+        coverImageUrl: bookData.coverImageUrl,
+        distribuitor: bookData.distribuitor,
+        editoral: bookData.editoral,
+        isbn: bookData.isbn,
+        pages: bookData.pages,
+        provider: bookData.provider,
+        subCategory: bookData.subCategory,
+        subTheme: bookData.subTheme,
+        synopsis: bookData.synopsis,
+        theme: bookData.theme,
+        title: bookData.title,
+        type: bookData.type,
+        unitaryCost: bookData.unitaryCost,
+      });
     }
-
-    return { books, total };
   }
 }

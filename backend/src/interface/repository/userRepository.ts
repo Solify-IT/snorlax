@@ -2,15 +2,9 @@ import User, {
   ROLE_TABLE_NAME, StoredRole, StoredUser, USER_TABLE_NAME,
 } from 'src/domain/model/user';
 import IUserRepository from 'src/usecases/repository/userRepository';
-import { IDatastore } from '.';
+import BaseRepository from './BaseRepository';
 
-export default class UserRepository implements IUserRepository {
-  private datastore: IDatastore;
-
-  constructor(datastore: IDatastore) {
-    this.datastore = datastore;
-  }
-
+export default class UserRepository extends BaseRepository implements IUserRepository {
   async listUsers(): Promise<User[]> {
     const allUsersData = await this.datastore.get<any>(`
       SELECT
