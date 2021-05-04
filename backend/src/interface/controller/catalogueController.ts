@@ -23,6 +23,7 @@ export default class CatalogueController {
 
     if (!catalogue) {
       context.response.send(404).json({ message: 'Libro no exisitente en el catálogo.' });
+      return;
     }
 
     context.response.status(200).json({ catalogue });
