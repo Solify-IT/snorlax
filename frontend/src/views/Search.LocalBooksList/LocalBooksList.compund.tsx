@@ -2,7 +2,9 @@ import {
   Button, Form, Input, Layout, notification, Switch,
 } from 'antd';
 import React, { useCallback, useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { Book } from 'src/@types';
+import { NEW_BOOK } from 'src/Components/Router/routes';
 import useNavigation from 'src/hooks/navigation';
 import { useBackend } from 'src/integrations/backend';
 import LocalBooksListComp from './LocalBooksList';
@@ -22,6 +24,7 @@ const LocalBooksList: React.FC = () => {
   const LIBRARY_ID = 'e11e5635-094c-4224-836f-b0caa13986f3';
   const [form] = Form.useForm();
   const [isGlobal, setIsGlobal] = useState(false);
+  const history = useHistory();
 
   const fetchBooks = useCallback(async (isbn?: string) => {
     setIsLoading(true);
@@ -39,12 +42,19 @@ const LocalBooksList: React.FC = () => {
     setBooks(result.data.books);
     setTotalBooks(result.data.total);
     setIsLoading(false);
-  }, [backend.books, pagination]);
+  }, [backend.books, pagination, isGlobal]);
 
   useEffect(() => {
     fetchBooks();
-    setTitles({ title: 'Consultar disponibilidad' });
-  }, [fetchBooks, setTitles, isGlobal]);
+    setTitles({
+      title: 'Consulta disponibilidad de libros',
+      extra: [
+        <Button type="primary" onClick={() => history.push(NEW_BOOK)}>
+          Registrar entrada de libro
+        </Button>,
+      ],
+    });
+  }, [fetchBooks, setTitles, isGlobal, history]);
 
   const onSearch = async (values: SearchType) => {
     setIsLoading(true);

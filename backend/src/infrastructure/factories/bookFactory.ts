@@ -5,6 +5,7 @@ import {
 } from 'src/domain/model';
 import { IDatastore } from 'src/interface/repository';
 import LibraryFactory, { givenALibrary } from './libraryFactory';
+import CatalogueFactory from './catalogueFactory';
 
 export const LocalBookFactory = Sync.makeFactory<LocalBook>({
   id: each(() => faker.datatype.uuid()),
@@ -24,7 +25,7 @@ export const ExternalBookFactory = Sync.makeFactory<ExternalBook>({
   ),
 });
 
-const BookFactory = LocalBookFactory.combine(ExternalBookFactory);
+const BookFactory = LocalBookFactory.combine(CatalogueFactory);
 
 export const givenALocalBook = async (
   datastore: IDatastore, library?: Library, localBook?: LocalBook,

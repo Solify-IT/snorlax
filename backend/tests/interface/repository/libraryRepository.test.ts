@@ -17,10 +17,13 @@ const pool = new Pool({ min: 1, max: 1 });
 const datastore = new Datastore(pool, logger);
 const repository = new LibraryRepository(datastore);
 
-beforeEach(() => pool.query('START TRANSACTION'));
-afterEach(() => pool.query('ROLLBACK'));
+beforeEach(async () => pool.query('START TRANSACTION'));
+afterEach(async () => pool.query('ROLLBACK'));
 
 describe('findOneByID', () => {
+  beforeEach(async () => pool.query('START TRANSACTION'));
+  afterEach(async () => pool.query('ROLLBACK'));
+
   it('should return the id of the new movement when valid data', async () => {
     expect.assertions(3);
     const [library] = await givenALibrary(datastore);

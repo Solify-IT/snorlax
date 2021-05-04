@@ -3,6 +3,26 @@ import axios, {
 } from 'axios';
 import { ExternalBook, WithError, wrapError } from 'src/@types';
 
+const DEFAULT_CATALOGUE_ITEM: ExternalBook = {
+  isbn: '',
+  title: '',
+  unitaryCost: 0,
+  author: '',
+  editoral: '',
+  area: '',
+  theme: '',
+  subTheme: '',
+  collection: '',
+  provider: '',
+  type: '',
+  coverType: '',
+  coverImageUrl: '',
+  subCategory: '',
+  distribuitor: '',
+  synopsis: '',
+  pages: 0,
+};
+
 export default class Client {
   private api: AxiosInstance;
 
@@ -16,7 +36,7 @@ export default class Client {
 
   async getByISBN(
     isbn: string, max: number = 3,
-  ): Promise<WithError<ExternalBook[], AxiosError>> {
+  ): WithError<ExternalBook[], AxiosError> {
     const [res, error] = await this.get<{ items: any[] }>(
       `${isbn}+isbn&maxResults=${max}`,
     );
@@ -31,10 +51,16 @@ export default class Client {
       items.forEach((item) => {
         const foundIsbn = item.volumeInfo.industryIdentifiers[0].identifier;
         books.push({
-          authors: item.volumeInfo.authors,
+          ...DEFAULT_CATALOGUE_ITEM,
+          author: item.volumeInfo.authors.join(', '),
           title: item.volumeInfo.title,
           isbn: foundIsbn,
-          coverURL: item.volumeInfo.imageLinks ? item.volumeInfo.imageLinks.thumbnail : '',
+          coverImageUrl: item.volumeInfo.imageLinks ? item.volumeInfo.imageLinks.thumbnail : '',
+          editoral: item.volumeInfo.publisher || '',
+          pages: item.volumeInfo.pageCount || 0,
+          area: item.volumeInfo.categories ? item.volumeInfo.categories.join(', ') : '',
+          unitaryCost: item.saleInfo && item.saleInfo.listPrice ? item.saleInfo.listPrice.amount || '' : '',
+          synopsis: item.volumeInfo.description || '',
         });
       });
     }

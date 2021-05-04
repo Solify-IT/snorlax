@@ -17,6 +17,22 @@ export default class BookController {
       libraryId,
       price,
       amount,
+      area,
+      author,
+      coverType,
+      collection,
+      coverImageUrl,
+      distribuitor,
+      editoral,
+      pages,
+      provider,
+      subCategory,
+      title,
+      subTheme,
+      synopsis,
+      theme,
+      type,
+      unitaryCost,
     } = context.request.body;
 
     const bookData: RegisterBookInputData = {
@@ -25,6 +41,22 @@ export default class BookController {
       libraryId,
       price: JSON.parse(price),
       amount: JSON.parse(amount),
+      area,
+      author,
+      coverType,
+      collection,
+      coverImageUrl,
+      distribuitor,
+      editoral,
+      pages: JSON.parse(pages),
+      provider,
+      subCategory,
+      title,
+      subTheme,
+      synopsis,
+      theme,
+      type,
+      unitaryCost: JSON.parse(unitaryCost),
     };
 
     const [id, error] = await wrapError(
@@ -54,6 +86,7 @@ export default class BookController {
 
     if (error) {
       context.next(error);
+      return;
     }
 
     context.response.status(200).json({ ...books });
