@@ -148,7 +148,7 @@ export default class BookInteractor {
         author: bookData.area,
         collection: bookData.collection,
         coverType: bookData.coverType,
-        coverImageURL: bookData.coverImageURL,
+        coverImageUrl: bookData.coverImageUrl,
         distribuitor: bookData.distribuitor,
         editoral: bookData.editoral,
         isbn: bookData.isbn,

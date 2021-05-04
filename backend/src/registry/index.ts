@@ -1,8 +1,8 @@
 import { credential, initializeApp } from 'firebase-admin';
-import IAppController, { BookController, LibraryController } from 'src/interface/controller';
+import IAppController, { BookController, CatalogueController, LibraryController } from 'src/interface/controller';
 import UserController from 'src/interface/controller/userController';
 import { GoogleBooksService } from 'src/infrastructure/integrations';
-import { BookRepository, IDatastore } from 'src/interface/repository';
+import { BookRepository, CatalogueRepository, IDatastore } from 'src/interface/repository';
 import LibraryRepository from 'src/interface/repository/libraryRepository';
 import MovementRepository from 'src/interface/repository/movementRepository';
 import UserRepository from 'src/interface/repository/userRepository';
@@ -12,6 +12,7 @@ import MovementInteractor from 'src/usecases/interactor/movementInteractor';
 import UserInteractor from 'src/usecases/interactor/userInteractor';
 import { ILogger } from 'src/usecases/interfaces/logger';
 import { FIREBASE_CLIENT_EMAIL, FIREBASE_PRIVATE_KEY, FIREBASE_PROJECT_ID } from 'src/utils/settings';
+import { CatalogueInteractor } from 'src/usecases/interactor';
 
 export default class Registry {
   datastore: IDatastore;
@@ -28,6 +29,7 @@ export default class Registry {
     const libraryRepository = new LibraryRepository(this.datastore);
     const movementRepository = new MovementRepository(this.datastore);
     const userRepository = new UserRepository(this.datastore);
+    const catalogueRepository = new CatalogueRepository(this.datastore);
 
     const metadataProvider = new GoogleBooksService();
     const firebase = initializeApp({
@@ -40,10 +42,12 @@ export default class Registry {
 
     const libraryInteractor = new LibraryInteractor(libraryRepository, this.logger);
     const movementInteractor = new MovementInteractor(movementRepository, this.logger);
+    const catalogueInteractor = new CatalogueInteractor(catalogueRepository, this.logger);
     const bookInteractor = new BookInteractor(
       bookRepository,
       libraryInteractor,
       movementInteractor,
+      catalogueInteractor,
       metadataProvider,
       this.logger,
     );
@@ -53,6 +57,7 @@ export default class Registry {
       books: new BookController(bookInteractor),
       users: new UserController(userInteractor),
       libraries: new LibraryController(libraryInteractor),
+      catalogue: new CatalogueController(catalogueInteractor),
     };
   }
 }
