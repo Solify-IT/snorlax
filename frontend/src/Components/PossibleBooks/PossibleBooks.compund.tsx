@@ -44,6 +44,8 @@ const PossibleBooks: React.FC<PassedProps> = ({ isbn, setSelected }) => {
     if (isbn.length === 13) {
       fetchBooksByISBN();
     }
+
+    if (!internalBooks) setSelected({ selected: undefined, type: undefined });
   }, [isbn, fetchBooksByISBN]);
 
   if (isbn.length !== 13) return null;

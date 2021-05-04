@@ -106,7 +106,7 @@ const RegisterForm: React.FC = () => {
               : INITIAL_STATE
           }
           isLoading={isLoading}
-          isManualInsert={selected.type === 'external'}
+          isManualInsert={selected.type === 'external' || !selected.selected}
         />
       </Col>
       <Col style={{ position: 'relative' }} span={12}>

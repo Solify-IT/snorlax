@@ -23,7 +23,8 @@ const BookForm: React.FC<Props> = ({
   isManualInsert,
 }) => {
   useEffect(() => {
-    form.setFieldsValue({ ...initialState });
+    const currISBN = form.getFieldValue('isbn');
+    form.setFieldsValue({ ...initialState, isbn: currISBN });
   }, [initialState]);
 
   return (

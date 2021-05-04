@@ -58,8 +58,8 @@ export default class Client {
           coverImageUrl: item.volumeInfo.imageLinks ? item.volumeInfo.imageLinks.thumbnail : '',
           editoral: item.volumeInfo.publisher || '',
           pages: item.volumeInfo.pageCount || 0,
-          area: item.volumeInfo.categories || '',
-          unitaryCost: item.saleInfo ? item.saleInfo.listPrice || '' : '',
+          area: item.volumeInfo.categories ? item.volumeInfo.categories.join(', ') : '',
+          unitaryCost: item.saleInfo && item.saleInfo.listPrice ? item.saleInfo.listPrice.amount || '' : '',
           synopsis: item.volumeInfo.description || '',
         });
       });
