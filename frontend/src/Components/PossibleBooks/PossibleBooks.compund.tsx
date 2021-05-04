@@ -38,7 +38,7 @@ const PossibleBooks: React.FC<PassedProps> = ({ isbn }) => {
       setInternalBooks(resInternal[0].data.catalogue);
     }
     setIsLoading(false);
-  }, [isbn, metadataClient]);
+  }, [isbn, metadataClient, backend.catalogue]);
 
   useEffect(() => {
     if (isbn.length === 13) {

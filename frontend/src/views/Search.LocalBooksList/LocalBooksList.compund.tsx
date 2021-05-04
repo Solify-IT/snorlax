@@ -39,7 +39,7 @@ const LocalBooksList: React.FC = () => {
     setBooks(result.data.books);
     setTotalBooks(result.data.total);
     setIsLoading(false);
-  }, [backend.books, pagination]);
+  }, [backend.books, pagination, isGlobal]);
 
   useEffect(() => {
     fetchBooks();
