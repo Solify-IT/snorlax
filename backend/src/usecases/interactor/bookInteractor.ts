@@ -145,7 +145,7 @@ export default class BookInteractor {
     if (!catalogue) {
       await this.catalogueInteractor.registerCatalogue({
         area: bookData.area,
-        author: bookData.area,
+        author: bookData.author,
         collection: bookData.collection,
         coverType: bookData.coverType,
         coverImageUrl: bookData.coverImageUrl,
