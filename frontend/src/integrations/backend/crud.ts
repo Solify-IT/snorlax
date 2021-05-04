@@ -8,7 +8,7 @@ export default class CRUD<T, C = any, U = any> extends Api {
   // TODO: Create new class to separate this method, since it is just used for establishments
   public getOne = (slug: string) => this.get<T>(`/${slug}`);
 
-  public getOneById = (id: string) => this.get<T>(`/${id}`);
+  public getOneById = <A = T>(id: string) => this.get<A>(`/${id}`);
 
   public createOne = (data: C) => this.post<T, C>('/', data);
 
