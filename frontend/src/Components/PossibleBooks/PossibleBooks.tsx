@@ -7,15 +7,23 @@ import { Props } from './PossibleBooks.type';
 import styles from './PossibleBooks.module.css';
 
 const ListMetadata: React.FC<{
-  items: Omit<Catalogue, 'id'>[], isLoading: boolean,
-}> = ({ items, isLoading }) => (
+  items: Omit<Catalogue, 'id'>[],
+  isLoading: boolean,
+  type: 'catalogue' | 'external',
+  setSelected: Props['setSelected'],
+}> = ({
+  items, isLoading, type, setSelected,
+}) => (
   <List
     size="large"
     loading={isLoading}
     itemLayout="horizontal"
     dataSource={items}
     renderItem={(item) => (
-      <List.Item className={styles.listItem}>
+      <List.Item
+        className={styles.listItem}
+        onClick={() => setSelected({ selected: item, type })}
+      >
         <List.Item.Meta
           avatar={<Avatar src={item.coverImageUrl} />}
           title={item.title}
@@ -30,7 +38,9 @@ const ListMetadata: React.FC<{
   />
 );
 
-const PossibleBooks: React.FC<Props> = ({ externalBooks, isLoading, internalBook }) => (
+const PossibleBooks: React.FC<Props> = ({
+  externalBooks, isLoading, internalBook, setSelected,
+}) => (
   <Row
     gutter={{
       xs: 8, sm: 16, md: 24, lg: 32,
@@ -42,18 +52,36 @@ const PossibleBooks: React.FC<Props> = ({ externalBooks, isLoading, internalBook
         Selecciona uno de los siguientes metadatos:
       </Typography.Title>
 
-      <Typography.Title level={5}>
-        Metadatos del catálogo:
-      </Typography.Title>
       {internalBook
-        && <ListMetadata isLoading={isLoading} items={[internalBook]} />}
+        ? (
+          <>
+            <Typography.Title level={5}>
+              Metadatos del catálogo:
+            </Typography.Title>
+            <ListMetadata setSelected={setSelected} type="catalogue" isLoading={isLoading} items={[internalBook]} />
+          </>
+        )
+        : externalBooks.length > 0 && (
+          <Typography.Text>
+            No hay metadatos en el catálogo, selecciona uno de los libros de abajo
+            o ingresa manualmente los datos.
+          </Typography.Text>
+        )}
 
-      <Typography.Title level={5}>
-        Metadatos externos:
-      </Typography.Title>
       {externalBooks.length > 0
-        ? <ListMetadata isLoading={isLoading} items={externalBooks} />
-        : 'No se encontraron metadatos externos. Prueba ingresando los datos manualmente'}
+        ? (
+          <>
+            <Typography.Title level={5}>
+              Metadatos externos:
+            </Typography.Title>
+            <ListMetadata setSelected={setSelected} type="external" isLoading={isLoading} items={externalBooks} />
+          </>
+        )
+        : (
+          <Typography.Text>
+            No hay metadatos externos, debes ingresar manualmente los datos para este ISBN.
+          </Typography.Text>
+        )}
     </Col>
   </Row>
 );

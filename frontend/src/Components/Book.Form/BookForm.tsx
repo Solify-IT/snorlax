@@ -1,7 +1,7 @@
 import {
   Button, Form, Input, InputNumber, Switch,
 } from 'antd';
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import Props from './BookForm.type';
 
 const layout = {
@@ -20,8 +20,11 @@ const BookForm: React.FC<Props> = ({
   form,
   onISBNChange,
   isLoading,
+  isManualInsert,
 }) => {
-  const [isManualInsert] = useState(false);
+  useEffect(() => {
+    form.setFieldsValue({ ...initialState });
+  }, [initialState]);
 
   return (
     <Form
@@ -42,7 +45,7 @@ const BookForm: React.FC<Props> = ({
           len: 13,
         }]}
       >
-        <Input onChange={onISBNChange} />
+        <Input value={initialState.isbn} onChange={onISBNChange} />
       </Form.Item>
 
       <Form.Item
@@ -79,7 +82,12 @@ const BookForm: React.FC<Props> = ({
           message: 'Debes ingresar un título',
         }]}
       >
-        <Input disabled={!isManualInsert} readOnly={!isManualInsert} onChange={onISBNChange} />
+        <Input
+          value={initialState.title}
+          disabled={!isManualInsert}
+          readOnly={!isManualInsert}
+          onChange={onISBNChange}
+        />
       </Form.Item>
 
       <Form.Item

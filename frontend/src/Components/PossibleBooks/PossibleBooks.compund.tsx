@@ -6,7 +6,7 @@ import useMetadataProvider from 'src/integrations/metadataProvider';
 import PassedProps from './PossibleBooks.type';
 import PossibleBooksComponent from './PossibleBooks';
 
-const PossibleBooks: React.FC<PassedProps> = ({ isbn }) => {
+const PossibleBooks: React.FC<PassedProps> = ({ isbn, setSelected }) => {
   const [externalBooks, setExternalBooks] = useState<ExternalBook[]>([]);
   const [internalBooks, setInternalBooks] = useState<Catalogue | undefined>(undefined);
   const [isLoading, setIsLoading] = useState(false);
@@ -50,6 +50,7 @@ const PossibleBooks: React.FC<PassedProps> = ({ isbn }) => {
 
   return (
     <PossibleBooksComponent
+      setSelected={setSelected}
       internalBook={internalBooks}
       externalBooks={externalBooks}
       isLoading={isLoading}

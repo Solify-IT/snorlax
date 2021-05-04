@@ -8,4 +8,5 @@ export default interface Props {
   onISBNChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   form: FormInstance<any>;
   isLoading: boolean;
+  isManualInsert: boolean;
 }

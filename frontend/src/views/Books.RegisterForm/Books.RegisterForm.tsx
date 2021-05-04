@@ -3,7 +3,7 @@ import {
 } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { BookFormType } from 'src/@types';
+import { BookFormType, Catalogue, ExternalBook } from 'src/@types';
 import BookForm from 'src/Components/Book.Form';
 import PossibleBooks from 'src/Components/PossibleBooks';
 import useNavigation from 'src/hooks/navigation';
@@ -35,6 +35,10 @@ const INITIAL_STATE = {
 const RegisterForm: React.FC = () => {
   const { setTitles } = useNavigation();
   const [isLoading, setIsLoading] = useState(false);
+  const [selected, setSelected] = useState<{
+    selected: Catalogue | ExternalBook | undefined,
+    type: 'catalogue' | 'external' | undefined,
+  }>({ selected: undefined, type: undefined });
   const [selectedISBN, setSelectedISBN] = useState(INITIAL_STATE.isbn);
   const backend = useBackend();
   const history = useHistory();
@@ -45,7 +49,7 @@ const RegisterForm: React.FC = () => {
       title: 'Añadir libros', subtitle: 'Ingresa todos los campos requeridos',
     });
     // eslint-disable-next-line
-  }, [INITIAL_STATE]);
+  }, [INITIAL_STATE, selected]);
 
   const onFinish = async (values: BookFormType) => {
     setIsLoading(true);
@@ -96,12 +100,17 @@ const RegisterForm: React.FC = () => {
           onFinishFailed={onFinishFailed}
           onISBNChange={onISBNChange}
           form={form}
-          initialState={INITIAL_STATE}
+          initialState={
+            selected.selected
+              ? { ...selected.selected, price: INITIAL_STATE.price }
+              : INITIAL_STATE
+          }
           isLoading={isLoading}
+          isManualInsert={selected.type === 'external'}
         />
       </Col>
       <Col style={{ position: 'relative' }} span={12}>
-        <PossibleBooks isbn={selectedISBN || ''} />
+        <PossibleBooks setSelected={setSelected} isbn={selectedISBN || ''} />
       </Col>
     </Row>
   );
