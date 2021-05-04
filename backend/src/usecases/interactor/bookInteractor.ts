@@ -122,21 +122,8 @@ export default class BookInteractor {
     const { localBooks, total } = await this.bookRepository.listBooksByLibrary(
       page, perPage, libraryId, isbn,
     );
-    const books: Book[] = [];
 
-    // eslint-disable-next-line no-restricted-syntax
-    for (const book of localBooks) {
-      // eslint-disable-next-line no-await-in-loop
-      const remoteBook = await this.metadataProvider.getOneByISBN(book.isbn);
-
-      if (remoteBook) {
-        books.push({
-          ...book, ...remoteBook,
-        });
-      }
-    }
-
-    return { books, total };
+    return { books: localBooks, total };
   }
 
   private async createInCatalogueIfNotExists(

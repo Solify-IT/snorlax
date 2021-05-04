@@ -86,6 +86,7 @@ export default class BookController {
 
     if (error) {
       context.next(error);
+      return;
     }
 
     context.response.status(200).json({ ...books });
