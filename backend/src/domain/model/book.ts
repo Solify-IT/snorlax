@@ -1,5 +1,6 @@
 import { Library } from './library';
 import CommonType from './common';
+import Catalogue from './catalogue';
 
 export type LocalBook = CommonType & {
   isbn: string,
@@ -17,6 +18,6 @@ export type ExternalBook = {
   isbn?: string,
 };
 
-export type Book = LocalBook & ExternalBook;
+export type Book = LocalBook & Catalogue;
 
 export const BOOK_TABLE_NAME = 'local_books';
