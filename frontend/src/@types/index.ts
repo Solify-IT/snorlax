@@ -1,6 +1,6 @@
 /* eslint-disable import/prefer-default-export */
 import {
-  Book, LocalBook, ExternalBook, BOOK_TABLE_NAME, LocalBookInput,
+  Book, LocalBook, ExternalBook, BOOK_TABLE_NAME, LocalBookInput, BookFormType,
 } from './book';
 
 import { Library, LIBRARY_TABLE_NAME } from './library';
@@ -8,6 +8,8 @@ import { Library, LIBRARY_TABLE_NAME } from './library';
 import CommonType from './common';
 
 import Movement, { MovementInputData, MOVEMENT_TABLE_NAME } from './movement';
+
+import Catalogue from './catalogue';
 
 export type Maybe<T> = T | null;
 
@@ -23,22 +25,18 @@ export async function wrapError<T, E = Error>(
   }
 }
 
-export {
-  BOOK_TABLE_NAME,
-
-  LIBRARY_TABLE_NAME,
-
-  MOVEMENT_TABLE_NAME,
-};
 export type {
   Book,
-  LocalBook,
-  ExternalBook,
-
+  BookFormType,
+  BOOK_TABLE_NAME,
+  Catalogue,
   CommonType,
+  ExternalBook,
   Library,
-
+  LIBRARY_TABLE_NAME,
+  LocalBook,
   LocalBookInput,
   Movement,
   MovementInputData,
+  MOVEMENT_TABLE_NAME,
 };

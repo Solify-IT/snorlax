@@ -30,5 +30,9 @@ export default class Router {
     app.get('/libraries', async (request, response, next) => {
       await controller.libraries.listAll({ request, response, next });
     });
+
+    app.get('/catalogue/:isbn', async (request, response, next) => {
+      await controller.catalogue.findByISBNOrNull({ request, response, next });
+    });
   }
 }
