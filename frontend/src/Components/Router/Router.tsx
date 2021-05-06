@@ -4,6 +4,7 @@ import Loader from '../Loader';
 import PageHeader from '../PageHeader';
 import HOME, {
   NEW_BOOK,
+  SIGN_IN,
   LIST_LOCAL_BOOKS,
   LIBRARIES,
   NEW_USER,
@@ -11,6 +12,7 @@ import HOME, {
 } from './routes';
 
 const RegisterFormView = React.lazy(() => import('src/views/Books.RegisterForm'));
+const SignInView = React.lazy(() => import('src/views/SignIn'));
 const LocalBooksListView = React.lazy(() => import('src/views/Inventory.LocalBooksList'));
 const LibrariesListView = React.lazy(() => import('src/views/Libraries.ListView'));
 const ListUsers = React.lazy(() => import('src/views/Users.List'));
@@ -23,6 +25,7 @@ const Router: React.FC = () => (
     <PageHeader>
       <React.Suspense fallback={<Loader isLoading />}>
         <Route exact path={NEW_BOOK} component={RegisterFormView} />
+        <Route exact path={SIGN_IN} component={SignInView} />
         <Route exact path={LIBRARIES} component={LibrariesListView} />
         <Route exact path={LIST_LOCAL_BOOKS} component={LocalBooksListView} />
         <Route exact path={NEW_USER} component={RegisterUser} />
