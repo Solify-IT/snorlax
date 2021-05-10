@@ -15,16 +15,16 @@ const SignIn = () => {
     <Row>
       <Col span={8} offset={8}>
         <Form
-          name="normal_login"
+          name="login"
           className={styles.loginForm}
           initialValues={{ remember: true }}
           onFinish={onFinish}
         >
           <Form.Item
-            name="username"
-            rules={[{ required: true, message: 'Por favor ingresa tu usario' }]}
+            name="email"
+            rules={[{ required: true, message: 'Por favor ingresa tu correo electrónico' }]}
           >
-            <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Username" />
+            <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Correo electrónico" />
           </Form.Item>
           <Form.Item
             name="password"
