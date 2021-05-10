@@ -1,7 +1,8 @@
 import { Pool } from 'pg';
 import { wrapError } from 'src/@types';
 import Datastore from 'src/infrastructure/datastore/datastore';
-import { givenALocalBook } from 'src/infrastructure/factories/bookFactory';
+import { CatalogueFactory, givenACatalogueItem } from 'src/infrastructure/factories';
+import { givenALocalBook, LocalBookFactory } from 'src/infrastructure/factories/bookFactory';
 import MovementRepository from 'src/interface/repository/movementRepository';
 import winston from 'winston';
 
@@ -12,13 +13,22 @@ jest.mock('winston', () => ({
   }),
 }));
 
-describe('registerMovement', () => {
-  const logger = winston.createLogger();
-  const datastore = new Datastore(new Pool(), logger);
-  const repository = new MovementRepository(datastore);
+const logger = winston.createLogger();
+const pool = new Pool();
+const datastore = new Datastore(pool, logger);
+const repository = new MovementRepository(datastore);
 
+beforeEach(async () => pool.query('START TRANSACTION'));
+afterEach(async () => pool.query('ROLLBACK'));
+
+describe('registerMovement', () => {
   it('should return the id of the new movement when valid data', async () => {
-    const localBook = await givenALocalBook(datastore);
+    expect.assertions(3);
+    const ISBN = 'found-isbn';
+    await givenACatalogueItem(datastore, CatalogueFactory.build({ isbn: ISBN }));
+    const localBook = await givenALocalBook(
+      datastore, undefined, LocalBookFactory.build({ isbn: ISBN }),
+    );
 
     const [result, error] = await wrapError(repository.registerMovement({
       amount: 10, localBookId: localBook.id, isLoan: false,

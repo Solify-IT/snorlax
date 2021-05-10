@@ -1,9 +1,10 @@
 import faker from 'faker';
 import { Sync, each } from 'factory.ts';
 import {
-  LocalBook, ExternalBook,
+  LocalBook,
 } from 'src/@types';
 import LibraryFactory from './libraryFactory';
+import CatalogueFactory from './catalogueFactory';
 
 export const LocalBookFactory = Sync.makeFactory<LocalBook>({
   id: each(() => faker.datatype.uuid()),
@@ -13,16 +14,7 @@ export const LocalBookFactory = Sync.makeFactory<LocalBook>({
   library: each(() => LibraryFactory.build()),
 });
 
-export const ExternalBookFactory = Sync.makeFactory<ExternalBook>({
-  title: each(() => faker.commerce.productName()),
-  isbn: each(() => faker.datatype.string(10)),
-  authors: each(
-    () => Array(faker.datatype.number(5))
-      .fill(null)
-      .map(() => `${faker.name.firstName()} ${faker.name.lastName()}`),
-  ),
-  coverURL: each(() => faker.image.imageUrl()),
-});
+export const ExternalBookFactory = CatalogueFactory;
 
 const BookFactory = LocalBookFactory.combine(ExternalBookFactory);
 

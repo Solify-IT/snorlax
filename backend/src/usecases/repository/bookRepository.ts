@@ -8,5 +8,5 @@ export interface IBookRepository {
   registerBook(bookData: Omit<LocalBookInput, 'id'>): Promise<LocalBook['id']>;
   listBooksByLibrary(
     page: number, perPage: number, libraryId?: string, isbn?:string,
-  ): Promise<{ localBooks: LocalBook[], total: number }>;
+  ): Promise<{ localBooks: Book[], total: number }>;
 }
