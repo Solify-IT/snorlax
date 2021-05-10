@@ -14,8 +14,9 @@ export default class Router {
         { request, response, next },
       );
     });
+
     app.get('/books/:bookId', async (request, response, next) => {
-      await controller.books.getBookbyId(
+      await controller.books.getBookById(
         { request, response, next },
       );
     });
