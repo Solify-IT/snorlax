@@ -12,7 +12,7 @@ import HOME, {
 } from './routes';
 
 const RegisterFormView = React.lazy(() => import('src/views/Books.RegisterForm'));
-const SignInView = React.lazy(() => import('src/views/SignIn'));
+const SignInView = React.lazy(() => import('src/views/Users.SignIn'));
 const SearchLocalBooksView = React.lazy(() => import('src/views/Search.LocalBooksList'));
 const LibrariesListView = React.lazy(() => import('src/views/Libraries.ListView'));
 const ListUsers = React.lazy(() => import('src/views/Users.List'));
