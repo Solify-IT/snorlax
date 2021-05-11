@@ -1,5 +1,7 @@
 import { credential, initializeApp } from 'firebase-admin';
-import IAppController, { BookController, CatalogueController, LibraryController } from 'src/interface/controller';
+import IAppController, {
+  BookController, CatalogueController, LibraryController, MovementController,
+} from 'src/interface/controller';
 import UserController from 'src/interface/controller/userController';
 import { BookRepository, CatalogueRepository, IDatastore } from 'src/interface/repository';
 import LibraryRepository from 'src/interface/repository/libraryRepository';
@@ -55,6 +57,7 @@ export default class Registry {
       users: new UserController(userInteractor),
       libraries: new LibraryController(libraryInteractor),
       catalogue: new CatalogueController(catalogueInteractor),
+      movements: new MovementController(movementInteractor),
     };
   }
 }

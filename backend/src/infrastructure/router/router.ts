@@ -14,8 +14,9 @@ export default class Router {
         { request, response, next },
       );
     });
-    app.put('/books', async (request, response, next) => {
-      await controller.books.updateBookAmount(
+
+    app.post('/movements', async (request, response, next) => {
+      await controller.movements.registerMovement(
         { request, response, next },
       );
     });

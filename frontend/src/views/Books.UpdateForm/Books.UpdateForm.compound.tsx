@@ -48,7 +48,7 @@ const UpdateForm: React.FC = () => {
 
   const onFinish = async (values: StateType) => {
     setIsLoading(true);
-    const [, error] = await backend.books.createOne({
+    const [, error] = await backend.movements.createOne({
       ...values,
       libraryId: 'e11e5635-094c-4224-836f-b0caa13986f3',
       amount: Math.abs(values.amount - values.newAmount),
