@@ -1,21 +1,56 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import {
-  Form, Input, Button, Row, Col,
+  Form, Input, Button, Row, Col, notification, Alert,
 } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
+import { wrapError } from 'src/@types';
+import useFirebase from 'src/hooks/firebase';
+import Firebase from 'src/integrations/firebase/firebase';
 import styles from './SignIn.styles.module.css';
 
 const SignIn = () => {
-  const onFinish = (values: any) => {
-    console.log('Received values of form: ', values);
+  const firebase = useFirebase();
+  const [isLoading, setIsLoading] = useState(false);
+  const [formError, setFormError] = useState<string | undefined>(undefined);
+
+  const onFinish = async (values: any) => {
+    setIsLoading(true);
+
+    const [result, error] = await wrapError(
+      firebase.doSignInWithEmail(values.email, values.password),
+    );
+
+    if (error || !result || !result.user) {
+      setIsLoading(false);
+      notification.error({ message: 'Ocurrió un error.' });
+      setFormError(Firebase.getSpanishErrorMessage(
+        error
+          ? { message: (error as any).message, code: (error as any).code }
+          : { message: '', code: '' },
+      ));
+      return;
+    }
+
+    setIsLoading(false);
+    notification.success({ message: '¡Inicio de sesión exitoso!' });
   };
 
   return (
     <Row>
       <Col span={8} offset={8}>
+        {formError && (
+          <Alert
+            message="Error"
+            description={formError}
+            type="error"
+            showIcon
+            style={{ marginBottom: '24px' }}
+          />
+        )}
         <Form
           name="login"
+          size="large"
           className={styles.loginForm}
           initialValues={{ remember: true }}
           onFinish={onFinish}
@@ -43,7 +78,12 @@ const SignIn = () => {
           </Form.Item>
 
           <Form.Item>
-            <Button type="primary" htmlType="submit" className={styles.loginFormButton}>
+            <Button
+              loading={isLoading}
+              type="primary"
+              htmlType="submit"
+              className={styles.loginFormButton}
+            >
               Iniciar Sesión
             </Button>
           </Form.Item>
