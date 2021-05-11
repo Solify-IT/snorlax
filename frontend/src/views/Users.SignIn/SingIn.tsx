@@ -14,23 +14,25 @@ const SignIn = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [formError, setFormError] = useState<string | undefined>(undefined);
 
-  const onFinish = async (values: any) => {
+  const onFinish = async (values: { email: string; password: string }) => {
     setIsLoading(true);
 
-    const [result, error] = await wrapError(
+    const [fireBResult, fireBError] = await wrapError(
       firebase.doSignInWithEmail(values.email, values.password),
     );
 
-    if (error || !result || !result.user) {
+    if (fireBError || !fireBResult || !fireBResult.user) {
       setIsLoading(false);
       notification.error({ message: 'Ocurrió un error.' });
       setFormError(Firebase.getSpanishErrorMessage(
-        error
-          ? { message: (error as any).message, code: (error as any).code }
+        fireBError
+          ? { message: (fireBError as any).message, code: (fireBError as any).code }
           : { message: '', code: '' },
       ));
       return;
     }
+
+    console.log(fireBResult);
 
     setIsLoading(false);
     notification.success({ message: '¡Inicio de sesión exitoso!' });
@@ -52,7 +54,6 @@ const SignIn = () => {
           name="login"
           size="large"
           className={styles.loginForm}
-          initialValues={{ remember: true }}
           onFinish={onFinish}
         >
           <Form.Item
@@ -68,7 +69,7 @@ const SignIn = () => {
             <Input
               prefix={<LockOutlined className="site-form-item-icon" />}
               type="password"
-              placeholder="Password"
+              placeholder="Contraseña"
             />
           </Form.Item>
           <Form.Item>
