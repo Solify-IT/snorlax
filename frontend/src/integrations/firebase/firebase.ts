@@ -38,6 +38,17 @@ export default class Firebase {
     return { user: null, token: null };
   }
 
+  async diSignInWithToken(customToken: string): Promise<LoginReturnType> {
+    const user = await this.authApp.signInWithCustomToken(customToken);
+
+    if (user.user) {
+      const token = await user.user?.getIdToken();
+      return { user: user.user, token };
+    }
+
+    return { user: null, token: null };
+  }
+
   static getSpanishErrorMessage(error: { code: string, message: string }): string {
     let message: string;
     switch (error.code) {

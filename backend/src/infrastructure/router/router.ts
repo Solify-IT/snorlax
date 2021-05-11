@@ -19,7 +19,7 @@ export default class Router {
       await controller.users.listAllRoles({ request, response, next });
     });
 
-    app.get('/users/sign-in', async (request, response, next) => {
+    app.post('/users/sign-in', async (request, response, next) => {
       await controller.users.signIn({ request, response, next });
     });
 

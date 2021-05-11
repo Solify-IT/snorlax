@@ -6,18 +6,20 @@ import {
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { wrapError } from 'src/@types';
 import useFirebase from 'src/hooks/firebase';
+import { useBackend } from 'src/integrations/backend';
 import Firebase from 'src/integrations/firebase/firebase';
 import styles from './SignIn.styles.module.css';
 
 const SignIn = () => {
   const firebase = useFirebase();
+  const backend = useBackend();
   const [isLoading, setIsLoading] = useState(false);
   const [formError, setFormError] = useState<string | undefined>(undefined);
 
   const onFinish = async (values: { email: string; password: string }) => {
     setIsLoading(true);
 
-    const [fireBResult, fireBError] = await wrapError(
+    let [fireBResult, fireBError] = await wrapError(
       firebase.doSignInWithEmail(values.email, values.password),
     );
 
@@ -32,7 +34,30 @@ const SignIn = () => {
       return;
     }
 
-    console.log(fireBResult);
+    const [beResult, beError] = await backend.users.post<{ token: string }, unknown>(
+      '/sign-in', { idToken: fireBResult.token },
+    );
+
+    if (beError || !beResult || !beResult.data.token) {
+      setIsLoading(false);
+      notification.error({ message: 'Ocurrió un error.' });
+      return;
+    }
+
+    [fireBResult, fireBError] = await wrapError(
+      firebase.diSignInWithToken(beResult?.data.token || ''),
+    );
+
+    if (fireBError || !fireBResult || !fireBResult.user) {
+      setIsLoading(false);
+      notification.error({ message: 'Ocurrió un error.' });
+      setFormError(Firebase.getSpanishErrorMessage(
+        fireBError
+          ? { message: (fireBError as any).message, code: (fireBError as any).code }
+          : { message: '', code: '' },
+      ));
+      return;
+    }
 
     setIsLoading(false);
     notification.success({ message: '¡Inicio de sesión exitoso!' });
