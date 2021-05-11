@@ -1,7 +1,7 @@
 import { wrapError } from 'src/@types';
 import User, { StoredRole, StoredUser, UserInput } from 'src/domain/model/user';
 import { v4 as uuidv4 } from 'uuid';
-import { InvalidDataError } from '../errors';
+import { InvalidDataError, UnauthorizedError } from '../errors';
 import IFirebaseApp from '../interfaces/firebase';
 import { ILogger } from '../interfaces/logger';
 import IUserRepository from '../repository/userRepository';
@@ -58,7 +58,15 @@ export default class UserInteractor {
 
   async signIn(token: string): Promise<string> {
     const decoded = await this.firebase.auth().verifyIdToken(token);
-    console.log(decoded);
+
+    if (!decoded.email) {
+      const message = 'User not found in firebase!';
+      this.logger.error({ message }); // { message } === { message: message }
+      throw new UnauthorizedError(message);
+    }
+
+    const user = await this.userRepository.findOneOrNullByEmail(decoded.email);
+    console.log(user);
     return token;
   }
 

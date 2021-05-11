@@ -49,7 +49,7 @@ export default class Datastore implements IDatastore {
 
   async getOneOrNull<T>(queryText: string, values?: any[]): Promise<Maybe<T>> {
     const result = await this.dbPool.query<T>(queryText, values);
-    return result.rowCount === 1 ? result.rows[0] : null;
+    return result.rowCount === 1 ? this.toCamel<T>(result.rows[0]) : null;
   }
 
   async insert<T extends CommonType>(
