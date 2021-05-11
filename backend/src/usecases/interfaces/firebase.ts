@@ -168,5 +168,6 @@ export default interface IFirebaseApp {
   auth(): {
     createUser(properties: CreateRequest): Promise<UserRecord>;
     verifyIdToken(idToken: string, checkRevoked?: boolean): Promise<DecodedIdToken>;
+    createCustomToken(uid: string, developerClaims?: object): Promise<string>;
   }
 }

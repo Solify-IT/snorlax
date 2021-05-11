@@ -66,8 +66,22 @@ export default class UserInteractor {
     }
 
     const user = await this.userRepository.findOneOrNullByEmail(decoded.email);
-    console.log(user);
-    return token;
+
+    if (!user) {
+      const message = 'User not found in our database!';
+      this.logger.error({ message });
+      throw new UnauthorizedError(message);
+    }
+
+    const newToken = await this.firebase.auth().createCustomToken(decoded.uid, {
+      libraryId: user.libraryId,
+      roleId: user.roleId,
+      id: user.id,
+      library: user.library,
+      role: user.role,
+    });
+
+    return newToken;
   }
 
   private validateUserData(userData: UserInput) {
