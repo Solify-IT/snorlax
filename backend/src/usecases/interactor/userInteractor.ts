@@ -56,6 +56,12 @@ export default class UserInteractor {
     return this.userRepository.listUsers();
   }
 
+  async signIn(token: string): Promise<string> {
+    const decoded = await this.firebase.auth().verifyIdToken(token);
+    console.log(decoded);
+    return token;
+  }
+
   private validateUserData(userData: UserInput) {
     let message = '';
 

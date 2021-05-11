@@ -69,4 +69,19 @@ export default class UserController {
 
     context.response.status(200).json({ users });
   }
+
+  // GET /users/sign-in
+  async signIn(context: IContext): Promise<void> {
+    const { idToken } = context.request.body;
+    const [token, error] = await wrapError(
+      this.userInteractor.signIn(idToken as string),
+    );
+
+    if (error) {
+      context.next(error);
+      return;
+    }
+
+    context.response.status(200).json({ token });
+  }
 }
