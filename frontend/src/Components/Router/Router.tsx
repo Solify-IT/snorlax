@@ -2,6 +2,7 @@ import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import Loader from '../Loader';
 import PageHeader from '../PageHeader';
+import PrivateRoute from './PrivateRoute';
 import HOME, {
   NEW_BOOK,
   SIGN_IN,
@@ -24,12 +25,24 @@ const Router: React.FC = () => (
     <Route exact path={HOME} />
     <PageHeader>
       <React.Suspense fallback={<Loader isLoading />}>
-        <Route exact path={NEW_BOOK} component={RegisterFormView} />
-        <Route exact path={SIGN_IN} component={SignInView} />
-        <Route exact path={LIST_LOCAL_BOOKS} component={SearchLocalBooksView} />
-        <Route exact path={LIBRARIES} component={LibrariesListView} />
-        <Route exact path={NEW_USER} component={RegisterUser} />
-        <Route exact path={LIST_USERS} component={ListUsers} />
+        <Route exact path={SIGN_IN}>
+          <SignInView />
+        </Route>
+        <PrivateRoute exact path={NEW_BOOK}>
+          <RegisterFormView />
+        </PrivateRoute>
+        <PrivateRoute exact path={LIST_LOCAL_BOOKS}>
+          <SearchLocalBooksView />
+        </PrivateRoute>
+        <PrivateRoute exact path={LIBRARIES}>
+          <LibrariesListView />
+        </PrivateRoute>
+        <PrivateRoute exact path={NEW_USER}>
+          <RegisterUser />
+        </PrivateRoute>
+        <PrivateRoute exact path={LIST_USERS}>
+          <ListUsers />
+        </PrivateRoute>
       </React.Suspense>
     </PageHeader>
   </Switch>

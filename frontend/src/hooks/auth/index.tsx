@@ -67,7 +67,10 @@ export const AuthContextProvider: React.FC = ({ children }) => {
     }
   }, []);
 
-  // returns false if state was set to undefined
+  const removePersistedData = () => {
+    localStorage.removeItem(AUTH_DATA_KEY);
+  };
+
   const getPersistedState = useCallback(() => {
     const result = localStorage.getItem(AUTH_DATA_KEY);
     if (!result) {
@@ -82,6 +85,13 @@ export const AuthContextProvider: React.FC = ({ children }) => {
     }
 
     const userData = JSON.parse(result);
+    userData.expiresAt = new Date(userData.expiresAt);
+    const now = new Date();
+
+    if (+userData.expiresAt <= +now) {
+      removePersistedData();
+      return;
+    }
 
     if (userData.idToken === auth.idToken) return;
 
