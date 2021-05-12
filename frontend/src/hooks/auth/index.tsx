@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
 import User from 'src/@types/user';
 import HOME, { ADMIN, INVENTORY } from 'src/Components/Router/routes';
 
@@ -42,7 +41,6 @@ export const INITIAL_STATE: AuthStateType = {
 
 export const AuthContextProvider: React.FC = ({ children }) => {
   const [auth, setAuth] = useState<AuthStateType>(INITIAL_STATE);
-  const history = useHistory();
 
   const parseJwt = (token: string): AuthUserType & { exp: number } => {
     const base64Url = token.split('.')[1];
@@ -88,8 +86,7 @@ export const AuthContextProvider: React.FC = ({ children }) => {
     if (userData.idToken === auth.idToken) return;
 
     setAuth(userData);
-    history.push(getHomeForRole(userData.role.name));
-  }, [history, getHomeForRole]);
+  }, [getHomeForRole]);
 
   const setAuthToken: AuthType['setAuthToken'] = useCallback((idToken) => {
     if (!idToken) return undefined;
@@ -122,7 +119,7 @@ export const AuthContextProvider: React.FC = ({ children }) => {
     }
 
     persistState(auth);
-  }, [auth]);
+  }, [auth, getPersistedState, persistState]);
 
   return (
     <AuthContext.Provider value={{ ...auth, setAuthToken, getHomeForRole }}>

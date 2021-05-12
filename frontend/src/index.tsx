@@ -13,11 +13,11 @@ ReactDOM.render(
     <NavigationContextProvider>
       <MetadataProviderContextProvider>
         <FirebaseProvider>
-          <BackendProvider>
-            <AuthContextProvider>
+          <AuthContextProvider>
+            <BackendProvider>
               <App />
-            </AuthContextProvider>
-          </BackendProvider>
+            </BackendProvider>
+          </AuthContextProvider>
         </FirebaseProvider>
       </MetadataProviderContextProvider>
     </NavigationContextProvider>
