@@ -6,6 +6,7 @@ import { NavigationContextProvider } from './hooks/navigation';
 import { BackendProvider } from './integrations/backend';
 import { MetadataProviderContextProvider } from './integrations/metadataProvider';
 import { FirebaseProvider } from './hooks/firebase';
+import { AuthContextProvider } from './hooks/auth';
 
 ReactDOM.render(
   <React.StrictMode>
@@ -13,7 +14,9 @@ ReactDOM.render(
       <MetadataProviderContextProvider>
         <FirebaseProvider>
           <BackendProvider>
-            <App />
+            <AuthContextProvider>
+              <App />
+            </AuthContextProvider>
           </BackendProvider>
         </FirebaseProvider>
       </MetadataProviderContextProvider>

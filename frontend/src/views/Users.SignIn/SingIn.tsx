@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-
+import { useHistory } from 'react-router-dom';
 import {
   Form, Input, Button, Row, Col, notification, Alert,
 } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { wrapError } from 'src/@types';
+import useAuth from 'src/hooks/auth';
 import useFirebase from 'src/hooks/firebase';
 import { useBackend } from 'src/integrations/backend';
 import Firebase from 'src/integrations/firebase/firebase';
@@ -12,7 +13,9 @@ import styles from './SignIn.styles.module.css';
 
 const SignIn = () => {
   const firebase = useFirebase();
+  const { setAuthToken, getHomeForRole } = useAuth();
   const backend = useBackend();
+  const history = useHistory();
   const [isLoading, setIsLoading] = useState(false);
   const [formError, setFormError] = useState<string | undefined>(undefined);
 
@@ -48,7 +51,7 @@ const SignIn = () => {
       firebase.diSignInWithToken(beResult?.data.token || ''),
     );
 
-    if (fireBError || !fireBResult || !fireBResult.user) {
+    if (fireBError || !fireBResult || !fireBResult.user || !fireBResult.token) {
       setIsLoading(false);
       notification.error({ message: 'Ocurrió un error.' });
       setFormError(Firebase.getSpanishErrorMessage(
@@ -59,7 +62,16 @@ const SignIn = () => {
       return;
     }
 
+    const userData = setAuthToken(fireBResult.token);
+
+    if (!userData) {
+      setIsLoading(false);
+      notification.error({ message: 'Ocurrió un error.' });
+      return;
+    }
+
     setIsLoading(false);
+    history.push(getHomeForRole(userData.role.name));
     notification.success({ message: '¡Inicio de sesión exitoso!' });
   };
 
