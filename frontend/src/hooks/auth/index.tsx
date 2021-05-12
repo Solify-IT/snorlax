@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import User from 'src/@types/user';
 import HOME, { ADMIN, INVENTORY } from 'src/Components/Router/routes';
 
@@ -14,6 +15,8 @@ export type AuthUserType = {
 
 export const ADMIN_ROLE_NAME = 'Admin';
 export const LIBRERO_ROLE_NAME = 'Librero';
+
+export const AUTH_DATA_KEY = 'authData';
 
 export const roleToHomePath = {
 };
@@ -39,6 +42,7 @@ export const INITIAL_STATE: AuthStateType = {
 
 export const AuthContextProvider: React.FC = ({ children }) => {
   const [auth, setAuth] = useState<AuthStateType>(INITIAL_STATE);
+  const history = useHistory();
 
   const parseJwt = (token: string): AuthUserType & { exp: number } => {
     const base64Url = token.split('.')[1];
@@ -50,7 +54,44 @@ export const AuthContextProvider: React.FC = ({ children }) => {
 
   const timestampToDate = (timestamp: number): Date => new Date(timestamp * 1000);
 
-  const setAuthToken: AuthType['setAuthToken'] = (idToken) => {
+  const persistState = useCallback((state: AuthStateType) => {
+    localStorage.setItem(AUTH_DATA_KEY, JSON.stringify(state));
+  }, []);
+
+  const getHomeForRole = useCallback((roleName: string): string => {
+    switch (roleName) {
+      case ADMIN_ROLE_NAME:
+        return ADMIN;
+      case LIBRERO_ROLE_NAME:
+        return INVENTORY;
+      default:
+        return HOME;
+    }
+  }, []);
+
+  // returns false if state was set to undefined
+  const getPersistedState = useCallback(() => {
+    const result = localStorage.getItem(AUTH_DATA_KEY);
+    if (!result) {
+      if (auth.idToken) {
+        setAuth({
+          expiresAt: undefined,
+          idToken: undefined,
+          user: undefined,
+        });
+      }
+      return;
+    }
+
+    const userData = JSON.parse(result);
+
+    if (userData.idToken === auth.idToken) return;
+
+    setAuth(userData);
+    history.push(getHomeForRole(userData.role.name));
+  }, [history, getHomeForRole]);
+
+  const setAuthToken: AuthType['setAuthToken'] = useCallback((idToken) => {
     if (!idToken) return undefined;
 
     const tokenData = parseJwt(idToken);
@@ -72,18 +113,16 @@ export const AuthContextProvider: React.FC = ({ children }) => {
     });
 
     return user;
-  };
+  }, []);
 
-  const getHomeForRole = (roleName: string): string => {
-    switch (roleName) {
-      case ADMIN_ROLE_NAME:
-        return ADMIN;
-      case LIBRERO_ROLE_NAME:
-        return INVENTORY;
-      default:
-        return HOME;
+  useEffect(() => {
+    if (!auth.idToken) {
+      getPersistedState();
+      return;
     }
-  };
+
+    persistState(auth);
+  }, [auth]);
 
   return (
     <AuthContext.Provider value={{ ...auth, setAuthToken, getHomeForRole }}>
