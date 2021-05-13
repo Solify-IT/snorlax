@@ -1,8 +1,7 @@
 import {
   Button, Col, Form, Input, Row, Switch,
 } from 'antd';
-import React, { useEffect, useState } from 'react';
-import PossibleBooks from 'src/Components/PossibleBooks';
+import React, { useEffect } from 'react';
 import useNavigation from 'src/hooks/navigation';
 import Props from './Books.Update.type';
 
@@ -24,7 +23,6 @@ const tailLayout = {
 
 const UpdateForm: React.FC<Props> = ({ book, onFinish, onFinishFailed }) => {
   const { setTitles } = useNavigation();
-  const [selectedISBN] = useState(book.isbn);
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -51,7 +49,7 @@ const UpdateForm: React.FC<Props> = ({ book, onFinish, onFinishFailed }) => {
                   label="ISBN"
                   name="isbn"
                 >
-                  <Input placeholder="ISBN" disabled value="1" />
+                  <Input placeholder="ISBN" disabled value="isbn1" />
                 </Form.Item>
               </Col>
             </Row>
@@ -114,9 +112,6 @@ const UpdateForm: React.FC<Props> = ({ book, onFinish, onFinishFailed }) => {
               </Button>
             </Form.Item>
           </Form>
-        </Col>
-        <Col style={{ position: 'relative' }} span={12}>
-          <PossibleBooks isbn={selectedISBN || ''} />
         </Col>
       </Row>
     </>
