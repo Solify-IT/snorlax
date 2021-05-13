@@ -7,6 +7,7 @@ import Registry from './registry';
 import Router from './infrastructure/router/router';
 import Datastore from './infrastructure/datastore/datastore';
 import { wrapError } from './@types';
+import authMiddleware from './infrastructure/router/authMiddleware';
 
 const app: express.Application = express();
 const logger = winston.createLogger({

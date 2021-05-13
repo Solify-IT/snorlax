@@ -1,15 +1,17 @@
 import { Application } from 'express';
 import IAppController from 'src/interface/controller';
+import authMiddleware from './authMiddleware';
 
 export default class Router {
   constructor(app: Application, controller: IAppController) {
+    const middleware = authMiddleware(controller.users.userInteractor.userRepository);
     app.post('/books', async (request, response, next) => {
       await controller.books.registerBook(
         { request, response, next },
       );
     });
 
-    app.get('/books', async (request, response, next) => {
+    app.get('/books', middleware, async (request, response, next) => {
       await controller.books.listBooksByLibrary(
         { request, response, next },
       );

@@ -7,7 +7,7 @@ import { ILogger } from '../interfaces/logger';
 import IUserRepository from '../repository/userRepository';
 
 export default class UserInteractor {
-  private userRepository: IUserRepository;
+  public userRepository: IUserRepository;
 
   private firebase: IFirebaseApp;
 
