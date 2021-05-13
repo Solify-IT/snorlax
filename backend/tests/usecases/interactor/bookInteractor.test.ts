@@ -393,3 +393,25 @@ describe('listBooksByLibrary', () => {
     jest.clearAllMocks();
   });
 });
+
+describe('modifyBookAmount', () => {
+  it('should return movement id of new movement', async () => {
+    const expectedId = 'expected';
+    const library = LibraryFactory.build();
+
+    jest.spyOn(
+      movementRepository, 'registerMovement',
+    ).mockImplementationOnce(async () => expectedId);
+
+    const [result, error] = await wrapError(
+      interactor.updateBookAmount(
+        library.id,
+        'test',
+        10,
+      ),
+    );
+
+    expect(error).toBe(null);
+    expect(result).toBe(expectedId);
+  });
+});
