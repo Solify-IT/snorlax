@@ -42,4 +42,7 @@ export const ROLE_TABLE_NAME = 'roles';
 export const PERMISSION_TABLE_NAME = 'permissions';
 export const ROLES_PERMISSION_TABLE_NAME = 'roles_permissions';
 
+export const ADMIN_ROLE = 'Admin';
+export const LIBRERO_ROLE = 'Librero';
+
 export default User;

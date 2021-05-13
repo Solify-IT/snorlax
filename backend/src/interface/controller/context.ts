@@ -65,6 +65,6 @@ export interface NextFunction {
 export interface IContext {
   request: IRequest,
   response: IResponse,
-  logger?: ILogger,
+  logger: ILogger,
   next: NextFunction,
 }
