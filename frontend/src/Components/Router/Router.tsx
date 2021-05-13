@@ -10,6 +10,7 @@ import HOME, {
   LIBRARIES,
   NEW_USER,
   LIST_USERS,
+  INVENTORY,
 } from './routes';
 
 const RegisterFormView = React.lazy(() => import('src/views/Books.RegisterForm'));
@@ -31,7 +32,7 @@ const Router: React.FC = () => (
         <PrivateRoute exact path={NEW_BOOK}>
           <RegisterFormView />
         </PrivateRoute>
-        <PrivateRoute exact path={LIST_LOCAL_BOOKS}>
+        <PrivateRoute exact path={[LIST_LOCAL_BOOKS, INVENTORY]}>
           <SearchLocalBooksView />
         </PrivateRoute>
         <PrivateRoute exact path={LIBRARIES}>

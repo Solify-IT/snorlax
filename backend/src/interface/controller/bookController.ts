@@ -78,6 +78,7 @@ export default class BookController {
     } = context.request.query;
     const pageNumber = page ? parseInt(page as string, 10) : undefined;
     const perPageNumber = perPage ? parseInt(perPage as string, 10) : undefined;
+
     const [books, error] = await wrapError(
       this.bookInteractor.listBooksByLibrary(
         pageNumber, perPageNumber, libraryId as string, isbn as string,

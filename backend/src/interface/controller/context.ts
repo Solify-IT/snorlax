@@ -1,3 +1,4 @@
+import User from 'src/domain/model/user';
 import { ILogger } from 'src/usecases/interfaces/logger';
 
 export interface CookieOptions {
@@ -20,6 +21,7 @@ export interface IRequest {
   param(name: string, defaultValue?: any): string;
   is(type: string | string[]): string | false | null;
   body: any;
+  currentUser: User;
 }
 
 export interface IResponse {

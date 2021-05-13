@@ -2,7 +2,7 @@ import { Layout, Menu } from 'antd';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import {
-  INVENTORY, SALES_POINT, ADMIN, menuItemKeys,
+  INVENTORY, SALES_POINT, ADMIN, menuItemKeys, LIST_LOCAL_BOOKS, LIBRARIES,
 } from '../Router/routes';
 
 const { Header } = Layout;
@@ -25,13 +25,13 @@ const NavHeader: React.FC<{ goTo(path: string): () => void }> = ({ goTo }) => {
     <Header className="header">
       <div className="logo" />
       <Menu theme="dark" mode="horizontal" selectedKeys={selectedKeys}>
-        <Menu.Item key={`header-${itemKeys.intentory}`} onClick={goTo(INVENTORY)}>
+        <Menu.Item key={`header-${itemKeys.intentory}`} onClick={goTo(LIST_LOCAL_BOOKS)}>
           Inventario
         </Menu.Item>
         <Menu.Item key={`header-${itemKeys.salesPoint}`} onClick={goTo(SALES_POINT)}>
           Punto de venta
         </Menu.Item>
-        <Menu.Item key={`header-${itemKeys.admin}`} onClick={goTo(ADMIN)}>
+        <Menu.Item key={`header-${itemKeys.admin}`} onClick={goTo(LIBRARIES)}>
           Administración
         </Menu.Item>
       </Menu>
