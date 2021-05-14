@@ -1,8 +1,7 @@
 import {
   Col, Form, Input, Row,
 } from 'antd';
-import React, { useEffect, useState } from 'react';
-import PossibleBooks from 'src/Components/PossibleBooks';
+import React, { useEffect } from 'react';
 import useNavigation from 'src/hooks/navigation';
 import Props from './FormViewBook.type';
 
@@ -20,9 +19,7 @@ const layout = {
 
 const FormViewBook: React.FC<Props> = ({ book }) => {
   const { setTitles } = useNavigation();
-  const [selectedISBN] = useState(book.isbn);
   const [form] = Form.useForm();
-
   useEffect(() => {
     setTitles({
       title: 'Informacion de libro', subtitle: '',
@@ -60,9 +57,6 @@ const FormViewBook: React.FC<Props> = ({ book }) => {
             <Input name="price" readOnly style={{ width: '120%', textAlign: 'center' }} />
           </Form.Item>
         </Form>
-      </Col>
-      <Col style={{ position: 'relative' }} span={12}>
-        <PossibleBooks isbn={selectedISBN || ''} />
       </Col>
     </Row>
   );
