@@ -1,5 +1,6 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
+import { isAdmin } from 'src/utils/auth';
 import Loader from '../Loader';
 import PageHeader from '../PageHeader';
 import PrivateRoute from './PrivateRoute';
@@ -29,19 +30,37 @@ const Router: React.FC = () => (
         <Route exact path={SIGN_IN}>
           <SignInView />
         </Route>
-        <PrivateRoute exact path={NEW_BOOK}>
+        <PrivateRoute
+          exact
+          path={NEW_BOOK}
+        >
           <RegisterFormView />
         </PrivateRoute>
-        <PrivateRoute exact path={[LIST_LOCAL_BOOKS, INVENTORY]}>
+        <PrivateRoute
+          exact
+          path={[LIST_LOCAL_BOOKS, INVENTORY]}
+        >
           <SearchLocalBooksView />
         </PrivateRoute>
-        <PrivateRoute exact path={LIBRARIES}>
+        <PrivateRoute
+          exact
+          path={LIBRARIES}
+          hasAccess={(user) => isAdmin(user)}
+        >
           <LibrariesListView />
         </PrivateRoute>
-        <PrivateRoute exact path={NEW_USER}>
+        <PrivateRoute
+          exact
+          path={NEW_USER}
+          hasAccess={(user) => isAdmin(user)}
+        >
           <RegisterUser />
         </PrivateRoute>
-        <PrivateRoute exact path={LIST_USERS}>
+        <PrivateRoute
+          exact
+          path={LIST_USERS}
+          hasAccess={(user) => isAdmin(user)}
+        >
           <ListUsers />
         </PrivateRoute>
       </React.Suspense>
