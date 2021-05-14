@@ -5,8 +5,8 @@ import {
 } from 'src/domain/model';
 import { IBookRepository } from 'src/usecases';
 import { InvalidDataError } from 'src/usecases/errors';
-import BaseRepository from './BaseRepository';
 import { Maybe } from 'src/@types';
+import BaseRepository from './BaseRepository';
 
 export default class BookRepository extends BaseRepository implements IBookRepository {
   async listBooksByLibrary(

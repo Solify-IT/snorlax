@@ -16,6 +16,8 @@ export type RegisterBookInputData = Omit<LocalBook & {
 } & CatalogueInputData, 'id' | 'library'>;
 
 export default class BookInteractor {
+  [x: string]: any;
+
   private bookRepository: IBookRepository;
 
   private libraryInteractor: LibraryInteractor;
@@ -153,11 +155,6 @@ export default class BookInteractor {
       this.logger.error('Local Book not found', { logger: 'bookInteractor:getbook', bookId });
       throw new NotFoundError('Local Book not found');
     }
-    const remoteBook = await this.metadataProvider.getOneByISBN(localBook.isbn);
-    if (!remoteBook) {
-      this.logger.error('Remote Book not found', { logger: 'bookInteractor:getbook', isbn: localBook.isbn });
-      throw new Error('Remote Book not found.');
-    }
-    return { ...localBook, ...remoteBook };
+    return localBook;
   }
 }
