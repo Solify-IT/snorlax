@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Redirect, useHistory } from 'react-router-dom';
 import {
   Form, Input, Button, Row, Col, notification, Alert,
@@ -7,6 +7,7 @@ import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { wrapError } from 'src/@types';
 import useAuth from 'src/hooks/auth';
 import useFirebase from 'src/hooks/firebase';
+import useNavigation from 'src/hooks/navigation';
 import { useBackend } from 'src/integrations/backend';
 import Firebase from 'src/integrations/firebase/firebase';
 import styles from './SignIn.styles.module.css';
@@ -15,6 +16,7 @@ const SignIn = () => {
   const firebase = useFirebase();
   const { setAuthToken, getHomeForRole, user } = useAuth();
   const backend = useBackend();
+  const { setTitles } = useNavigation();
   const history = useHistory();
   const [isLoading, setIsLoading] = useState(false);
   const [formError, setFormError] = useState<string | undefined>(undefined);
@@ -74,6 +76,10 @@ const SignIn = () => {
     history.push(getHomeForRole(userData.role.name));
     notification.success({ message: '¡Inicio de sesión exitoso!' });
   };
+
+  useEffect(() => {
+    setTitles({ title: '¡Bienvenido!', subtitle: 'Inicia sesión con tu correo y contraseña' });
+  }, []);
 
   if (user) return <Redirect to={getHomeForRole(user.role.name)} />;
 

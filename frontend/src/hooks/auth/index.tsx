@@ -29,6 +29,7 @@ export type AuthStateType = {
 export type AuthType = AuthStateType & {
   setAuthToken(idToken: AuthType['idToken']): AuthUserType | undefined;
   getHomeForRole: (roleName: string) => string;
+  logOut(): void;
 };
 
 export const AuthContext = React.createContext<AuthType>(undefined!);
@@ -122,6 +123,15 @@ export const AuthContextProvider: React.FC = ({ children }) => {
     return user;
   }, []);
 
+  const logOut = () => {
+    setAuth({
+      expiresAt: undefined,
+      idToken: undefined,
+      user: undefined,
+    });
+    removePersistedData();
+  };
+
   useEffect(() => {
     if (!auth.idToken) {
       getPersistedState();
@@ -132,7 +142,11 @@ export const AuthContextProvider: React.FC = ({ children }) => {
   }, [auth, getPersistedState, persistState]);
 
   return (
-    <AuthContext.Provider value={{ ...auth, setAuthToken, getHomeForRole }}>
+    <AuthContext.Provider
+      value={{
+        ...auth, setAuthToken, getHomeForRole, logOut,
+      }}
+    >
       { children }
     </AuthContext.Provider>
   );
