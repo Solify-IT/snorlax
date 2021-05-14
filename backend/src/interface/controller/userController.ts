@@ -1,6 +1,8 @@
 import { wrapError } from 'src/@types';
 import { UserInput } from 'src/domain/model/user';
+import { UnauthorizedError } from 'src/usecases/errors';
 import UserInteractor from 'src/usecases/interactor/userInteractor';
+import { isAdmin } from '../auth';
 import { IContext } from './context';
 
 export default class UserController {
@@ -12,6 +14,12 @@ export default class UserController {
 
   // POST /users { userData }
   async createUser(context: IContext): Promise<void> {
+    if (!isAdmin(context.request.currentUser.role.name)) {
+      const MESSAGE = 'Permisos insuficientes.';
+      context.logger.error({ message: MESSAGE });
+      throw new UnauthorizedError(MESSAGE);
+    }
+
     const {
       email,
       disabled,
@@ -44,6 +52,12 @@ export default class UserController {
 
   // GET /users/roles
   async listAllRoles(context: IContext): Promise<void> {
+    if (!isAdmin(context.request.currentUser.role.name)) {
+      const MESSAGE = 'Permisos insuficientes.';
+      context.logger.error({ message: MESSAGE });
+      throw new UnauthorizedError(MESSAGE);
+    }
+
     const [roles, error] = await wrapError(
       this.userInteractor.listAllRoles(),
     );
@@ -58,6 +72,12 @@ export default class UserController {
 
   // GET /users
   async listUsers(context: IContext): Promise<void> {
+    if (!isAdmin(context.request.currentUser.role.name)) {
+      const MESSAGE = 'Permisos insuficientes.';
+      context.logger.error({ message: MESSAGE });
+      throw new UnauthorizedError(MESSAGE);
+    }
+
     const [users, error] = await wrapError(
       this.userInteractor.listUsers(),
     );
