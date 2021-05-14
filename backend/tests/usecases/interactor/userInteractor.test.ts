@@ -61,6 +61,8 @@ describe('createUser', () => {
         emailVerified: false,
         ...createUserMedatadaMock,
       }),
+      verifyIdToken: jest.fn(),
+      createCustomToken: jest.fn(),
     })));
     jest.spyOn(userRepository, 'createUser').mockImplementation(repoCreateUser);
 
