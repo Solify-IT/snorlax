@@ -57,6 +57,7 @@ export default class Registry {
       users: new UserController(userInteractor),
       libraries: new LibraryController(libraryInteractor),
       catalogue: new CatalogueController(catalogueInteractor),
+      logger: this.logger,
     };
   }
 }

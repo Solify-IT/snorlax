@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { Redirect, useHistory } from 'react-router-dom';
 import {
   Form, Input, Button, Row, Col, notification, Alert,
 } from 'antd';
@@ -13,7 +13,7 @@ import styles from './SignIn.styles.module.css';
 
 const SignIn = () => {
   const firebase = useFirebase();
-  const { setAuthToken, getHomeForRole } = useAuth();
+  const { setAuthToken, getHomeForRole, user } = useAuth();
   const backend = useBackend();
   const history = useHistory();
   const [isLoading, setIsLoading] = useState(false);
@@ -74,6 +74,8 @@ const SignIn = () => {
     history.push(getHomeForRole(userData.role.name));
     notification.success({ message: '¡Inicio de sesión exitoso!' });
   };
+
+  if (user) return <Redirect to={getHomeForRole(user.role.name)} />;
 
   return (
     <Row>
