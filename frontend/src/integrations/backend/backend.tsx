@@ -7,6 +7,7 @@ import {
   BACKEND_MAIN_EP, BOOKS_ROOT, LIBRARIES_ROOT, USERS_ROOT, CATALOGUE_ROOT,
 } from 'src/settings';
 import User, { UserInput } from 'src/@types/user';
+import useAuth from 'src/hooks/auth';
 import CRUD from './crud';
 
 export type RegisterBook = BookFormType & { libraryId: Library['id'] };
@@ -41,11 +42,20 @@ export class Backend {
 
 export const BackendContext = React.createContext<Backend>(undefined!);
 
-export const BackendProvider: React.FC = ({ children }) => (
-  <BackendContext.Provider value={new Backend(BACKEND_MAIN_EP)}>
-    {children}
-  </BackendContext.Provider>
-);
+export const BackendProvider: React.FC = ({ children }) => {
+  const { idToken } = useAuth();
+  return (
+    <BackendContext.Provider
+      value={new Backend(BACKEND_MAIN_EP, {
+        headers: {
+          Authorization: idToken || undefined,
+        },
+      })}
+    >
+      {children}
+    </BackendContext.Provider>
+  );
+};
 
 export const useBackend = () => React.useContext(BackendContext);
 
