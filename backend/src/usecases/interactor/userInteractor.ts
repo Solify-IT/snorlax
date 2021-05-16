@@ -1,13 +1,13 @@
 import { wrapError } from 'src/@types';
 import User, { StoredRole, StoredUser, UserInput } from 'src/domain/model/user';
 import { v4 as uuidv4 } from 'uuid';
-import { InvalidDataError } from '../errors';
+import { InvalidDataError, UnauthorizedError } from '../errors';
 import IFirebaseApp from '../interfaces/firebase';
 import { ILogger } from '../interfaces/logger';
 import IUserRepository from '../repository/userRepository';
 
 export default class UserInteractor {
-  private userRepository: IUserRepository;
+  public userRepository: IUserRepository;
 
   private firebase: IFirebaseApp;
 
@@ -54,6 +54,34 @@ export default class UserInteractor {
 
   async listUsers(): Promise<StoredUser[]> {
     return this.userRepository.listUsers();
+  }
+
+  async signIn(token: string): Promise<string> {
+    const decoded = await this.firebase.auth().verifyIdToken(token);
+
+    if (!decoded.email) {
+      const message = 'User not found in firebase!';
+      this.logger.error({ message }); // { message } === { message: message }
+      throw new UnauthorizedError(message);
+    }
+
+    const user = await this.userRepository.findOneOrNullByEmail(decoded.email);
+
+    if (!user) {
+      const message = 'User not found in our database!';
+      this.logger.error({ message });
+      throw new UnauthorizedError(message);
+    }
+
+    const newToken = await this.firebase.auth().createCustomToken(decoded.uid, {
+      libraryId: user.libraryId,
+      roleId: user.roleId,
+      id: user.id,
+      library: user.library,
+      role: user.role,
+    });
+
+    return newToken;
   }
 
   private validateUserData(userData: UserInput) {

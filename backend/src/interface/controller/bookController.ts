@@ -1,5 +1,7 @@
 import { wrapError } from 'src/@types';
+import { UnauthorizedError } from 'src/usecases/errors';
 import BookInteractor, { RegisterBookInputData } from 'src/usecases/interactor/bookInteractor';
+import { isAdmin, isLibrero } from '../auth';
 import { IContext } from './context';
 
 export default class BookController {
@@ -34,6 +36,20 @@ export default class BookController {
       type,
       unitaryCost,
     } = context.request.body;
+    const { currentUser } = context.request;
+
+    // Only admins or libreros of the same library can register books
+    if (
+      !isAdmin(currentUser.role.name)
+      && !(
+        isLibrero(currentUser.role.name)
+        && currentUser.libraryId === libraryId
+      )
+    ) {
+      const MESSAGE = 'Permisos insuficientes.';
+      context.logger.error({ message: MESSAGE });
+      throw new UnauthorizedError(MESSAGE);
+    }
 
     const bookData: RegisterBookInputData = {
       isLoan: JSON.parse(isLoan),
@@ -76,8 +92,21 @@ export default class BookController {
     const {
       page, perPage, libraryId, isbn,
     } = context.request.query;
+    const { currentUser } = context.request;
+
+    // Only admins or libreros can list books
+    if (
+      !isAdmin(currentUser.role.name)
+      && !isLibrero(currentUser.role.name)
+    ) {
+      const MESSAGE = 'Permisos insuficientes.';
+      context.logger.error({ MESSAGE });
+      throw new UnauthorizedError(MESSAGE);
+    }
+
     const pageNumber = page ? parseInt(page as string, 10) : undefined;
     const perPageNumber = perPage ? parseInt(perPage as string, 10) : undefined;
+
     const [books, error] = await wrapError(
       this.bookInteractor.listBooksByLibrary(
         pageNumber, perPageNumber, libraryId as string, isbn as string,
