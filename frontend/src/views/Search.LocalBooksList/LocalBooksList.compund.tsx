@@ -69,8 +69,8 @@ const LocalBooksList: React.FC = () => {
         onChange={(e) => setIsbn(e.target.value)}
         suffix={(
           <Switch
-            checkedChildren="Busqueda Global"
-            unCheckedChildren="Busqueda Local"
+            checkedChildren="Búsqueda Global"
+            unCheckedChildren="Búsqueda Local"
             onChange={(checked) => setIsGlobal(checked)}
           />
         )}
