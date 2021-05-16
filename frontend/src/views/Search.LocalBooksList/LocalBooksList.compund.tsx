@@ -45,7 +45,7 @@ const LocalBooksList: React.FC = () => {
   }, [backend.books, pagination, isGlobal]);
 
   useEffect(() => {
-    fetchBooks();
+    fetchBooks(form.getFieldValue('isbn'));
     setTitles({
       title: 'Consulta disponibilidad de libros',
       extra: [
@@ -54,25 +54,9 @@ const LocalBooksList: React.FC = () => {
         </Button>,
       ],
     });
-  }, [fetchBooks, setTitles, isGlobal, history]);
+  }, [fetchBooks, setTitles, history]);
 
-  const onSearch = async (values: SearchType) => {
-    setIsLoading(true);
-    const [result, error] = await backend.books.getAll<{
-      total: number,
-      books: Book[],
-    }>(`${isGlobal ? '' : `libraryId=${LIBRARY_ID}&`}isbn=${values.isbn}&page=${pagination.page}&perPage=${pagination.perPage}`);
-
-    if (error || !result) {
-      notification.error({ message: 'Ocurrió un error al obtener la lista de libros' });
-      return;
-    }
-
-    setBooks(result.data.books);
-    setTotalBooks(result.data.total);
-
-    setIsLoading(false);
-  };
+  const onSearch = async (values: SearchType) => fetchBooks(values.isbn);
 
   const onSearchFailed = () => {
     notification.error({
