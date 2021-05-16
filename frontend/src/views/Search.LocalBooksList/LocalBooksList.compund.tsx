@@ -1,6 +1,7 @@
 import {
-  Button, Form, Input, Layout, notification, Switch,
+  Button, notification, Switch,
 } from 'antd';
+import Search from 'antd/lib/input/Search';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Book } from 'src/@types';
@@ -8,11 +9,6 @@ import { NEW_BOOK } from 'src/Components/Router/routes';
 import useNavigation from 'src/hooks/navigation';
 import { useBackend } from 'src/integrations/backend';
 import LocalBooksListComp from './LocalBooksList';
-import { SearchType } from './LocalBooksList.type';
-
-const INITIAL_STATE = {
-  isbn: '',
-};
 
 const LocalBooksList: React.FC = () => {
   const backend = useBackend();
@@ -22,17 +18,17 @@ const LocalBooksList: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { setTitles } = useNavigation();
   const LIBRARY_ID = 'e11e5635-094c-4224-836f-b0caa13986f3';
-  const [form] = Form.useForm();
+  const [isbn, setIsbn] = useState('');
   const [isGlobal, setIsGlobal] = useState(false);
   const history = useHistory();
 
-  const fetchBooks = useCallback(async (isbn?: string) => {
+  const fetchBooks = useCallback(async (currIsbn?: string) => {
     setIsLoading(true);
 
     const [result, error] = await backend.books.getAll<{
       total: number,
       books: Book[],
-    }>(`${isGlobal ? '' : `libraryId=${LIBRARY_ID}&`}${isbn ? `isbn=${isbn}&` : ''}page=${pagination.page}&perPage=${pagination.perPage}`);
+    }>(`${isGlobal ? '' : `libraryId=${LIBRARY_ID}&`}${currIsbn ? `isbn=${currIsbn}&` : ''}page=${pagination.page}&perPage=${pagination.perPage}`);
 
     if (error || !result) {
       notification.error({ message: 'Ocurrió un error al obtener la lista de libros' });
@@ -45,7 +41,9 @@ const LocalBooksList: React.FC = () => {
   }, [backend.books, pagination, isGlobal]);
 
   useEffect(() => {
-    fetchBooks();
+    if ((!isGlobal && !isbn) || (isGlobal && isbn)) {
+      fetchBooks(isbn);
+    }
     setTitles({
       title: 'Consulta disponibilidad de libros',
       extra: [
@@ -54,86 +52,30 @@ const LocalBooksList: React.FC = () => {
         </Button>,
       ],
     });
-  }, [fetchBooks, setTitles, isGlobal, history]);
+  }, [fetchBooks, setTitles, history]);
 
-  const onSearch = async (values: SearchType) => {
-    setIsLoading(true);
-    const [result, error] = await backend.books.getAll<{
-      total: number,
-      books: Book[],
-    }>(`${isGlobal ? '' : `libraryId=${LIBRARY_ID}&`}isbn=${values.isbn}&page=${pagination.page}&perPage=${pagination.perPage}`);
-
-    if (error || !result) {
-      notification.error({ message: 'Ocurrió un error al obtener la lista de libros' });
-      return;
-    }
-
-    setBooks(result.data.books);
-    setTotalBooks(result.data.total);
-
-    setIsLoading(false);
-  };
-
-  const onSearchFailed = () => {
-    notification.error({
-      message: '¡Ocurrió un error al consultar!',
-      description: 'Intentalo después.',
-    });
-  };
+  const onSearch = async (currIsbn?: string) => fetchBooks(currIsbn || undefined);
 
   return (
-    <div>
-
-      <Form
-        name="searchByIsbn"
+    <>
+      <Search
+        allowClear
+        enterButton="Buscar"
         size="large"
-        form={form}
-        initialValues={INITIAL_STATE}
-        onFinish={onSearch}
-        onFinishFailed={onSearchFailed}
-      >
-        <Layout
-          background-color="white"
-        >
-          <Form.Item
-            label="ISBN"
-            name="isbn"
-            rules={[{
-              required: true,
-              message: 'Debes ingresar un ISBN válido',
-            }]}
-          >
-            <Input />
-          </Form.Item>
-          <br />
-          <Form.Item
-            name="isGlobal"
-            label=" Local"
-            valuePropName="checked"
-            initialValue={false}
-          >
-            <Switch
-              checkedChildren="Busqueda Global"
-              unCheckedChildren="Busqueda Local"
-              onChange={(checked) => setIsGlobal(checked)}
-            />
-            {' '}
-            : Global
-          </Form.Item>
-
-          <Form.Item>
-
-            <Button
-              loading={isLoading}
-              type="primary"
-              htmlType="submit"
-            >
-              Buscar Libro
-            </Button>
-          </Form.Item>
-
-        </Layout>
-      </Form>
+        placeholder="Ingresa el ISBN a buscar"
+        onSearch={onSearch}
+        loading={isLoading}
+        value={isbn}
+        onChange={(e) => setIsbn(e.target.value)}
+        suffix={(
+          <Switch
+            checkedChildren="Búsqueda Global"
+            unCheckedChildren="Búsqueda Local"
+            onChange={(checked) => setIsGlobal(checked)}
+          />
+        )}
+        style={{ margin: '12px 0 24px 0' }}
+      />
 
       <LocalBooksListComp
         isLoading={isLoading}
@@ -142,8 +84,7 @@ const LocalBooksList: React.FC = () => {
         setPagination={setPagination}
         pagination={pagination}
       />
-    </div>
-
+    </>
   );
 };
 
