@@ -74,7 +74,7 @@ const LocalBooksList: React.FC = () => {
             onChange={(checked) => setIsGlobal(checked)}
           />
         )}
-        style={{ margin: '24px 0' }}
+        style={{ margin: '12px 0 24px 0' }}
       />
 
       <LocalBooksListComp
