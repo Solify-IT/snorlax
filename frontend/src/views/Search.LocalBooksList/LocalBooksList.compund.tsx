@@ -54,7 +54,7 @@ const LocalBooksList: React.FC = () => {
         </Button>,
       ],
     });
-  }, [fetchBooks, setTitles, history]);
+  }, [fetchBooks, setTitles, history, form]);
 
   const onSearch = async (values: SearchType) => fetchBooks(values.isbn);
 

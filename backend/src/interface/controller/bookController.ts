@@ -39,8 +39,8 @@ export default class BookController {
       isLoan: JSON.parse(isLoan),
       isbn,
       libraryId,
-      price: JSON.parse(price),
-      amount: JSON.parse(amount),
+      price: JSON.parse(price || '0'),
+      amount: JSON.parse(amount || '0'),
       area,
       author,
       coverType,
@@ -48,7 +48,7 @@ export default class BookController {
       coverImageUrl,
       distribuitor,
       editoral,
-      pages: JSON.parse(pages),
+      pages: JSON.parse(pages || '0'),
       provider,
       subCategory,
       title,
@@ -56,7 +56,7 @@ export default class BookController {
       synopsis,
       theme,
       type,
-      unitaryCost: JSON.parse(unitaryCost),
+      unitaryCost: JSON.parse(unitaryCost || '0'),
     };
 
     const [id, error] = await wrapError(
