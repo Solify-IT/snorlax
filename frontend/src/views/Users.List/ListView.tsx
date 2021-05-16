@@ -50,6 +50,16 @@ const columns = [
       </Typography.Text>
     ),
   },
+  {
+    title: 'Modificar',
+    dataIndex: 'disabled',
+    key: 'disabled',
+    render: (disabled: boolean) => (
+      <Typography.Text>
+        {disabled ? 'Desactivado' : 'Activo'}
+      </Typography.Text>
+    ),
+  },
 ];
 
 const ListView: React.FC<Props> = ({ users, loading }) => (

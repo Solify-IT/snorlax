@@ -48,6 +48,23 @@ export default class UserInteractor {
     return result;
   }
 
+  async updateUser(userData: UserInput): Promise<StoredUser> {
+    this.logger.info('Updating user.', { logger: 'UserInteractor:updateUser' });
+
+    this.validateUserData(userData);
+
+    const result = await this.userRepository.updateUser({
+      roleId: userData.roleId,
+      libraryId: userData.libraryId,
+      disabled: userData.disabled,
+      displayName: userData.displayName,
+      email: userData.email,
+      id: uuidv4(),
+    });
+
+    return result;
+  }
+
   async listAllRoles(): Promise<StoredRole[]> {
     return this.userRepository.listAllRoles();
   }

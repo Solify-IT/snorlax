@@ -42,6 +42,38 @@ export default class UserController {
     context.response.status(200).json({ id });
   }
 
+  // PUT /users { userData }
+  async updateUser(context: IContext): Promise<void> {
+    const {
+      email,
+      disabled,
+      displayName,
+      libraryId,
+      password,
+      roleId,
+    } = context.request.body;
+
+    const userData: UserInput = {
+      email,
+      disabled: JSON.parse(disabled),
+      displayName,
+      libraryId,
+      password,
+      roleId,
+    };
+
+    const [id, error] = await wrapError(
+      this.userInteractor.updateUser(userData),
+    );
+
+    if (error) {
+      context.next(error);
+      return;
+    }
+
+    context.response.status(200).json({ id });
+  }
+
   // GET /users/roles
   async listAllRoles(context: IContext): Promise<void> {
     const [roles, error] = await wrapError(

@@ -89,4 +89,10 @@ export default class UserRepository implements IUserRepository {
       ...userData,
     });
   }
+
+  async updateUser(userData: StoredUser): Promise<StoredUser> {
+    return this.datastore.update<StoredUser>(USER_TABLE_NAME, `email = ${userData.email}`, {
+      ...userData,
+    });
+  }
 }

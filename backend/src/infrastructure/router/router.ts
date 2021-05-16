@@ -26,6 +26,9 @@ export default class Router {
     app.post('/users', async (request, response, next) => {
       await controller.users.createUser({ request, response, next });
     });
+    app.put('/users', async (request, response, next) => {
+      await controller.users.updateUser({ request, response, next });
+    });
 
     app.get('/libraries', async (request, response, next) => {
       await controller.libraries.listAll({ request, response, next });
