@@ -1,16 +1,18 @@
 import {
     Button, Form, Input, notification, Select,
   } from 'antd';
-  import React, { useEffect, useState } from 'react';
+  import React, { useCallback, useEffect, useState } from 'react';
   import { useHistory } from 'react-router-dom';
   import { Library, wrapError } from 'src/@types';
-  import { StoredRole, UserInput } from 'src/@types/user';
+  import User, { StoredRole, StoredUser, UserInput } from 'src/@types/user';
   import { toUserDetail } from 'src/Components/Router/routes';
   import useNavigation from 'src/hooks/navigation';
   import { useBackend } from 'src/integrations/backend';
   import {
     useParams
   } from "react-router-dom";
+  import { RouteComponentProps } from "react-router-dom";
+
   
   const INITIAL_STATE: UserInput = {
     email: '',
@@ -29,9 +31,16 @@ import {
   const tailLayout = {
     wrapperCol: { offset: 6, span: 18 },
   };
+
+    interface RouteParams {
+        id: string
+    }
+
+    interface Update extends RouteComponentProps<RouteParams> {
+    }
   
   
-  const Update: React.FC = () => {
+  const Update: React.FC<Update> = (props) => {
     const { setTitles } = useNavigation();
     const [isFormLoading, setIsFormLoading] = useState(false);
     const [isMetadataLoading, setIsMedatadaLoading] = useState(true);
@@ -40,9 +49,27 @@ import {
     }>({ roles: [], libraries: [] });
     const backend = useBackend();
     const history = useHistory();
+    const [userInformation, setUser] = useState<StoredUser[]>([]);
     const [form] = Form.useForm();
+    const [users, setUsers] = useState<User[]>([]);
    
-  
+    console.log(props.match.params.id);
+
+    const fetchuser = useCallback(async () => {
+        const [result, error] = await backend.users.getOne(`?${props.match.params.id}`);
+    
+        if (error || !result) {
+          notification.error({ message: 'Ocurrió un error al obtener al usuario' });
+          return;
+        }
+        console.log(result.data);
+        console.log('hola');
+      }, [backend.users]);
+
+
+
+     
+    
     const fetchMetadata = async () => {
       setIsMedatadaLoading(true);
       const [result, error] = await wrapError(
@@ -72,6 +99,7 @@ import {
         title: 'Modificar usuario', subtitle: 'Ingresa todos los campos a modificar',
       });
       fetchMetadata();
+      fetchuser();
       // eslint-disable-next-line
     }, [INITIAL_STATE]);
   
