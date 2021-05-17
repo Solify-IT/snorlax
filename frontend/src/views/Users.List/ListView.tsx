@@ -1,7 +1,9 @@
 import { Table, Typography } from 'antd';
 import React from 'react';
+import { Link, Route } from 'react-router-dom';
 import { StoredUser } from 'src/@types/user';
 import { toUserDetail } from 'src/Components/Router/routes';
+import Update from '../Users.Update';
 
 interface Props {
   users: StoredUser[];
@@ -51,13 +53,13 @@ const columns = [
     ),
   },
   {
-    title: 'Modificar',
-    dataIndex: 'disabled',
-    key: 'disabled',
-    render: (disabled: boolean) => (
-      <Typography.Text>
-        {disabled ? 'Desactivado' : 'Activo'}
-      </Typography.Text>
+    title: 'Modificar Usuario',
+    dataIndex: 'displayName',
+    key: 'displayName',
+    render: (name: string, row: StoredUser) => (
+      <Typography.Link href={toUserDetail(row.id)}>
+      Modificar
+    </Typography.Link>
     ),
   },
 ];

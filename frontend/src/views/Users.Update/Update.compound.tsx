@@ -8,6 +8,9 @@ import {
   import { toUserDetail } from 'src/Components/Router/routes';
   import useNavigation from 'src/hooks/navigation';
   import { useBackend } from 'src/integrations/backend';
+  import {
+    useParams
+  } from "react-router-dom";
   
   const INITIAL_STATE: UserInput = {
     email: '',
@@ -27,7 +30,8 @@ import {
     wrapperCol: { offset: 6, span: 18 },
   };
   
-  const RegisterForm: React.FC = () => {
+  
+  const Update: React.FC = () => {
     const { setTitles } = useNavigation();
     const [isFormLoading, setIsFormLoading] = useState(false);
     const [isMetadataLoading, setIsMedatadaLoading] = useState(true);
@@ -37,6 +41,7 @@ import {
     const backend = useBackend();
     const history = useHistory();
     const [form] = Form.useForm();
+   
   
     const fetchMetadata = async () => {
       setIsMedatadaLoading(true);
@@ -64,7 +69,7 @@ import {
   
     useEffect(() => {
       setTitles({
-        title: 'Crear nuevo usuario', subtitle: 'Ingresa todos los campos requeridos',
+        title: 'Modificar usuario', subtitle: 'Ingresa todos los campos a modificar',
       });
       fetchMetadata();
       // eslint-disable-next-line
@@ -99,12 +104,15 @@ import {
       setIsFormLoading(false);
     };
   
+    //this.props.match.params.id;
     const onFinishFailed = () => {
       notification.error({
         message: '¡Ocurrió un error al guardar!',
         description: 'Intentalo después.',
       });
     };
+    
+    
   
     return (
       <Form
@@ -173,7 +181,6 @@ import {
         >
           <Input.Password />
         </Form.Item>
-  
         <Form.Item
           label="Librería"
           name="libraryId"
@@ -217,5 +224,5 @@ import {
     );
   };
   
-  export default RegisterForm;
+  export default Update;
   

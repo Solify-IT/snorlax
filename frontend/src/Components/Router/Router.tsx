@@ -29,6 +29,7 @@ const Router: React.FC = () => (
         <Route exact path={NEW_USER} component={RegisterUser} />
         <Route exact path={LIST_USERS} component={ListUsers} />
         <Route exact path={UPDATE_USER} component={UpdateUser} />
+        
       </React.Suspense>
     </PageHeader>
   </Switch>
