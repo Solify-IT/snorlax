@@ -84,6 +84,10 @@ export default class UserRepository implements IUserRepository {
     return this.datastore.get(`SELECT * FROM ${ROLE_TABLE_NAME}`);
   }
 
+  async getUser(id: string):Promise<StoredUser[]> {
+    return this.datastore.get(`SELECT * FROM ${USER_TABLE_NAME} WHERE id = '${id}' `);
+  }
+
   async createUser(userData: StoredUser): Promise<User['id']> {
     return this.datastore.insert<StoredUser>(USER_TABLE_NAME, {
       ...userData,
@@ -91,7 +95,7 @@ export default class UserRepository implements IUserRepository {
   }
 
   async updateUser(userData: StoredUser): Promise<StoredUser> {
-    return this.datastore.update<StoredUser>(USER_TABLE_NAME, `email = ${userData.email}`, {
+    return this.datastore.update<StoredUser>(USER_TABLE_NAME, `email = '${userData.email}'`, {
       ...userData,
     });
   }

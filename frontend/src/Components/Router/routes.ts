@@ -20,6 +20,7 @@ export const toLibraryDetail = (
 export const USERS = `${ADMIN}/usuarios`;
 export const LIST_USERS = `${USERS}/lista-local`;
 export const NEW_USER = `${USERS}/nuevo`;
+export const UPDATE_USER = `${USERS}/modificar-usuario`;
 export const toUserDetail = (
   uuid: string,
 ) => `${USERS}/${uuid}`;

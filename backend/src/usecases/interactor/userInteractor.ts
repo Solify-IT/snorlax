@@ -73,6 +73,10 @@ export default class UserInteractor {
     return this.userRepository.listUsers();
   }
 
+  async getUser(id: string): Promise<StoredUser[]> {
+    return this.userRepository.getUser(id);
+  }
+
   private validateUserData(userData: UserInput) {
     let message = '';
 

@@ -71,6 +71,7 @@ export default class Datastore implements IDatastore {
       VALUES (${paramsPlaceholders})
       RETURNING *
     `;
+    console.log(query);
     const data = Object.values(values);
 
     const [result, error] = await wrapError<QueryResult<T>>(

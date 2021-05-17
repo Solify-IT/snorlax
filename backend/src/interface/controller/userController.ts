@@ -101,4 +101,20 @@ export default class UserController {
 
     context.response.status(200).json({ users });
   }
+
+  async getUser(context: IContext): Promise<void> {
+    const {
+      id,
+    } = context.request.query;
+    const [users, error] = await wrapError(
+      this.userInteractor.getUser(
+        id as string,
+      ),
+    );
+
+    if (error) {
+      context.next(error);
+    }
+    context.response.status(200).json({ users });
+  }
 }

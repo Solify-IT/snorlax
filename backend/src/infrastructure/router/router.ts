@@ -23,6 +23,10 @@ export default class Router {
       await controller.users.listUsers({ request, response, next });
     });
 
+    app.get('/users/id', async (request, response, next) => {
+      await controller.users.getUser({ request, response, next });
+    });
+
     app.post('/users', async (request, response, next) => {
       await controller.users.createUser({ request, response, next });
     });

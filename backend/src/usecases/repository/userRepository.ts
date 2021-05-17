@@ -5,4 +5,5 @@ export default interface IUserRepository {
   updateUser(userData: StoredUser): Promise<StoredUser>;
   listAllRoles(): Promise<StoredRole[]>;
   listUsers(): Promise<StoredUser[]>;
+  getUser(id:string): Promise<StoredUser[]>;
 }
