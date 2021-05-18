@@ -149,7 +149,7 @@ export default class BookInteractor {
     }
   }
 
-  async getBook(bookId: string): Promise<Book> {
+  async getBook(bookId: string): Promise<LocalBook> {
     const localBook = await this.bookRepository.findById(bookId);
     if (!localBook) {
       this.logger.error('Local Book not found', { logger: 'bookInteractor:getbook', bookId });
