@@ -1,5 +1,6 @@
 import { Library } from './library';
 import CommonType from './common';
+import Catalogue from './catalogue';
 
 export type LocalBook = CommonType & {
   isbn: string,
@@ -11,12 +12,10 @@ export type LocalBook = CommonType & {
 
 export type LocalBookInput = Omit<LocalBook, 'library'>;
 
-export type ExternalBook = {
-  authors: string[],
-  coverURL: string,
-  title: string,
-  isbn?: string,
-};
+export type ExternalBook = Omit<Catalogue, 'id'>;
+
+export type BookFormType = Omit<Catalogue, 'id' | 'createdAt' | 'updatedAt'>
+& Omit<LocalBookInput, 'id' | 'createdAt' | 'updatedAt' | 'libraryId'>;
 
 export type Book = LocalBook & ExternalBook;
 

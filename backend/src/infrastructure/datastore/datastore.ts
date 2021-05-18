@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Pool, QueryResult } from 'pg';
 import loadash from 'lodash';
-import { wrapError } from 'src/@types';
+import { Maybe, wrapError } from 'src/@types';
 import { CommonType } from 'src/domain/model';
 import { IDatastore } from 'src/interface/repository';
 import NotFoundError from 'src/usecases/errors/notFoundError';
@@ -19,28 +19,18 @@ export default class Datastore implements IDatastore {
   }
 
   async get<T>(queryText: string, values?: any[]): Promise<T[]> {
-    const [result, error] = await wrapError(
-      this.dbPool.query(queryText, values),
-    );
+    const result = await this.dbPool.query(queryText, values);
 
-    if (error) {
-      throw error;
-    }
-
-    if (!result) return [];
+    if (result.rowCount === 0) return [];
 
     return result.rows.map((el) => this.toCamel<T>(el));
   }
 
   async getById<T>(tableName: string, id: string): Promise<T> {
     const query = `SELECT * FROM ${tableName} WHERE id = $1`;
-    const [result, error] = await wrapError(this.dbPool.query<T>(query, [id]));
+    const result = await this.dbPool.query<T>(query, [id]);
 
-    if (error) {
-      throw error;
-    }
-
-    if (!result) {
+    if (result.rowCount === 0) {
       const message = 'The object searched was not found';
       this.logger.error(message, {
         logger: 'datasotre:getById',
@@ -57,8 +47,9 @@ export default class Datastore implements IDatastore {
     throw new Error('Method not implemented.');
   }
 
-  getOneOrNull<T>(queryText: string, values?: any[]): Promise<T> {
-    throw new Error('Method not implemented.');
+  async getOneOrNull<T>(queryText: string, values?: any[]): Promise<Maybe<T>> {
+    const result = await this.dbPool.query<T>(queryText, values);
+    return result.rowCount === 1 ? this.toCamel<T>(result.rows[0]) : null;
   }
 
   async insert<T extends CommonType>(

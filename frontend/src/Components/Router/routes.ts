@@ -1,5 +1,7 @@
 const HOME = '/';
 
+export const SIGN_IN = '/sign-in';
+
 export const INVENTORY = '/inventario';
 export const SALES_POINT = '/punto-de-venta';
 export const ADMIN = '/admin';

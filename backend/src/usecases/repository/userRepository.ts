@@ -1,3 +1,4 @@
+import { Maybe } from 'src/@types';
 import User, { StoredRole, StoredUser } from 'src/domain/model/user';
 
 export default interface IUserRepository {
@@ -6,4 +7,5 @@ export default interface IUserRepository {
   listAllRoles(): Promise<StoredRole[]>;
   listUsers(): Promise<StoredUser[]>;
   getUser(id:string): Promise<StoredUser[]>;
+  findOneOrNullByEmail(email: string): Promise<Maybe<User>>;
 }

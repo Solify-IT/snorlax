@@ -1,0 +1,13 @@
+.loginForm {
+    width: 100%;
+}
+.loginFormForgot {
+    float: right;
+}
+.ant-col-rtl .loginFormForgot {
+    float: left;
+}
+.loginFormButton {
+    width: 100%;
+}
+  

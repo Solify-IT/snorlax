@@ -40,12 +40,12 @@ const LocalBooksList: React.FC<Props> = ({
     },
     {
       title: 'Autores',
-      dataIndex: 'authors',
-      key: 'authors',
-      render: (authors: string[]) => (
+      dataIndex: 'author',
+      key: 'author',
+      render: (author: string) => (
         <>
-          {authors.map(
-            (author) => <Tag key={author}>{author}</Tag>,
+          {author.split(', ').map(
+            (a) => <Tag key={a}>{a}</Tag>,
           )}
         </>
       ),
