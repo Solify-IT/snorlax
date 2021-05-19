@@ -38,6 +38,8 @@ export default class Registry {
       }),
     });
 
+    // firebase.auth().
+
     const libraryInteractor = new LibraryInteractor(libraryRepository, this.logger);
     const movementInteractor = new MovementInteractor(movementRepository, this.logger);
     const catalogueInteractor = new CatalogueInteractor(catalogueRepository, this.logger);
@@ -55,6 +57,7 @@ export default class Registry {
       users: new UserController(userInteractor),
       libraries: new LibraryController(libraryInteractor),
       catalogue: new CatalogueController(catalogueInteractor),
+      logger: this.logger,
     };
   }
 }
