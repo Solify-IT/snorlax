@@ -12,7 +12,7 @@ import HOME, {
 } from './routes';
 
 const RegisterFormView = React.lazy(() => import('src/views/Books.RegisterForm'));
-const FormViewBook = React.lazy(() => import('src/views/Books.FormViewBook'));
+const DetailViewBook = React.lazy(() => import('src/views/Books.FormViewBook'));
 const SearchLocalBooksView = React.lazy(() => import('src/views/Search.LocalBooksList'));
 const LibrariesListView = React.lazy(() => import('src/views/Libraries.ListView'));
 const ListUsers = React.lazy(() => import('src/views/Users.List'));
@@ -27,7 +27,7 @@ const Router: React.FC = () => (
         <Route exact path={LIBRARIES} component={LibrariesListView} />
         <Route exact path={NEW_USER} component={RegisterUser} />
         <Route exact path={LIST_USERS} component={ListUsers} />
-        <Route exact path={BOOK_DETAIL} component={FormViewBook} />
+        <Route path={BOOK_DETAIL} component={DetailViewBook} />
         <Route path={HOME} />
       </Switch>
     </React.Suspense>

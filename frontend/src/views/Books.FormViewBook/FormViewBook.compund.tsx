@@ -15,7 +15,8 @@ const FormViewBook: React.FC = () => {
   const fetchBooks = useCallback(async () => {
     setIsLoading(true);
 
-    const [result, error] = await backend.books.getOneById<{ books: Book }>(id);
+    const [result, error] = await backend.books.getOneById<{ book: Book }>(id);
+    console.log(result);
     if (error || !result) {
       notification.error({
         message: 'Error al cargar informacion del libro',
@@ -24,12 +25,13 @@ const FormViewBook: React.FC = () => {
       setIsLoading(false);
       return;
     }
-    console.log(result.data.books);
-    setBook(result.data.books);
+    console.log(result.data.book);
+    setBook(result.data.book);
     setIsLoading(false);
   }, [backend.books]);
 
   useEffect(() => {
+    console.log('Prueb');
     setTitles({ title: 'Libro' });
     fetchBooks();
   }, [fetchBooks, setTitles]);
