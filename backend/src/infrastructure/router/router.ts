@@ -21,7 +21,7 @@ export default class Router {
       );
     });
 
-    app.get('/books/:bookId', middleware , async (request, response, next) => {
+    app.get('/books/:bookId', middleware, async (request, response, next) => {
       await controller.books.getBookById(
         {
           request, response, next, logger: controller.logger,
