@@ -1,6 +1,6 @@
 import { Table, Typography } from 'antd';
 import React from 'react';
-import { Link, Route } from 'react-router-dom';
+import { Link, Route, useHistory } from 'react-router-dom';
 import { StoredUser } from 'src/@types/user';
 import { toUserDetail } from 'src/Components/Router/routes';
 import Update from '../Users.Update';
@@ -21,51 +21,52 @@ interface Props {
 //   "libraryId": "e11e5635-094c-4224-836f-b0caa13986f3"
 // },
 
-const columns = [
-  {
-    title: 'Nombre',
-    dataIndex: 'displayName',
-    key: 'displayName',
-    render: (name: string, row: StoredUser) => (
-      <Typography.Link href={toUserDetail(row.id)}>
-        {name}
-      </Typography.Link>
-    ),
-  },
-  {
-    title: 'Librería',
-    dataIndex: ['library', 'name'],
-    key: 'libraryName',
-  },
-  {
-    title: 'Rol',
-    dataIndex: ['role', 'name'],
-    key: 'roleName',
-  },
-  {
-    title: 'Estado',
-    dataIndex: 'disabled',
-    key: 'disabled',
-    render: (disabled: boolean) => (
-      <Typography.Text>
-        {disabled ? 'Desactivado' : 'Activo'}
-      </Typography.Text>
-    ),
-  },
-  {
-    title: 'Modificar Usuario',
-    dataIndex: 'displayName',
-    key: 'displayName',
-    render: (name: string, row: StoredUser) => (
-      <Typography.Link href={toUserDetail(row.id)}>
-      Modificar
-    </Typography.Link>
-    ),
-  },
-];
 
-const ListView: React.FC<Props> = ({ users, loading }) => (
-  <Table dataSource={users} loading={loading} columns={columns} />
-);
-
+const ListView: React.FC<Props> = ({ users, loading }) => {
+  const history = useHistory();
+  const columns = [
+    {
+      title: 'Nombre',
+      dataIndex: 'displayName',
+      key: 'displayName',
+      render: (name: string, row: StoredUser) => (
+        <Typography.Text  >
+          {name}
+        </Typography.Text>
+      ),
+    },
+    {
+      title: 'Librería',
+      dataIndex: ['library', 'name'],
+      key: 'libraryName',
+    },
+    {
+      title: 'Rol',
+      dataIndex: ['role', 'name'],
+      key: 'roleName',
+    },
+    {
+      title: 'Estado',
+      dataIndex: 'disabled',
+      key: 'disabled',
+      render: (disabled: boolean) => (
+        <Typography.Text>
+          {disabled ? 'Desactivado' : 'Activo'}
+        </Typography.Text>
+      ),
+    },
+    {
+      title: 'Modificar Usuario',
+      dataIndex: 'displayName',
+      key: 'displayName',
+      render: (name: string, row: StoredUser) => (
+        <Link to={toUserDetail(row.id)} >Modificar</Link>
+      ),
+    },
+  ];
+  return (
+    <Table dataSource={users} loading={loading} columns={columns} />
+  );
+}
+  
 export default ListView;

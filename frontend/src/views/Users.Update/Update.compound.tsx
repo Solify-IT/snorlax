@@ -14,14 +14,7 @@ import {
   import { RouteComponentProps } from "react-router-dom";
 
   
-  const INITIAL_STATE: UserInput = {
-    email: '',
-    password: '',
-    displayName: '',
-    disabled: false,
-    libraryId: '',
-    roleId: '',
-  };
+  
   
   const layout = {
     labelCol: { span: 6 },
@@ -38,75 +31,79 @@ import {
 
     interface Update extends RouteComponentProps<RouteParams> {
     }
+    const INITIAL_STATE: UserInput = {
+      email: '',
+      password: '',
+      displayName: '',
+      disabled: false,
+      libraryId: '',
+      roleId: '',
+    };
+
+    
   
   
-  const Update: React.FC<Update> = (props) => {
+  const Update: React.FC = (props) => {
     const { setTitles } = useNavigation();
     const [isFormLoading, setIsFormLoading] = useState(false);
+    const [isUserLoading, setIsUserLoading] = useState(true);
     const [isMetadataLoading, setIsMedatadaLoading] = useState(true);
     const [metadata, setMetadata] = useState<{
-      roles: StoredRole[], libraries: Library[],
-    }>({ roles: [], libraries: [] });
+      roles: StoredRole[], libraries: Library[],users: StoredUser[],
+    }>({ roles: [], libraries: [] ,users: [] });
     const backend = useBackend();
     const history = useHistory();
-    const [userInformation, setUser] = useState<StoredUser[]>([]);
     const [form] = Form.useForm();
-    const [users, setUsers] = useState<User[]>([]);
-   
-    console.log(props.match.params.id);
+    const [usersInfo, setUsers] = useState<User[]>([]);
+    const { id } = useParams<{ id: string }>();
+    let displayNameApi = '';
+    let emailApi = '';
+    let libreriaApi = '';
+    let rolApi= '';
 
-    const fetchuser = useCallback(async () => {
-        const [result, error] = await backend.users.getOne(`?${props.match.params.id}`);
+      const fetchMetadata = async () => {
+        setIsMedatadaLoading(true);
+        const [result, error] = await wrapError(
+          Promise.all([
+            backend.libraries.getAll<{ libraries: Library[] }>(),
+            backend.users.get<{ roles: StoredRole[] }>('/roles'),
+            backend.usersId.getAll<{users: User[]}>(`id=${id}`),
+          ]),
+        );
     
-        if (error || !result) {
-          notification.error({ message: 'Ocurrió un error al obtener al usuario' });
+        if (error || !result || !result[0][0] || !result[1][0]|| !result[2][0]) {
+          notification.error({
+            message: 'Ocurrió un problema al cargar.', description: 'Intentalo más tarde.',
+          });
+          setIsMedatadaLoading(false);
           return;
         }
-        console.log(result.data);
-        console.log('hola');
-      }, [backend.users]);
-
-
-
-     
     
-    const fetchMetadata = async () => {
-      setIsMedatadaLoading(true);
-      const [result, error] = await wrapError(
-        Promise.all([
-          backend.libraries.getAll<{ libraries: Library[] }>(),
-          backend.users.get<{ roles: StoredRole[] }>('/roles'),
-        ]),
-      );
-  
-      if (error || !result || !result[0][0] || !result[1][0]) {
-        notification.error({
-          message: 'Ocurrió un problema al cargar.', description: 'Intentalo más tarde.',
+        setMetadata({
+          libraries: result[0][0]!.data.libraries,
+          roles: result[1][0]!.data.roles,
+          users: result[2][0]!.data.users,
         });
+        console.log(result[2][0].data);
         setIsMedatadaLoading(false);
-        return;
-      }
-  
-      setMetadata({
-        libraries: result[0][0]!.data.libraries,
-        roles: result[1][0]!.data.roles,
-      });
-      setIsMedatadaLoading(false);
-    };
+      };
+      
+      
   
     useEffect(() => {
       setTitles({
         title: 'Modificar usuario', subtitle: 'Ingresa todos los campos a modificar',
       });
       fetchMetadata();
-      fetchuser();
-      // eslint-disable-next-line
     }, [INITIAL_STATE]);
+
   
     const onFinish = async (values: UserInput) => {
       setIsFormLoading(true);
   
-      const [result, error] = await backend.users.createOne({ ...values, disabled: false });
+      const [result, error] = await backend.users.updateOneK({ ...values, disabled: false });
+
+      console.log({ ...values, disabled: false });
   
       if (error) {
         notification.error({
@@ -140,7 +137,6 @@ import {
       });
     };
     
-    
   
     return (
       <Form
@@ -148,13 +144,14 @@ import {
         form={form}
         name="registerUser"
         initialValues={INITIAL_STATE}
+        
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
         size="large"
         scrollToFirstError
       >
         <Form.Item
-          label="E-Mail"
+          label="email"
           name="email"
           rules={[
             {
@@ -167,18 +164,16 @@ import {
             },
           ]}
         >
-          <Input />
+          <Input disabled={isMetadataLoading} />
         </Form.Item>
   
         <Form.Item
-          label="Nombre"
+        
+          label="nombre"
           name="displayName"
-          rules={[{
-            required: true,
-            message: 'Ingresar el nombre',
-          }]}
+          
         >
-          <Input />
+          <Input  disabled={isMetadataLoading} />
         </Form.Item>
   
         <Form.Item
@@ -207,7 +202,7 @@ import {
           ]}
           hasFeedback
         >
-          <Input.Password />
+          <Input.Password  disabled={isMetadataLoading}/>
         </Form.Item>
         <Form.Item
           label="Librería"
@@ -221,6 +216,19 @@ import {
             {metadata.libraries.map((lib) => (
               <Select.Option key={lib.id} value={lib.id}>{lib.name}</Select.Option>
             ))}
+          </Select>
+        </Form.Item>
+
+        <Form.Item
+          label="Usuario Activo"
+          name="disabled"
+          rules={[{
+            required: true,
+            message: 'Debes seleccionar un estado',
+          }]}
+        >
+          <Select showSearch disabled={isMetadataLoading} loading={isMetadataLoading}>
+              <Select.Option value="si">Si</Select.Option>
           </Select>
         </Form.Item>
   

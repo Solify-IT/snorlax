@@ -44,7 +44,7 @@ export default class Router {
         request, response, next, logger: controller.logger,
       });
     });
-    app.put('/users', async (request, response, next) => {
+    app.patch('/users', async (request, response, next) => {
       await controller.users.updateUser({
         request, response, next, logger: controller.logger,
       });

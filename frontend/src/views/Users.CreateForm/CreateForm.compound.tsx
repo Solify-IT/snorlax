@@ -73,7 +73,9 @@ const RegisterForm: React.FC = () => {
   const onFinish = async (values: UserInput) => {
     setIsFormLoading(true);
 
+   
     const [result, error] = await backend.users.createOne({ ...values, disabled: false });
+    console.log({ ...values, disabled: false });
 
     if (error) {
       notification.error({

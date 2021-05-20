@@ -19,6 +19,8 @@ export class Backend {
 
   users: CRUD<User, UserInput, UserInput>;
 
+  usersId : CRUD<User, UserInput, UserInput>;
+
   libraries: CRUD<Library, unknown, unknown>;
 
   catalogue: CRUD<Catalogue, unknown, unknown>;
@@ -29,8 +31,13 @@ export class Backend {
       `${this.rootEndpoint}${BOOKS_ROOT}`, config,
     );
     this.users = new CRUD(
+      `${this.rootEndpoint}${USERS_ROOT}`, config,
+    );
+
+    this.usersId = new CRUD(
       `${this.rootEndpoint}${USERS_ROOT_ID}`, config,
     );
+
     this.libraries = new CRUD(
       `${this.rootEndpoint}${LIBRARIES_ROOT}`, config,
     );
