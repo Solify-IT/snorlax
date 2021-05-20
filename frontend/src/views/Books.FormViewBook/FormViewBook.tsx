@@ -21,22 +21,30 @@ const FormViewBook: React.FC<Props> = ({ book }) => {
     // eslint-disable-next-line
   }, [INITIAL_STATE]);
   const data = [
-    (book.title),
-    (book.price),
-    (book.author),
-    (book.unitaryCost),
-    (book.provider),
+    <b>Titulo </b>,
+    <b>Precio </b>,
+    <b>Autor</b>,
+    <b>Costo Unitario</b>,
+    <b>Proveedor</b>,
+  ];
+
+  const dat = [
+    book.title,
+    book.price,
+    book.author,
+    book.unitaryCost,
+    book.provider,
   ];
   return (
     <Row justify="space-around" align="middle">
-      <Col span={12}>
-        <Divider orientation="left">Detalles</Divider>
+      <Col span={6}>
+        <Divider orientation="left">Titulos</Divider>
         <List
-          size="large"
-          header={<div>-------------------------</div>}
-          footer={<div>-------------------------</div>}
+          header={<div>--------------------------------------</div>}
+          footer={<div>--------------------------------------</div>}
           dataSource={data}
           bordered
+          size="large"
           renderItem={(item) => (
             <List.Item>
               {item}
@@ -44,7 +52,21 @@ const FormViewBook: React.FC<Props> = ({ book }) => {
           )}
         />
       </Col>
-
+      <Col span={14}>
+        <Divider orientation="left">Detalles</Divider>
+        <List
+          header={<div>--------------------------------------</div>}
+          footer={<div>--------------------------------------</div>}
+          dataSource={dat}
+          bordered
+          size="large"
+          renderItem={(item) => (
+            <List.Item>
+              {item}
+            </List.Item>
+          )}
+        />
+      </Col>
     </Row>
   );
 };

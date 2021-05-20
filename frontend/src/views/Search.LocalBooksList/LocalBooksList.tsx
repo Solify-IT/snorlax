@@ -3,7 +3,7 @@ import {
   Button, Table, Tag, Tooltip, Typography,
 } from 'antd';
 import React from 'react';
-import { useHistory } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { Book } from 'src/@types';
 import { toBookDetail } from 'src/Components/Router/routes';
 import formatISBN from 'src/utils/isbn';
@@ -20,9 +20,7 @@ const LocalBooksList: React.FC<Props> = ({
       dataIndex: 'title',
       key: 'title',
       render: (title: string, row: Book) => (
-        <Typography.Link href={toBookDetail(row.id)}>
-          {title}
-        </Typography.Link>
+        <Link to={toBookDetail(row.id)}>{title}</Link>
       ),
     },
     {
