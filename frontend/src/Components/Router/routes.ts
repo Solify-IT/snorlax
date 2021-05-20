@@ -8,6 +8,8 @@ export const ADMIN = '/admin';
 
 export const BOOKS = `${INVENTORY}/libros`;
 export const NEW_BOOK = `${BOOKS}/nuevo`;
+export const BOOK_DETAIL = `${BOOKS}/:id`;
+
 export const LIST_LOCAL_BOOKS = `${BOOKS}/buscar`;
 
 export const toBookDetail = (
@@ -15,6 +17,7 @@ export const toBookDetail = (
 ) => `${BOOKS}/${uuid}`;
 
 export const LIBRARIES = `${ADMIN}/librerías`;
+
 export const toLibraryDetail = (
   uuid: string,
 ) => `${LIBRARIES}/${uuid}`;
@@ -22,6 +25,7 @@ export const toLibraryDetail = (
 export const USERS = `${ADMIN}/usuarios`;
 export const LIST_USERS = `${USERS}/lista-local`;
 export const NEW_USER = `${USERS}/nuevo`;
+
 export const toUserDetail = (
   uuid: string,
 ) => `${USERS}/${uuid}`;

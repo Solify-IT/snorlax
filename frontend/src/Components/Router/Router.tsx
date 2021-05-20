@@ -11,6 +11,7 @@ import HOME, {
   LIBRARIES,
   NEW_USER,
   LIST_USERS,
+  BOOK_DETAIL,
   INVENTORY,
 } from './routes';
 
@@ -20,13 +21,14 @@ const SearchLocalBooksView = React.lazy(() => import('src/views/Search.LocalBook
 const LibrariesListView = React.lazy(() => import('src/views/Libraries.ListView'));
 const ListUsers = React.lazy(() => import('src/views/Users.List'));
 const RegisterUser = React.lazy(() => import('src/views/Users.CreateForm'));
+const DetailViewBook = React.lazy(() => import('src/views/Books.FormViewBook'));
 
 const Router: React.FC = () => (
-  <Switch>
-    {/* {} es para ingresar código de JS o TS */}
-    <Route exact path={HOME} />
-    <PageHeader>
-      <React.Suspense fallback={<Loader isLoading />}>
+
+  <PageHeader>
+    <React.Suspense fallback={<Loader isLoading />}>
+      <Switch>
+        <Route exact path={HOME} />
         <Route exact path={SIGN_IN}>
           <SignInView />
         </Route>
@@ -63,9 +65,15 @@ const Router: React.FC = () => (
         >
           <ListUsers />
         </PrivateRoute>
-      </React.Suspense>
-    </PageHeader>
-  </Switch>
+        <PrivateRoute
+          path={BOOK_DETAIL}
+        >
+          <DetailViewBook />
+        </PrivateRoute>
+      </Switch>
+    </React.Suspense>
+  </PageHeader>
+
 );
 
 export default Router;
