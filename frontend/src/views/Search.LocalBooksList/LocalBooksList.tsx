@@ -69,7 +69,7 @@ const LocalBooksList: React.FC<Props> = ({
     },
 
     {
-      title: '',
+      title: 'Acciones',
       dataIndex: '',
       key: 'view',
       render: (row: Book) => (

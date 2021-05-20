@@ -106,7 +106,7 @@ export default class BookController {
 
     const pageNumber = page ? parseInt(page as string, 10) : undefined;
     const perPageNumber = perPage ? parseInt(perPage as string, 10) : undefined;
-    const [book, error] = await wrapError(
+    const [books, error] = await wrapError(
       this.bookInteractor.listBooksByLibrary(
         pageNumber, perPageNumber, libraryId as string, isbn as string,
       ),
@@ -117,7 +117,7 @@ export default class BookController {
       return;
     }
 
-    context.response.status(200).json({ ...book });
+    context.response.status(200).json({ ...books });
   }
 
   async getBookById(context: IContext): Promise<void> {
