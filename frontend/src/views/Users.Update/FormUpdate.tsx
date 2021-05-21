@@ -60,7 +60,7 @@ const FormUpdate: React.FC<Props> = ({ user }) => {
   const onFinish = async (values: UserInput) => {
     setIsFormLoading(true);
 
-    const [error] = await backend.users.updateOneK({ ...values });
+    const [result, error] = await backend.users.updateOneK({ ...values });
 
     if (error) {
       notification.error({
@@ -105,7 +105,7 @@ const FormUpdate: React.FC<Props> = ({ user }) => {
     <Form
       {...layout}
       form={form}
-      name="registerUser"
+      name="uodateUser"
       initialValues={INITIAL_STATE}
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
