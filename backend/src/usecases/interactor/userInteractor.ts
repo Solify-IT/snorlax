@@ -48,10 +48,10 @@ export default class UserInteractor {
     return result;
   }
 
-  async updateUser(userData: UserInput): Promise<StoredUser> {
+  async updateUser(userData: Omit<UserInput, 'password'>): Promise<StoredUser> {
     this.logger.info('Updating user.', { logger: 'UserInteractor:updateUser' });
 
-    this.validateUserData(userData);
+    this.validateUpdateUserData(userData);
 
     const result = await this.userRepository.updateUser({
       roleId: userData.roleId,
@@ -59,7 +59,6 @@ export default class UserInteractor {
       disabled: userData.disabled,
       displayName: userData.displayName,
       email: userData.email,
-      id: uuidv4(),
     });
 
     return result;
@@ -122,6 +121,27 @@ export default class UserInteractor {
 
     if (!paswdRegex.test(userData.password)) {
       message += 'Your password is weak! ';
+    }
+
+    if (message !== '') {
+      this.logger.error(message, {
+        userData, logger: 'UserInteractor:validateUserData',
+      });
+      throw new InvalidDataError(message);
+    }
+  }
+
+  private validateUpdateUserData(userData: Omit<UserInput, 'password'>) {
+    let message = '';
+
+    if (!userData.email || !userData.displayName) {
+      message += 'Missing data! ';
+    }
+
+    const emailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+    if (!emailRegex.test(userData.email)) {
+      message += 'The email is not valid. ';
     }
 
     if (message !== '') {

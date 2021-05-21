@@ -23,6 +23,7 @@ const LocalBooksList: React.FC = () => {
   const history = useHistory();
 
   const fetchBooks = useCallback(async (currIsbn?: string) => {
+
     setIsLoading(true);
 
     const [result, error] = await backend.books.getAll<{

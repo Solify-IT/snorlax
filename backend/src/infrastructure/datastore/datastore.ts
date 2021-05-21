@@ -82,8 +82,8 @@ export default class Datastore implements IDatastore {
     return result!.rows[0].id;
   }
 
-  async update<T extends CommonType>(
-    tableName: string, where:string, values: T,
+  async update<T, Y>(
+    tableName: string, where:string, values: Y,
   ): Promise<T> {
     const fields = Object.keys(values).map(camelToSnakeCase);
     const data = Object.values(values);

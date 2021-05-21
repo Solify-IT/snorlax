@@ -57,16 +57,14 @@ export default class UserController {
       disabled,
       displayName,
       libraryId,
-      password,
       roleId,
     } = context.request.body;
 
-    const userData: UserInput = {
+    const userData = {
       email,
       disabled: JSON.parse(disabled),
       displayName,
       libraryId,
-      password,
       roleId,
     };
 

@@ -9,7 +9,7 @@ export default interface IDatastore {
   insert<T extends CommonType>(
     tableName: string, values: T,
   ): Promise<CommonType['id']>;
-  update<T extends CommonType>(
-    tableName: string, where: string, values: T,
+  update<T, Y>(
+    tableName: string, where: string, values: Y,
   ): Promise<T>;
 }
