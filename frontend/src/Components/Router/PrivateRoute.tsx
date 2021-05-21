@@ -18,7 +18,6 @@ const PrivateRoute: React.FC<RouteProps & Props> = ({
     return hasAccess ? hasAccess(user) : true;
   }, [user, hasAccess]);
 
-  console.log(idToken, user, userHasAccess);
   return (
     <Route
       {...rest}

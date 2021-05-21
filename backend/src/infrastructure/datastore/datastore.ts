@@ -62,7 +62,6 @@ export default class Datastore implements IDatastore {
       VALUES (${paramsPlaceholders})
       RETURNING *
     `;
-    console.log(query);
     const data = Object.values(values);
 
     const [result, error] = await wrapError<QueryResult<T>>(
@@ -92,7 +91,6 @@ export default class Datastore implements IDatastore {
       UPDATE ${tableName} SET ${paramsPlaceholders} WHERE ${where}
       RETURNING *
     `;
-    console.log(query);
     const [result, error] = await wrapError<QueryResult<T>>(
       this.dbPool.query<T>(query, data),
     );

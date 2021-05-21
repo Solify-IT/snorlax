@@ -1,4 +1,4 @@
-import User, { StoredUser, UserInput } from 'src/@types/user';
+import { StoredUser } from 'src/@types/user';
 
 export default interface Props {
   user: StoredUser ;
