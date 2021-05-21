@@ -21,6 +21,14 @@ export default class Router {
       );
     });
 
+    app.get('/books/:bookId', middleware, async (request, response, next) => {
+      await controller.books.getBookById(
+        {
+          request, response, next, logger: controller.logger,
+        },
+      );
+    });
+
     app.get('/users/roles', middleware, async (request, response, next) => {
       await controller.users.listAllRoles({
         request, response, next, logger: controller.logger,
