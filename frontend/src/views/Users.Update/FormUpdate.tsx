@@ -77,16 +77,8 @@ import { toUserList } from 'src/Components/Router/routes';
           notification.success({
             message: '¡Usuario modificado!',
             description: 'Puedes modificar más usuarios o verificar el detalle del usuario.',
-            btn: (
-              <Button
-                type="primary"
-                onClick={() => history.push(toUserList())}
-                
-              >
-                Regresar a lista
-              </Button>
-            ),
           });
+          history.push(toUserList());
           form.resetFields();
         }
     
