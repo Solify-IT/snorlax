@@ -67,7 +67,8 @@ const FormUpdate: React.FC<Props> = ({ user }) => {
         message: '¡Ocurrió un error al guardar!',
         description: 'Intentalo después.',
       });
-    } else {
+    }
+    if (result) {
       notification.success({
         message: '¡Usuario modificado!',
         description: 'Puedes modificar más usuarios o verificar el detalle del usuario.',
