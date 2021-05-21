@@ -2,12 +2,10 @@ import {
     Button, Col, Form, Input, notification, Row, Select, Switch,
   } from 'antd';
   import React, {  useEffect, useState } from 'react';
-  import { RouteComponentProps, useHistory } from 'react-router-dom';
-  import { BookFormType, Catalogue, ExternalBook, Library, wrapError } from 'src/@types';
+  import {  useHistory } from 'react-router-dom';
+  import { Library, wrapError } from 'src/@types';
 import User, { StoredRole, StoredUser, UserInput } from 'src/@types/user';
-  import BookForm from 'src/Components/Book.Form';
-  import PossibleBooks from 'src/Components/PossibleBooks';
-import { toUserDetail } from 'src/Components/Router/routes';
+import { toUserList } from 'src/Components/Router/routes';
   import useNavigation from 'src/hooks/navigation';
 
   import { useBackend } from 'src/integrations/backend';
@@ -23,17 +21,9 @@ import { toUserDetail } from 'src/Components/Router/routes';
     wrapperCol: { offset: 6, span: 18 },
   };
 
-    interface RouteParams {
-        id: string
-    }
-
-    interface Update extends RouteComponentProps<RouteParams> {
-    }
-    
     
   
   const FormUpdate:   React.FC<Props> = ({ user }) => {
-    console.log("d");
     const [form] = Form.useForm();
     const [isFormLoading, setIsFormLoading] = useState(false);
     const [isMetadataLoading, setIsMedatadaLoading] = useState(true);
@@ -85,14 +75,15 @@ import { toUserDetail } from 'src/Components/Router/routes';
           });
         } else {
           notification.success({
-            message: '¡Usuario creado!',
-            description: 'Puedes añadir más usuarios o ir al detalle del usuario agregado.',
+            message: '¡Usuario modificado!',
+            description: 'Puedes modificar más usuarios o verificar el detalle del usuario.',
             btn: (
               <Button
                 type="primary"
-                onClick={() => history.push(toUserDetail(result!.data.id))}
+                onClick={() => history.push(toUserList())}
+                
               >
-                Ir al detalle
+                Regresar a lista
               </Button>
             ),
           });
@@ -182,7 +173,7 @@ import { toUserDetail } from 'src/Components/Router/routes';
             label="Usuario Activo"
             name="disabled"
         >
-          <Switch   />
+          <Switch defaultChecked= {user.disabled} />
         </Form.Item>
   
         <Form.Item
@@ -207,7 +198,7 @@ import { toUserDetail } from 'src/Components/Router/routes';
             type="primary"
             htmlType="submit"
           >
-            Registrar Usuario
+            Modificar Usuario
           </Button>
         </Form.Item>
       </Form>

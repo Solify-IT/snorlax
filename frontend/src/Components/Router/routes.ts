@@ -27,6 +27,8 @@ export const UPDATE_USER_ID = `${USERS}/modificar-usuario`;
 export const toUserDetail = (
   uuid: string,
 ) => `${UPDATE_USER_ID}/${uuid}`;
+export const toUserList = (
+) => `${LIST_USERS}`;
 
 export const menuItemKeys = {
   intentory: 'inventory',
