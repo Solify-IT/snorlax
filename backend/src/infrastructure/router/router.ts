@@ -58,6 +58,11 @@ export default class Router {
         request, response, next, logger: controller.logger,
       });
     });
+    app.post('/library', middleware, async (request, response, next) => {
+      await controller.libraries.createLibrary({
+        request, response, next, logger: controller.logger,
+      });
+    });
 
     app.get('/catalogue/:isbn', middleware, async (request, response, next) => {
       await controller.catalogue.findByISBNOrNull({

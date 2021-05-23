@@ -22,4 +22,37 @@ export default class LibraryController {
 
     context.response.status(200).json({ libraries });
   }
+
+  // POST /users { userData }
+  async createLibrary(context: IContext): Promise<void> {
+    
+    const {
+      email,
+      disabled,
+      displayName,
+      libraryId,
+      password,
+      roleId,
+    } = context.request.body;
+
+    const userData: UserInput = {
+      email,
+      disabled: JSON.parse(disabled),
+      displayName,
+      libraryId,
+      password,
+      roleId,
+    };
+
+    const [id, error] = await wrapError(
+      this.userInteractor.createUser(userData),
+    );
+
+    if (error) {
+      context.next(error);
+      return;
+    }
+
+    context.response.status(200).json({ id });
+  }
 }
