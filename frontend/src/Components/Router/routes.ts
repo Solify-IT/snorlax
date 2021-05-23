@@ -25,10 +25,14 @@ export const toLibraryDetail = (
 export const USERS = `${ADMIN}/usuarios`;
 export const LIST_USERS = `${USERS}/lista-local`;
 export const NEW_USER = `${USERS}/nuevo`;
+export const UPDATE_USER = `${USERS}/modificar-usuario/:id`;
+export const UPDATE_USER_ID = `${USERS}/modificar-usuario`;
 
 export const toUserDetail = (
   uuid: string,
-) => `${USERS}/${uuid}`;
+) => `${UPDATE_USER_ID}/${uuid}`;
+export const toUserList = (
+) => `${LIST_USERS}`;
 
 export const menuItemKeys = {
   intentory: 'inventory',

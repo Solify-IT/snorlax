@@ -14,6 +14,8 @@ export default class CRUD<T, C = any, U = any> extends Api {
 
   public updateOne = (id: string, data: U) => this.patch<T, U>(`/${id}`, data);
 
+  public updateOneK = (data: C) => this.patch<T, C>('/', data);
+
   public disableOne = (id: string) => this.patch<string, undefined>(`/${id}`);
 
   public deleteOne = (id: string) => this.delete<string>(`/${id}`);

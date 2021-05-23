@@ -144,8 +144,18 @@ export default class UserRepository extends BaseRepository implements IUserRepos
     return this.datastore.get(`SELECT * FROM ${ROLE_TABLE_NAME}`);
   }
 
+  async getUser(id: string):Promise<StoredUser[]> {
+    return this.datastore.get(`SELECT * FROM ${USER_TABLE_NAME} WHERE id = '${id}' `);
+  }
+
   async createUser(userData: StoredUser): Promise<User['id']> {
     return this.datastore.insert<StoredUser>(USER_TABLE_NAME, {
+      ...userData,
+    });
+  }
+
+  async updateUser(userData: Omit<StoredUser, 'password' | 'id'>): Promise<StoredUser> {
+    return this.datastore.update<StoredUser, Omit<StoredUser, 'password' | 'id'>>(USER_TABLE_NAME, `email = '${userData.email}'`, {
       ...userData,
     });
   }
