@@ -1,18 +1,19 @@
-import { LocalBook } from 'src/domain/model';
 import {
-  IBookPresenter,
-  IBookRepository,
-} from '..';
+  LocalBook, Book, CatalogueInputData, Catalogue,
+} from 'src/domain/model';
+import { Maybe } from 'src/@types';
+import { IBookRepository } from '..';
 import { UnknownError } from '../errors';
 import InvalidDataError from '../errors/invalidDataError';
 import NotFoundError from '../errors/notFoundError';
 import { ILogger } from '../interfaces/logger';
 import LibraryInteractor from './libraryInteractor';
 import MovementInteractor from './movementInteractor';
+import CatalogueInteractor from './catalogueInteractor';
 
 export type RegisterBookInputData = Omit<LocalBook & {
   isLoan: boolean, amount: number,
-}, 'id' | 'library'>;
+} & CatalogueInputData, 'id' | 'library'>;
 
 export default class BookInteractor {
   private bookRepository: IBookRepository;
@@ -21,21 +22,21 @@ export default class BookInteractor {
 
   private movementInteractor: MovementInteractor;
 
-  private bookPresenter: IBookPresenter;
+  catalogueInteractor: CatalogueInteractor;
 
   private logger: ILogger;
 
   constructor(
     bookRepository: IBookRepository,
-    bookPresenter: IBookPresenter,
     libraryInteractor: LibraryInteractor,
     movementInteractor: MovementInteractor,
+    catalogueInteractor: CatalogueInteractor,
     logger: ILogger,
   ) {
     this.bookRepository = bookRepository;
-    this.bookPresenter = bookPresenter;
     this.libraryInteractor = libraryInteractor;
     this.movementInteractor = movementInteractor;
+    this.catalogueInteractor = catalogueInteractor;
     this.logger = logger;
   }
 
@@ -45,10 +46,13 @@ export default class BookInteractor {
     this.validateRegisterBookData(bookData);
 
     // Check if the library exists and if already is registered the book in the library
-    const [libraryResult, existLocalBook] = await Promise.all([
+    const [libraryResult, existLocalBook, catalogue] = await Promise.all([
       this.libraryInteractor.getOneById(bookData.libraryId),
       this.bookRepository.findByISBN(bookData.isbn),
+      this.catalogueInteractor.findByISBNOrNull(bookData.isbn),
     ]);
+
+    await this.createInCatalogueIfNotExists(catalogue, bookData);
 
     if (!libraryResult) {
       const message = 'Library not found';
@@ -79,7 +83,7 @@ export default class BookInteractor {
     // Register the inventory movement
     // TODO: also save the user and turn in which the movement was registered
     await this.movementInteractor.registerMovement({
-      amount: bookData.amount, localBookId: result, isLoan: bookData.isLoan, type:'in',
+      amount: bookData.amount, localBookId: result, isLoan: bookData.isLoan, type: 'in',
     });
 
     if (result !== '') return result;
@@ -107,30 +111,68 @@ export default class BookInteractor {
     }
   }
 
-  async updateBookAmount(libraryId: string, isbn: string, amount: number): Promise<LocalBook>{
-    // TODO: Agregar movement type(Entrada o salida) a tabla de movimientos 
+  async updateBookAmount(libraryId: string, isbn: string, amount: number): Promise<LocalBook> {
+    // TODO: Agregar movement type(Entrada o salida) a tabla de movimientos
 
-    //Check if book exists in library
+    // Check if book exists in library
     const [bookResult] = await Promise.all([
       this.bookRepository.getBookInLibrary(libraryId, isbn),
     ]);
 
-    if (!bookResult){
+    if (!bookResult) {
       const message = 'Book not found in library';
       this.logger.error(
         message, {
           libraryId, logger: 'BookInteractor:updateBookAmount',
-        }
-      )
+        },
+      );
       throw new NotFoundError(message);
     }
 
-    const result = await this.movementInteractor.registerMovement({amount,isLoan:false,localBookId:bookResult.id,type:'fix'});
+    const result = await this.movementInteractor.registerMovement({
+      amount, isLoan: false, localBookId: bookResult.id, type: 'fix',
+    });
 
     if (result) {
       return bookResult;
     }
 
-      throw new UnknownError('unknown');
+    throw new UnknownError('unknown');
+  }
+
+  async listBooksByLibrary(
+    page: number = 1, perPage: number = 10, libraryId?: string, isbn?: string,
+  ): Promise<{ books: Book[], total: number }> {
+    const { localBooks, total } = await this.bookRepository.listBooksByLibrary(
+      page, perPage, libraryId, isbn,
+    );
+
+    return { books: localBooks, total };
+  }
+
+  private async createInCatalogueIfNotExists(
+    catalogue: Maybe<Catalogue>, bookData: RegisterBookInputData,
+  ): Promise<void> {
+    if (!catalogue) {
+      await this.catalogueInteractor.registerCatalogue({
+        area: bookData.area,
+        author: bookData.author,
+        collection: bookData.collection,
+        coverType: bookData.coverType,
+        coverImageUrl: bookData.coverImageUrl,
+        distribuitor: bookData.distribuitor,
+        editoral: bookData.editoral,
+        isbn: bookData.isbn,
+        pages: bookData.pages,
+        provider: bookData.provider,
+        subCategory: bookData.subCategory,
+        subTheme: bookData.subTheme,
+        synopsis: bookData.synopsis,
+        theme: bookData.theme,
+        title: bookData.title,
+        type: bookData.type,
+        unitaryCost: bookData.unitaryCost,
+      });
+    }
   }
 }
