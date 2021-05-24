@@ -1,5 +1,7 @@
 import { wrapError } from 'src/@types';
+import { UnauthorizedError } from 'src/usecases/errors';
 import BookInteractor, { RegisterBookInputData } from 'src/usecases/interactor/bookInteractor';
+import { isAdmin, isLibrero } from '../auth';
 import { IContext } from './context';
 
 export default class BookController {
@@ -34,13 +36,27 @@ export default class BookController {
       type,
       unitaryCost,
     } = context.request.body;
+    const { currentUser } = context.request;
+
+    // Only admins or libreros of the same library can register books
+    if (
+      !isAdmin(currentUser.role.name)
+      && !(
+        isLibrero(currentUser.role.name)
+        && currentUser.libraryId === libraryId
+      )
+    ) {
+      const MESSAGE = 'Permisos insuficientes.';
+      context.logger.error({ message: MESSAGE });
+      throw new UnauthorizedError(MESSAGE);
+    }
 
     const bookData: RegisterBookInputData = {
       isLoan: JSON.parse(isLoan),
       isbn,
       libraryId,
-      price: JSON.parse(price),
-      amount: JSON.parse(amount),
+      price: JSON.parse(price || '0'),
+      amount: JSON.parse(amount || '0'),
       area,
       author,
       coverType,
@@ -48,7 +64,7 @@ export default class BookController {
       coverImageUrl,
       distribuitor,
       editoral,
-      pages: JSON.parse(pages),
+      pages: JSON.parse(pages || '0'),
       provider,
       subCategory,
       title,
@@ -56,7 +72,7 @@ export default class BookController {
       synopsis,
       theme,
       type,
-      unitaryCost: JSON.parse(unitaryCost),
+      unitaryCost: JSON.parse(unitaryCost || '0'),
     };
 
     const [id, error] = await wrapError(
@@ -76,6 +92,18 @@ export default class BookController {
     const {
       page, perPage, libraryId, isbn,
     } = context.request.query;
+    const { currentUser } = context.request;
+
+    // Only admins or libreros can list books
+    if (
+      !isAdmin(currentUser.role.name)
+      && !isLibrero(currentUser.role.name)
+    ) {
+      const MESSAGE = 'Permisos insuficientes.';
+      context.logger.error({ MESSAGE });
+      throw new UnauthorizedError(MESSAGE);
+    }
+
     const pageNumber = page ? parseInt(page as string, 10) : undefined;
     const perPageNumber = perPage ? parseInt(perPage as string, 10) : undefined;
     const [books, error] = await wrapError(
@@ -90,5 +118,18 @@ export default class BookController {
     }
 
     context.response.status(200).json({ ...books });
+  }
+
+  async getBookById(context: IContext): Promise<void> {
+    const { bookId } = context.request.params;
+    const [book, error] = await wrapError(
+      this.bookInteractor.getBook(bookId as string),
+    );
+
+    if (error) {
+      context.next(error);
+    }
+
+    context.response.status(200).json({ book });
   }
 }

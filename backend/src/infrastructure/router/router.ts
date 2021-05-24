@@ -1,20 +1,27 @@
 import { Application } from 'express';
 import IAppController from 'src/interface/controller';
+import authMiddleware from './authMiddleware';
 
 export default class Router {
   constructor(app: Application, controller: IAppController) {
-    app.post('/books', async (request, response, next) => {
+    const middleware = authMiddleware(controller.users.userInteractor.userRepository);
+    app.post('/books', middleware, async (request, response, next) => {
       await controller.books.registerBook(
-        { request, response, next },
+        {
+          request, response, next, logger: controller.logger,
+        },
       );
     });
 
-    app.get('/books', async (request, response, next) => {
+    app.get('/books', middleware, async (request, response, next) => {
       await controller.books.listBooksByLibrary(
-        { request, response, next },
+        {
+          request, response, next, logger: controller.logger,
+        },
       );
     });
 
+<<<<<<< HEAD
     app.post('/movements', async (request, response, next) => {
       await controller.movements.registerMovement(
         { request, response, next },
@@ -23,22 +30,61 @@ export default class Router {
 
     app.get('/users/roles', async (request, response, next) => {
       await controller.users.listAllRoles({ request, response, next });
+=======
+    app.get('/books/:bookId', middleware, async (request, response, next) => {
+      await controller.books.getBookById(
+        {
+          request, response, next, logger: controller.logger,
+        },
+      );
     });
 
-    app.get('/users', async (request, response, next) => {
-      await controller.users.listUsers({ request, response, next });
+    app.get('/users/roles', middleware, async (request, response, next) => {
+      await controller.users.listAllRoles({
+        request, response, next, logger: controller.logger,
+      });
     });
 
-    app.post('/users', async (request, response, next) => {
-      await controller.users.createUser({ request, response, next });
+    app.post('/users/sign-in', async (request, response, next) => {
+      await controller.users.signIn({
+        request, response, next, logger: controller.logger,
+      });
     });
 
-    app.get('/libraries', async (request, response, next) => {
-      await controller.libraries.listAll({ request, response, next });
+    app.get('/users/id', async (request, response, next) => {
+      await controller.users.getUser({
+        request, response, next, logger: controller.logger,
+      });
+>>>>>>> 9b55ca3a2fbb12eb61ab44dfb251e7b491eca305
     });
 
-    app.get('/catalogue/:isbn', async (request, response, next) => {
-      await controller.catalogue.findByISBNOrNull({ request, response, next });
+    app.get('/users', middleware, async (request, response, next) => {
+      await controller.users.listUsers({
+        request, response, next, logger: controller.logger,
+      });
+    });
+    app.patch('/users', async (request, response, next) => {
+      await controller.users.updateUser({
+        request, response, next, logger: controller.logger,
+      });
+    });
+
+    app.post('/users', middleware, async (request, response, next) => {
+      await controller.users.createUser({
+        request, response, next, logger: controller.logger,
+      });
+    });
+
+    app.get('/libraries', middleware, async (request, response, next) => {
+      await controller.libraries.listAll({
+        request, response, next, logger: controller.logger,
+      });
+    });
+
+    app.get('/catalogue/:isbn', middleware, async (request, response, next) => {
+      await controller.catalogue.findByISBNOrNull({
+        request, response, next, logger: controller.logger,
+      });
     });
   }
 }

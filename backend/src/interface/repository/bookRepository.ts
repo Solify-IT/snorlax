@@ -5,9 +5,14 @@ import {
 } from 'src/domain/model';
 import { IBookRepository } from 'src/usecases';
 import { InvalidDataError } from 'src/usecases/errors';
+import { Maybe } from 'src/@types';
 import BaseRepository from './BaseRepository';
 
 export default class BookRepository extends BaseRepository implements IBookRepository {
+  findByISBN(isbn: string): Promise<LocalBook[]> {
+    throw new Error('Method not implemented.');
+  }
+
   async listBooksByLibrary(
     page: number, perPage: number, libraryId?: string, isbn?: string,
   ): Promise<{ localBooks: Book[], total: number }> {
@@ -83,12 +88,13 @@ export default class BookRepository extends BaseRepository implements IBookRepos
     throw new Error('Method not implemented.');
   }
 
-  async findByISBN(isbn: string): Promise<LocalBook[]> {
-    const books = await this.datastore.get<LocalBook>(
-      `SELECT * FROM ${BOOK_TABLE_NAME} WHERE isbn = $1`, [isbn],
+  async findById(id: string): Promise<Maybe<LocalBook>> {
+    const book = await this.datastore.getOneOrNull<LocalBook>(
+      `SELECT * FROM  ${BOOK_TABLE_NAME} l, ${CATALOGUE_TABLE_NAME} c WHERE l.isbn = c.isbn AND l.id = $1
+      `, [id],
     );
 
-    return books;
+    return book;
   }
 
   async getBookInLibrary(libraryId: string, isbn: string): Promise<LocalBook> {

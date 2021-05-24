@@ -5,14 +5,20 @@ import reportWebVitals from './reportWebVitals';
 import { NavigationContextProvider } from './hooks/navigation';
 import { BackendProvider } from './integrations/backend';
 import { MetadataProviderContextProvider } from './integrations/metadataProvider';
+import { FirebaseProvider } from './hooks/firebase';
+import { AuthContextProvider } from './hooks/auth';
 
 ReactDOM.render(
   <React.StrictMode>
     <NavigationContextProvider>
       <MetadataProviderContextProvider>
-        <BackendProvider>
-          <App />
-        </BackendProvider>
+        <FirebaseProvider>
+          <AuthContextProvider>
+            <BackendProvider>
+              <App />
+            </BackendProvider>
+          </AuthContextProvider>
+        </FirebaseProvider>
       </MetadataProviderContextProvider>
     </NavigationContextProvider>
   </React.StrictMode>,

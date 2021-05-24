@@ -1,12 +1,14 @@
+
 import React from 'react';
 import { AxiosRequestConfig } from 'axios';
 import {
   BookFormType, Catalogue, Library, LocalBook, Movement,
 } from 'src/@types';
 import {
-  BACKEND_MAIN_EP, BOOKS_ROOT, LIBRARIES_ROOT, USERS_ROOT, CATALOGUE_ROOT, MOVEMENTS_ROOT,
+  BACKEND_MAIN_EP, BOOKS_ROOT, LIBRARIES_ROOT, USERS_ROOT, CATALOGUE_ROOT, MOVEMENTS_ROOT,USERS_ROOT_ID,
 } from 'src/settings';
 import User, { UserInput } from 'src/@types/user';
+import useAuth from 'src/hooks/auth';
 import CRUD from './crud';
 
 export type RegisterBook = BookFormType & { libraryId: Library['id'] };
@@ -17,6 +19,8 @@ export class Backend {
   books: CRUD<LocalBook, RegisterBook, RegisterBook>;
 
   users: CRUD<User, UserInput, UserInput>;
+
+  usersId : CRUD<User, UserInput, UserInput>;
 
   libraries: CRUD<Library, unknown, unknown>;
 
@@ -32,6 +36,11 @@ export class Backend {
     this.users = new CRUD(
       `${this.rootEndpoint}${USERS_ROOT}`, config,
     );
+
+    this.usersId = new CRUD(
+      `${this.rootEndpoint}${USERS_ROOT_ID}`, config,
+    );
+
     this.libraries = new CRUD(
       `${this.rootEndpoint}${LIBRARIES_ROOT}`, config,
     );
@@ -46,11 +55,20 @@ export class Backend {
 
 export const BackendContext = React.createContext<Backend>(undefined!);
 
-export const BackendProvider: React.FC = ({ children }) => (
-  <BackendContext.Provider value={new Backend(BACKEND_MAIN_EP)}>
-    {children}
-  </BackendContext.Provider>
-);
+export const BackendProvider: React.FC = ({ children }) => {
+  const { idToken } = useAuth();
+  return (
+    <BackendContext.Provider
+      value={new Backend(BACKEND_MAIN_EP, {
+        headers: {
+          Authorization: idToken || undefined,
+        },
+      })}
+    >
+      {children}
+    </BackendContext.Provider>
+  );
+};
 
 export const useBackend = () => React.useContext(BackendContext);
 

@@ -1,3 +1,4 @@
+import { ILogger } from 'src/usecases/interfaces/logger';
 import BookController from './bookController';
 import UserController from './userController';
 import LibraryController from './libraryController';
@@ -10,6 +11,7 @@ export interface IAppController {
   libraries: LibraryController
   catalogue: CatalogueController,
   movements: MovementController,
+  logger: ILogger,
 }
 
 export default IAppController;
