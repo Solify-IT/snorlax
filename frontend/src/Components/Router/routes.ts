@@ -17,6 +17,7 @@ export const toBookDetail = (
 ) => `${BOOKS}/${uuid}`;
 
 export const LIBRARIES = `${ADMIN}/librerías`;
+export const NEW_LIBRARY = `${LIBRARIES}/nuevo`;
 
 export const toLibraryDetail = (
   uuid: string,

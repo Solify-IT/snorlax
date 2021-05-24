@@ -1,11 +1,14 @@
-import { notification } from 'antd';
+import { Button, notification } from 'antd';
 import React, { useCallback, useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { Library } from 'src/@types';
+import { NEW_LIBRARY } from 'src/Components/Router/routes';
 import useNavigation from 'src/hooks/navigation';
 import { useBackend } from 'src/integrations/backend';
 import LibrariesListViewComp from './ListView';
 
 const LibrariesListView: React.FC = () => {
+  const history = useHistory();
   const [libraries, setLibraries] = useState<Library[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const backend = useBackend();
@@ -31,7 +34,16 @@ const LibrariesListView: React.FC = () => {
   }, [backend.libraries]);
 
   useEffect(() => {
-    setTitles({ title: 'Librerías' });
+    setTitles({ title: 'Librerías',
+    extra: [
+      <Button
+        type="primary"
+        onClick={() => history.push(NEW_LIBRARY)}
+      >
+        Nueva librería
+      </Button>,
+    ], });
+    
     fetchLibraries();
   }, [fetchLibraries, setTitles]);
 
