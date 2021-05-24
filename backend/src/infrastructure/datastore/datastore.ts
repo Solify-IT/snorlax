@@ -81,6 +81,33 @@ export default class Datastore implements IDatastore {
     return result!.rows[0].id;
   }
 
+  async update<T, Y>(
+    tableName: string, where:string, values: Y,
+  ): Promise<T> {
+    const fields = Object.keys(values).map(camelToSnakeCase);
+    const data = Object.values(values);
+    const paramsPlaceholders = fields.map((field, i) => `${field} = $${i + 1}`).join(', ');
+    const query = `
+      UPDATE ${tableName} SET ${paramsPlaceholders} WHERE ${where}
+      RETURNING *
+    `;
+    const [result, error] = await wrapError<QueryResult<T>>(
+      this.dbPool.query<T>(query, data),
+    );
+
+    if (error) {
+      this.logger.error('Error while updating an object', {
+        logger: 'datastore',
+        tableName,
+        values,
+        error,
+      });
+      throw error;
+    }
+
+    return result!.rows[0];
+  }
+
   private toCamel<T>(obj: any) {
     return loadash.mapKeys(obj, (v, k) => loadash.camelCase(k)) as T;
   }

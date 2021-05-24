@@ -41,8 +41,19 @@ export default class Router {
       });
     });
 
+    app.get('/users/id', async (request, response, next) => {
+      await controller.users.getUser({
+        request, response, next, logger: controller.logger,
+      });
+    });
+
     app.get('/users', middleware, async (request, response, next) => {
       await controller.users.listUsers({
+        request, response, next, logger: controller.logger,
+      });
+    });
+    app.patch('/users', async (request, response, next) => {
+      await controller.users.updateUser({
         request, response, next, logger: controller.logger,
       });
     });
