@@ -10,6 +10,5 @@ export type Library = CommonType & {
   inCharge: string;
 };
 
-export type LibraryInput = Omit<Library, 'id'> & {
-};
+export type LibraryInput = Omit<Library, 'id'>;
 export const LIBRARY_TABLE_NAME = 'libraries';

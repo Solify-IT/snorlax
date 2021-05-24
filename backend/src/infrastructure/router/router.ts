@@ -58,7 +58,9 @@ export default class Router {
         request, response, next, logger: controller.logger,
       });
     });
-    app.post('/library', middleware, async (request, response, next) => {
+
+    app.post('/library', async (request, response, next) => {
+      console.log(request);
       await controller.libraries.createLibrary({
         request, response, next, logger: controller.logger,
       });

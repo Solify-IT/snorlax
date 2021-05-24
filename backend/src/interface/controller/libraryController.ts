@@ -1,18 +1,19 @@
 import { wrapError } from 'src/@types';
+import { LibraryInput } from 'src/domain/model/library';
 import LibraryInteractor from 'src/usecases/interactor/libraryInteractor';
 import { IContext } from './context';
 
 export default class LibraryController {
-  userInteractor: LibraryInteractor;
+  libraryInteractor: LibraryInteractor;
 
-  constructor(userInteractor: LibraryInteractor) {
-    this.userInteractor = userInteractor;
+  constructor(libraryInteractor: LibraryInteractor) {
+    this.libraryInteractor = libraryInteractor;
   }
 
   // GET /libraries
   async listAll(context: IContext): Promise<void> {
     const [libraries, error] = await wrapError(
-      this.userInteractor.listAll(),
+      this.libraryInteractor.listAll(),
     );
 
     if (error) {
@@ -23,29 +24,30 @@ export default class LibraryController {
     context.response.status(200).json({ libraries });
   }
 
-  // POST /users { userData }
+  // POST /library { libraryData }
   async createLibrary(context: IContext): Promise<void> {
-    
     const {
       email,
-      disabled,
-      displayName,
-      libraryId,
-      password,
-      roleId,
+      name,
+      phoneNumber,
+      state,
+      city,
+      address,
+      inCharge,
     } = context.request.body;
 
-    const userData: UserInput = {
+    const libraryData: LibraryInput = {
       email,
-      disabled: JSON.parse(disabled),
-      displayName,
-      libraryId,
-      password,
-      roleId,
+      name,
+      phoneNumber,
+      state,
+      city,
+      address,
+      inCharge,
     };
 
     const [id, error] = await wrapError(
-      this.userInteractor.createUser(userData),
+      this.libraryInteractor.createLibrary(libraryData),
     );
 
     if (error) {

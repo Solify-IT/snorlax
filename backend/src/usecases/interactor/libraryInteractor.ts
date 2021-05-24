@@ -1,5 +1,6 @@
 import { Maybe } from 'src/@types';
 import { Library } from 'src/domain/model';
+import { LibraryInput } from 'src/domain/model/library';
 import { v4 as uuidv4 } from 'uuid';
 import { ILibraryRepository } from '..';
 import { InvalidDataError } from '../errors';
@@ -21,9 +22,8 @@ export default class LibraryInteractor {
     return result;
   }
 
-  async createLibrary(libraryData: Library): Promise<Library['id']> {
-    this.logger.info('Creating new library.', { logger: 'LibraryInteractor:libraryUser' });
-
+  async createLibrary(libraryData: LibraryInput): Promise<Library['id']> {
+    this.logger.info('Creating new library.', { logger: 'LibraryInteractor:createLibrary' });
     this.validateLibraryData(libraryData);
 
     const result = await this.libraryRepository.createLibrary({
@@ -40,7 +40,7 @@ export default class LibraryInteractor {
     return result;
   }
 
-  private validateLibraryData(libraryData: Library) {
+  private validateLibraryData(libraryData: LibraryInput) {
     let message = '';
 
     if (!libraryData.email || !libraryData.name || !libraryData.phoneNumber) {

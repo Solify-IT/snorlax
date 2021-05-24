@@ -37,6 +37,7 @@ export default class UserController {
       password,
       roleId,
     };
+    console.log(context.request.body);
 
     const [id, error] = await wrapError(
       this.userInteractor.createUser(userData),
