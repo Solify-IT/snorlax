@@ -1,18 +1,19 @@
 import { wrapError } from 'src/@types';
+import { LibraryInput } from 'src/domain/model/library';
 import LibraryInteractor from 'src/usecases/interactor/libraryInteractor';
 import { IContext } from './context';
 
 export default class LibraryController {
-  userInteractor: LibraryInteractor;
+  libraryInteractor: LibraryInteractor;
 
-  constructor(userInteractor: LibraryInteractor) {
-    this.userInteractor = userInteractor;
+  constructor(libraryInteractor: LibraryInteractor) {
+    this.libraryInteractor = libraryInteractor;
   }
 
   // GET /libraries
   async listAll(context: IContext): Promise<void> {
     const [libraries, error] = await wrapError(
-      this.userInteractor.listAll(),
+      this.libraryInteractor.listAll(),
     );
 
     if (error) {
@@ -21,5 +22,39 @@ export default class LibraryController {
     }
 
     context.response.status(200).json({ libraries });
+  }
+
+  // POST /library { libraryData }
+  async createLibrary(context: IContext): Promise<void> {
+    const {
+      email,
+      name,
+      phoneNumber,
+      state,
+      city,
+      address,
+      inCharge,
+    } = context.request.body;
+
+    const libraryData: LibraryInput = {
+      email,
+      name,
+      phoneNumber,
+      state,
+      city,
+      address,
+      inCharge,
+    };
+
+    const [id, error] = await wrapError(
+      this.libraryInteractor.createLibrary(libraryData),
+    );
+
+    if (error) {
+      context.next(error);
+      return;
+    }
+
+    context.response.status(200).json({ id });
   }
 }
