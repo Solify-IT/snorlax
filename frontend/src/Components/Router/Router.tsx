@@ -61,8 +61,8 @@ const Router: React.FC = () => (
           hasAccess={(user) => isAdmin(user)}
         >
           <RegisterUser />
-          </PrivateRoute>
-          <PrivateRoute
+        </PrivateRoute>
+        <PrivateRoute
           exact
           path={NEW_LIBRARY}
           hasAccess={(user) => isAdmin(user)}

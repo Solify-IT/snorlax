@@ -34,16 +34,18 @@ const LibrariesListView: React.FC = () => {
   }, [backend.libraries]);
 
   useEffect(() => {
-    setTitles({ title: 'Librerías',
-    extra: [
-      <Button
-        type="primary"
-        onClick={() => history.push(NEW_LIBRARY)}
-      >
-        Nueva librería
-      </Button>,
-    ], });
-    
+    setTitles({
+      title: 'Librerías',
+      extra: [
+        <Button
+          type="primary"
+          onClick={() => history.push(NEW_LIBRARY)}
+        >
+          Nueva librería
+        </Button>,
+      ],
+    });
+
     fetchLibraries();
   }, [fetchLibraries, setTitles]);
 
