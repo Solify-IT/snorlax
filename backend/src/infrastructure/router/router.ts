@@ -5,6 +5,7 @@ import authMiddleware from './authMiddleware';
 export default class Router {
   constructor(app: Application, controller: IAppController) {
     const middleware = authMiddleware(controller.users.userInteractor.userRepository);
+
     app.post('/books', middleware, async (request, response, next) => {
       await controller.books.registerBook(
         {
@@ -21,16 +22,22 @@ export default class Router {
       );
     });
 
-<<<<<<< HEAD
-    app.post('/movements', async (request, response, next) => {
-      await controller.movements.registerMovement(
-        { request, response, next },
+    app.patch('/books', middleware, async (request, response, next) => {
+      await controller.books.updateBook(
+        {
+          request, response, next, logger: controller.logger,
+        },
       );
     });
 
-    app.get('/users/roles', async (request, response, next) => {
-      await controller.users.listAllRoles({ request, response, next });
-=======
+    app.post('/movements', async (request, response, next) => {
+      await controller.movements.registerMovement(
+        {
+          request, response, next, logger: controller.logger,
+        },
+      );
+    });
+
     app.get('/books/:bookId', middleware, async (request, response, next) => {
       await controller.books.getBookById(
         {
@@ -55,7 +62,6 @@ export default class Router {
       await controller.users.getUser({
         request, response, next, logger: controller.logger,
       });
->>>>>>> 9b55ca3a2fbb12eb61ab44dfb251e7b491eca305
     });
 
     app.get('/users', middleware, async (request, response, next) => {
@@ -63,6 +69,7 @@ export default class Router {
         request, response, next, logger: controller.logger,
       });
     });
+
     app.patch('/users', async (request, response, next) => {
       await controller.users.updateUser({
         request, response, next, logger: controller.logger,
