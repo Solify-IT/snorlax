@@ -10,12 +10,16 @@ export const BOOKS = `${INVENTORY}/libros`;
 export const NEW_BOOK = `${BOOKS}/nuevo`;
 export const MODIFY_BOOK = `${BOOKS}/:id/modificar`;
 export const BOOK_DETAIL = `${BOOKS}/:id`;
-
+export const BOOK_UPDATE = `${BOOKS}/:id`;
 export const LIST_LOCAL_BOOKS = `${BOOKS}/buscar`;
 
 export const toBookDetail = (
   uuid: string,
-) => `${BOOKS}/${uuid}`;
+) => `${BOOK_DETAIL}/${uuid}`;
+
+export const toBookUpdate = (
+  uuid: string,
+) => `${BOOK_UPDATE}/${uuid}`;
 
 export const LIBRARIES = `${ADMIN}/librerías`;
 

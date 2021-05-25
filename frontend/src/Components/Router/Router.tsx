@@ -15,6 +15,7 @@ import HOME, {
   BOOK_DETAIL,
   UPDATE_USER,
   INVENTORY,
+  BOOK_UPDATE,
 } from './routes';
 
 const UpdateFormView = React.lazy(() => import('src/views/Books.UpdateForm'));
@@ -81,6 +82,13 @@ const Router: React.FC = () => (
           hasAccess={(user) => isAdmin(user)}
         >
           <UpdateUser />
+        </PrivateRoute>
+        <PrivateRoute
+          exact
+          path={BOOK_UPDATE}
+          hasAccess={(user) => isAdmin(user)}
+        >
+          <UpdateFormView />
         </PrivateRoute>
       </Switch>
     </React.Suspense>
