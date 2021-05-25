@@ -76,7 +76,10 @@ export default class BookInteractor {
 
     if (shouldSaveNewLocalBook) {
       result = await this.bookRepository.registerBook({
-        isbn: bookData.isbn, price: bookData.price, libraryId: bookData.libraryId,
+        isbn: bookData.isbn,
+        price: bookData.price,
+        libraryId: bookData.libraryId,
+        amount: bookData.amount,
       });
     } else if (existLocalBook) {
       result = existLocalBook[0].id;
@@ -113,24 +116,24 @@ export default class BookInteractor {
     }
   }
 
-  async updateBookAmount(libraryId: string, isbn: string, amount: number): Promise<LocalBook> {
+  async updateBookAmount(bookId: string, bookData:Omit<LocalBook, 'id'>): Promise<LocalBook> {
     // TODO: Agregar movement type(Entrada o salida) a tabla de movimientos
-
+    const book = await this.getBook(bookId);
     // Check if book exists in library
     const [bookResult] = await Promise.all([
-      this.bookRepository.getBookInLibrary(libraryId, isbn),
+      this.bookRepository.updateBook(bookId, bookData),
     ]);
 
     if (!bookResult) {
       const message = 'Book not found in library';
       this.logger.error(
         message, {
-          libraryId, logger: 'BookInteractor:updateBookAmount',
+          bookId, logger: 'BookInteractor:updateBookAmount',
         },
       );
       throw new NotFoundError(message);
     }
-
+    const amount = Math.abs(book.amount - bookData.amount);
     const result = await this.movementInteractor.registerMovement({
       amount, isLoan: false, localBookId: bookResult.id, type: 'fix',
     });
