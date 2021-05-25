@@ -132,4 +132,37 @@ export default class BookController {
 
     context.response.status(200).json({ book });
   }
+
+  async updateBook(context: IContext): Promise<void> {
+    const {
+      id,
+      isbn,
+      price,
+      libraryId,
+      library,
+      generos,
+      amount,
+    } = context.request.body;
+
+    const bookData = {
+      id,
+      isbn,
+      price,
+      libraryId,
+      library,
+      generos,
+      amount,
+    };
+
+    const [idd, error] = await wrapError(
+      this.bookInteractor.updateBookAmount(id, bookData),
+    );
+
+    if (error) {
+      context.next(error);
+      return;
+    }
+
+    context.response.status(200).json({ idd });
+  }
 }
