@@ -1,11 +1,11 @@
-import { SearchOutlined } from '@ant-design/icons';
+import { EditOutlined, SearchOutlined } from '@ant-design/icons';
 import {
   Button, Table, Tag, Tooltip, Typography,
 } from 'antd';
 import React from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { Book } from 'src/@types';
-import { toBookDetail } from 'src/Components/Router/routes';
+import { toBookDetail, toBookUpdate } from 'src/Components/Router/routes';
 import formatISBN from 'src/utils/isbn';
 import Props from './LocalBooksList.type';
 
@@ -76,6 +76,9 @@ const LocalBooksList: React.FC<Props> = ({
         <>
           <Tooltip title="search">
             <Button type="primary" shape="circle" icon={<SearchOutlined />} onClick={goTo(toBookDetail(row.id))} />
+          </Tooltip>
+          <Tooltip title="edit">
+            <Button type="primary" shape="circle" icon={<EditOutlined />} onClick={goTo(toBookUpdate(row.id))} />
           </Tooltip>
         </>
       ),
