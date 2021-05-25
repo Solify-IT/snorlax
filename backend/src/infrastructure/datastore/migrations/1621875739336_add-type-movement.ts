@@ -5,7 +5,7 @@ export const shorthands: ColumnDefinitions | undefined = undefined;
 export async function up(pgm: MigrationBuilder): Promise<void> {
   pgm.addColumn('movements', {
     type: {
-      type: 'text',
+      type: 'varchar(30)',
       notNull: false,
     },
   });
