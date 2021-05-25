@@ -9,10 +9,6 @@ import { Maybe } from 'src/@types';
 import BaseRepository from './BaseRepository';
 
 export default class BookRepository extends BaseRepository implements IBookRepository {
-  findByISBN(isbn: string): Promise<LocalBook[]> {
-    throw new Error('Method not implemented.');
-  }
-
   async listBooksByLibrary(
     page: number, perPage: number, libraryId?: string, isbn?: string,
   ): Promise<{ localBooks: Book[], total: number }> {
@@ -97,9 +93,19 @@ export default class BookRepository extends BaseRepository implements IBookRepos
     return book;
   }
 
-  async getBookInLibrary(libraryId: string, isbn: string): Promise<LocalBook> {
-    const book = await this.datastore.update<LocalBook>(
-      `SELECT * FROM ${BOOK_TABLE_NAME} WHERE library_id = $1 AND isbn = $2 `, [libraryId, isbn],
+  async findByISBN(isbn: string): Promise<LocalBook[]> {
+    const books = await this.datastore.get<LocalBook>(
+      `SELECT * FROM ${BOOK_TABLE_NAME} WHERE isbn = $1`, [isbn],
+    );
+
+    return books;
+  }
+
+  async updateBook(bookId: string, bookData: Omit<LocalBook, 'id'>): Promise<LocalBook> {
+    const book = await this.datastore.update<LocalBook, Omit<LocalBook, 'id'>>(
+      BOOK_TABLE_NAME,
+      `id = '${bookId}'`,
+      bookData,
     );
     return book;
   }
