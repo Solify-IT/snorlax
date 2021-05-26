@@ -7,17 +7,17 @@ const ShoppingCart: React.FC = () => {
   const { user } = useAuth();
   const { setTitles } = useNavigation();
 
-  if (!user) {
-    notification.error({ message: 'No tienes acceso.' });
-    return null;
-  }
-
   useEffect(() => {
     setTitles({
       title: 'Punto de venta',
       subtitle: 'Añade libros por su ISBN',
     });
   }, []);
+
+  if (!user) {
+    notification.error({ message: 'No tienes acceso.' });
+    return null;
+  }
 
   return (
     <>Hola</>
