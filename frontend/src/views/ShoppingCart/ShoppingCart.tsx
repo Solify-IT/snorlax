@@ -4,7 +4,7 @@ import {
   InputNumber, Popconfirm, Table, Typography,
 } from 'antd';
 import Search from 'antd/lib/input/Search';
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { Book } from 'src/@types';
 import { toBookDetail } from 'src/Components/Router/routes';
@@ -17,13 +17,12 @@ interface Props {
   fetchBook(isbn: string): void;
   updateAmount(bookId: string): (amount: number | null) => void;
   remove(bookId: string): () => void;
+  isLoading: boolean;
 }
 
 const ShoppingCart: React.FC<Props> = ({
-  books, fetchBook, updateAmount, remove,
+  books, fetchBook, updateAmount, remove, isLoading,
 }) => {
-  const [isLoading] = useState(false);
-
   const columns = [
     {
       title: 'Title',

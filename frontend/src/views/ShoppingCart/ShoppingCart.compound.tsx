@@ -14,6 +14,7 @@ const ShoppingCart: React.FC = () => {
   const { setTitles } = useNavigation();
   const [books, setBooks] = useState<{ book: Book, amount: number }[]>();
   const backend = useBackend();
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (!user || !SHOW_SHOPPING_CART) return;
@@ -34,6 +35,7 @@ const ShoppingCart: React.FC = () => {
   }
 
   const fetchBook = async (isbn: string) => {
+    setIsLoading(true);
     if (isbn.length !== 13) {
       message.warning('El ISBN no es válido');
       return;
@@ -61,6 +63,7 @@ const ShoppingCart: React.FC = () => {
       return;
     }
     setBooks([newBook]);
+    setIsLoading(false);
   };
 
   const updateAmount = (bookId: string) => (amount: number | null) => {
@@ -94,6 +97,7 @@ const ShoppingCart: React.FC = () => {
       books={books || []}
       fetchBook={fetchBook}
       remove={remove}
+      isLoading={isLoading}
     />
   );
 };
