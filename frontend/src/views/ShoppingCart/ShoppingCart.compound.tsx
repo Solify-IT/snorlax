@@ -63,6 +63,7 @@ const ShoppingCart: React.FC = () => {
     setIsLoading(true);
     if (isbn.length !== 13) {
       message.warning('El ISBN no es válido');
+      setIsLoading(false);
       return;
     }
 
@@ -73,11 +74,13 @@ const ShoppingCart: React.FC = () => {
 
     if (err || !res || (res.status !== 404 && res.status !== 200)) {
       message.error('¡Error al obtener el libro!');
+      setIsLoading(false);
       return;
     }
 
     if (res.status === 404 || res.data.books.length !== 1) {
       message.warn('¡No se encontró el libro!');
+      setIsLoading(false);
       return;
     }
 

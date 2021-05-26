@@ -98,6 +98,7 @@ const ShoppingCart: React.FC<Props> = ({
         loading={isLoading}
         onChange={onSearchChange}
         style={{ margin: '12px 0 24px 0' }}
+        autoFocus
       />
 
       <Table
