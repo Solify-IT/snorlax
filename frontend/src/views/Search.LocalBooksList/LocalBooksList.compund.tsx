@@ -60,7 +60,7 @@ const LocalBooksList: React.FC = () => {
     return null;
   }
 
-  const onSearch = async (currIsbn?: string) => fetchBooks(currIsbn || undefined);
+  const onSearch = async (currIsbn?: string) => (currIsbn ? fetchBooks(currIsbn) : null);
 
   return (
     <>
