@@ -55,7 +55,7 @@ const ShoppingCart: React.FC = () => {
     }
 
     const newBook = { book: res.data.books[0], amount: 1 };
-    console.log(newBook);
+
     if (books) {
       setBooks([...books, newBook]);
       return;
