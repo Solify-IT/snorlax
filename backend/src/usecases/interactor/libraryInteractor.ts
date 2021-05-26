@@ -22,6 +22,24 @@ export default class LibraryInteractor {
     return result;
   }
 
+  async updateLibrary(libraryData: Omit<LibraryInput, 'id'>): Promise<Library> {
+    this.logger.info('Updating library.', { logger: 'LibraryInteractor:updateLibrary' });
+
+    this.validateLibraryData(libraryData);
+
+    const result = await this.libraryRepository.updateLibrary({
+      email: libraryData.email,
+      name: libraryData.name,
+      phoneNumber: libraryData.phoneNumber,
+      state: libraryData.state,
+      city: libraryData.city,
+      address: libraryData.address,
+      inCharge: libraryData.inCharge,
+    });
+
+    return result;
+  }
+
   async createLibrary(libraryData: LibraryInput): Promise<Library['id']> {
     this.logger.info('Creating new library.', { logger: 'LibraryInteractor:createLibrary' });
     this.validateLibraryData(libraryData);

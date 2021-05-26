@@ -24,7 +24,41 @@ export default class LibraryController {
     context.response.status(200).json({ libraries });
   }
 
-  // POST /library { libraryData }
+  // PUT /libraries{ libraryData }
+  async updateLibrary(context: IContext): Promise<void> {
+    const {
+      email,
+      name,
+      phoneNumber,
+      state,
+      city,
+      address,
+      inCharge,
+    } = context.request.body;
+
+    const libraryData: LibraryInput = {
+      email,
+      name,
+      phoneNumber,
+      state,
+      city,
+      address,
+      inCharge,
+    };
+
+    const [id, error] = await wrapError(
+      this.libraryInteractor.updateLibrary(libraryData),
+    );
+
+    if (error) {
+      context.next(error);
+      return;
+    }
+
+    context.response.status(200).json({ id });
+  }
+
+  // POST /libraries { libraryData }
   async createLibrary(context: IContext): Promise<void> {
     const {
       email,
