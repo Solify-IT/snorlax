@@ -24,6 +24,8 @@ export const UPDATE_LIBRARY_ID = `${LIBRARIES}/modificar-libreria`;
 export const toLibraryDetail = (
   uuid: string,
 ) => `${UPDATE_LIBRARY_ID}/${uuid}`;
+export const toLibraryList = (
+) => `${LIBRARIES}`;
 
 export const USERS = `${ADMIN}/usuarios`;
 export const LIST_USERS = `${USERS}/lista-local`;

@@ -62,7 +62,7 @@ export default class LibraryController {
     const {
       id,
     } = context.request.query;
-    const [users, error] = await wrapError(
+    const [libraries, error] = await wrapError(
       this.libraryInteractor.getLibrary(
         id as string,
       ),
@@ -72,7 +72,7 @@ export default class LibraryController {
       context.next(error);
       return;
     }
-    context.response.status(200).json({ users });
+    context.response.status(200).json({ libraries });
   }
 
   // POST /libraries { libraryData }
