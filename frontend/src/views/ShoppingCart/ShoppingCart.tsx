@@ -25,7 +25,7 @@ const ShoppingCart: React.FC<Props> = ({
 }) => {
   const columns = [
     {
-      title: 'Title',
+      title: 'Título',
       dataIndex: ['book', 'title'],
       key: 'title',
       render: (title: string, row: ShoppingCartBook) => (
