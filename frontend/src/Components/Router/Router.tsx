@@ -12,6 +12,7 @@ import HOME, {
   NEW_USER,
   LIST_USERS,
   UPDATE_USER,
+  UPDATE_LIBRRY,
   BOOK_DETAIL,
   INVENTORY,
   NEW_LIBRARY,
@@ -25,6 +26,7 @@ const ListUsers = React.lazy(() => import('src/views/Users.List'));
 const RegisterUser = React.lazy(() => import('src/views/Users.CreateForm'));
 const RegisterLibrary = React.lazy(() => import('src/views/Library.CreateLibrary'));
 const UpdateUser = React.lazy(() => import('src/views/Users.Update'));
+const UpdateLibrary = React.lazy(() => import('src/views/Library.Update'));
 const DetailViewBook = React.lazy(() => import('src/views/Books.FormViewBook'));
 
 const Router: React.FC = () => (
@@ -88,6 +90,14 @@ const Router: React.FC = () => (
           hasAccess={(user) => isAdmin(user)}
         >
           <UpdateUser />
+        </PrivateRoute>
+
+        <PrivateRoute
+          exact
+          path={UPDATE_LIBRRY}
+          hasAccess={(user) => isAdmin(user)}
+        >
+          <UpdateLibrary />
         </PrivateRoute>
       </Switch>
     </React.Suspense>
