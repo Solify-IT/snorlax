@@ -22,6 +22,10 @@ export default class LibraryInteractor {
     return result;
   }
 
+  async getLibrary(id: string): Promise<Library[]> {
+    return this.libraryRepository.getLibrary(id);
+  }
+
   async updateLibrary(libraryData: Omit<LibraryInput, 'id'>): Promise<Library> {
     this.logger.info('Updating library.', { logger: 'LibraryInteractor:updateLibrary' });
 

@@ -58,6 +58,23 @@ export default class LibraryController {
     context.response.status(200).json({ id });
   }
 
+  async getLibrary(context: IContext): Promise<void> {
+    const {
+      id,
+    } = context.request.query;
+    const [users, error] = await wrapError(
+      this.libraryInteractor.getLibrary(
+        id as string,
+      ),
+    );
+
+    if (error) {
+      context.next(error);
+      return;
+    }
+    context.response.status(200).json({ users });
+  }
+
   // POST /libraries { libraryData }
   async createLibrary(context: IContext): Promise<void> {
     const {

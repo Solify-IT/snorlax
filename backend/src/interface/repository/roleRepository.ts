@@ -19,4 +19,14 @@ export default class LibraryRepository extends BaseRepository implements ILibrar
       ...libraryData,
     });
   }
+
+  async getLibrary(id: string):Promise<Library[]> {
+    return this.datastore.get(`SELECT * FROM ${LIBRARY_TABLE_NAME} WHERE id = '${id}' `);
+  }
+
+  async updateLibrary(libraryData: Omit<Library, 'id'>): Promise<Library> {
+    return this.datastore.update<Library, Omit<Library, 'id'>>(LIBRARY_TABLE_NAME, `name = '${libraryData.name}'`, {
+      ...libraryData,
+    });
+  }
 }

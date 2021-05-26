@@ -64,6 +64,12 @@ export default class Router {
       });
     });
 
+    app.get('/libraries/id', async (request, response, next) => {
+      await controller.libraries.getLibrary({
+        request, response, next, logger: controller.logger,
+      });
+    });
+
     app.patch('/libraries', async (request, response, next) => {
       await controller.libraries.updateLibrary({
         request, response, next, logger: controller.logger,
