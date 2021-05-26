@@ -6,6 +6,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Book } from 'src/@types';
 import { NEW_BOOK } from 'src/Components/Router/routes';
+import useAuth from 'src/hooks/auth';
 import useNavigation from 'src/hooks/navigation';
 import { useBackend } from 'src/integrations/backend';
 import LocalBooksListComp from './LocalBooksList';
@@ -17,10 +18,10 @@ const LocalBooksList: React.FC = () => {
   const [pagination, setPagination] = useState({ page: 1, perPage: 10 });
   const [isLoading, setIsLoading] = useState(false);
   const { setTitles } = useNavigation();
-  const LIBRARY_ID = 'e11e5635-094c-4224-836f-b0caa13986f3';
   const [isbn, setIsbn] = useState('');
   const [isGlobal, setIsGlobal] = useState(false);
   const history = useHistory();
+  const { user } = useAuth();
 
   const fetchBooks = useCallback(async (currIsbn?: string) => {
     setIsLoading(true);
@@ -28,7 +29,7 @@ const LocalBooksList: React.FC = () => {
     const [result, error] = await backend.books.getAll<{
       total: number,
       books: Book[],
-    }>(`${isGlobal ? '' : `libraryId=${LIBRARY_ID}&`}${currIsbn ? `isbn=${currIsbn}&` : ''}page=${pagination.page}&perPage=${pagination.perPage}`);
+    }>(`${isGlobal ? '' : `libraryId=${user?.libraryId}&`}${currIsbn ? `isbn=${currIsbn}&` : ''}page=${pagination.page}&perPage=${pagination.perPage}`);
 
     if (error || !result) {
       notification.error({ message: 'Ocurrió un error al obtener la lista de libros' });
@@ -53,6 +54,11 @@ const LocalBooksList: React.FC = () => {
       ],
     });
   }, [fetchBooks, setTitles, history]);
+
+  if (!user) {
+    notification.error({ message: 'No tienes permisos para acceder' });
+    return null;
+  }
 
   const onSearch = async (currIsbn?: string) => fetchBooks(currIsbn || undefined);
 
