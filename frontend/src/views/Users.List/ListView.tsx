@@ -9,17 +9,6 @@ interface Props {
   loading: boolean;
 }
 
-// {
-//   "id": "ddf128b6-8c5e-4ff7-8a48-035eeba920d4",
-//   "createdAt": "2021-04-20T23:24:41.131Z",
-//   "updatedAt": "2021-04-20T23:24:41.131Z",
-//   "email": "nokoayzack@gmail.com",
-//   "displayName": "Topi",
-//   "disabled": false,
-//   "roleId": "e450d7e3-05a7-4750-8791-de92772d4275",
-//   "libraryId": "e11e5635-094c-4224-836f-b0caa13986f3"
-// },
-
 const ListView: React.FC<Props> = ({ users, loading }) => {
   const columns = [
     {
