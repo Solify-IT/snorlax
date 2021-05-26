@@ -34,6 +34,31 @@ const ShoppingCart: React.FC = () => {
     return <Redirect to={getHomeForRole(user.role.name)} />;
   }
 
+  const updateAmount = (bookId: string) => (amount: number | null) => {
+    if (!books) return;
+
+    if (!amount) {
+      setBooks(books.map((b) => (
+        b.book.id === bookId ? { book: b.book, amount: 1 } : b
+      )));
+      return;
+    }
+
+    setBooks(books.map((b) => (
+      b.book.id === bookId ? { book: b.book, amount } : b
+    )));
+  };
+
+  const remove = (bookId: string) => () => {
+    if (!books) return;
+
+    setBooks(books.filter((b) => (
+      b.book.id !== bookId
+    )));
+
+    message.success('Compra de libro cancelada');
+  };
+
   const fetchBook = async (isbn: string) => {
     setIsLoading(true);
     if (isbn.length !== 13) {
@@ -59,36 +84,20 @@ const ShoppingCart: React.FC = () => {
     const newBook = { book: res.data.books[0], amount: 1 };
 
     if (books) {
+      const alreadyExists = books.findIndex((b) => b.book.id === newBook.book.id);
+
+      if (alreadyExists !== -1) {
+        updateAmount(newBook.book.id)(books[alreadyExists].amount + 1);
+        setIsLoading(false);
+        return;
+      }
+
       setBooks([...books, newBook]);
+      setIsLoading(false);
       return;
     }
     setBooks([newBook]);
     setIsLoading(false);
-  };
-
-  const updateAmount = (bookId: string) => (amount: number | null) => {
-    if (!books) return;
-
-    if (!amount) {
-      setBooks(books.map((b) => (
-        b.book.id === bookId ? { book: b.book, amount: 1 } : b
-      )));
-      return;
-    }
-
-    setBooks(books.map((b) => (
-      b.book.id === bookId ? { book: b.book, amount } : b
-    )));
-  };
-
-  const remove = (bookId: string) => () => {
-    if (!books) return;
-
-    setBooks(books.filter((b) => (
-      b.book.id !== bookId
-    )));
-
-    message.success('Compra de libro cancelada');
   };
 
   return (

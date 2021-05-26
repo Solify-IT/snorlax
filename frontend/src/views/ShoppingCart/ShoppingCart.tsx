@@ -105,6 +105,7 @@ const ShoppingCart: React.FC<Props> = ({
         loading={isLoading}
         dataSource={books}
         columns={columns}
+        pagination={false}
       />
     </>
   );
