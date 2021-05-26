@@ -1,4 +1,4 @@
-import { notification } from 'antd';
+import { message } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { Redirect } from 'react-router-dom';
 import { Book } from 'src/@types';
@@ -25,7 +25,7 @@ const ShoppingCart: React.FC = () => {
   }, []);
 
   if (!user) {
-    notification.error({ message: 'No tienes acceso.' });
+    message.error('No tienes acceso.');
     return <Redirect to={SIGN_IN} />;
   }
 
@@ -35,7 +35,7 @@ const ShoppingCart: React.FC = () => {
 
   const fetchBook = async (isbn: string) => {
     if (isbn.length !== 13) {
-      notification.warning({ message: 'El ISBN no es válido' });
+      message.warning('El ISBN no es válido');
       return;
     }
 
@@ -45,12 +45,12 @@ const ShoppingCart: React.FC = () => {
     }>(`libraryId=${user.libraryId}&isbn=${isbn}`);
 
     if (err || !res || (res.status !== 404 && res.status !== 200)) {
-      notification.error({ message: '¡Error al obtener el libro!' });
+      message.error('¡Error al obtener el libro!');
       return;
     }
 
     if (res.status === 404 || res.data.books.length !== 1) {
-      notification.warn({ message: '¡No se encontró el libro!' });
+      message.warn('¡No se encontró el libro!');
       return;
     }
 
@@ -63,7 +63,39 @@ const ShoppingCart: React.FC = () => {
     setBooks([newBook]);
   };
 
-  return (<ShoppingCartComp books={books || []} fetchBook={fetchBook} />);
+  const updateAmount = (bookId: string) => (amount: number | null) => {
+    if (!books) return;
+
+    if (!amount) {
+      setBooks(books.map((b) => (
+        b.book.id === bookId ? { book: b.book, amount: 1 } : b
+      )));
+      return;
+    }
+
+    setBooks(books.map((b) => (
+      b.book.id === bookId ? { book: b.book, amount } : b
+    )));
+  };
+
+  const remove = (bookId: string) => () => {
+    if (!books) return;
+
+    setBooks(books.filter((b) => (
+      b.book.id !== bookId
+    )));
+
+    message.success('Compra de libro cancelada');
+  };
+
+  return (
+    <ShoppingCartComp
+      updateAmount={updateAmount}
+      books={books || []}
+      fetchBook={fetchBook}
+      remove={remove}
+    />
+  );
 };
 
 export default ShoppingCart;

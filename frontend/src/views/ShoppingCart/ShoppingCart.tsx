@@ -1,9 +1,11 @@
+import { DeleteFilled } from '@ant-design/icons';
 import {
-  InputNumber, Table, Tag, Typography,
+  Button,
+  InputNumber, Popconfirm, Table, Typography,
 } from 'antd';
 import Search from 'antd/lib/input/Search';
 import React, { useState } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Book } from 'src/@types';
 import { toBookDetail } from 'src/Components/Router/routes';
 import formatISBN from 'src/utils/isbn';
@@ -13,13 +15,14 @@ type ShoppingCartBook = { book: Book, amount: number };
 interface Props {
   books: ShoppingCartBook[];
   fetchBook(isbn: string): void;
+  updateAmount(bookId: string): (amount: number | null) => void;
+  remove(bookId: string): () => void;
 }
 
-const ShoppingCart: React.FC<Props> = ({ books, fetchBook }) => {
+const ShoppingCart: React.FC<Props> = ({
+  books, fetchBook, updateAmount, remove,
+}) => {
   const [isLoading] = useState(false);
-  const history = useHistory();
-
-  const goTo = (path: string) => () => history.push(path);
 
   const columns = [
     {
@@ -50,36 +53,26 @@ const ShoppingCart: React.FC<Props> = ({ books, fetchBook }) => {
       width: 100,
     },
     {
-      title: 'Autores',
-      dataIndex: ['book', 'author'],
-      key: 'author',
-      render: (author?: string) => (
-        <>
-          {author && author.split(', ').map(
-            (a) => <Tag key={a}>{a}</Tag>,
-          )}
-        </>
-      ),
-    },
-    {
-      title: 'Disponibilidad',
-      dataIndex: ['book', 'price'],
-      key: 'price',
-      render: (price: string) => (
-        <Typography.Text>
-
-          {price}
-          pz
-        </Typography.Text>
-      ),
-      width: 100,
-    },
-    {
       title: 'Cantidad',
       dataIndex: '',
       key: 'view',
       render: (row: ShoppingCartBook) => (
-        <InputNumber value={row.amount} />
+        <InputNumber onChange={updateAmount(row.book.id)} value={row.amount} />
+      ),
+    },
+    {
+      title: '¿Eliminar?',
+      dataIndex: '',
+      key: 'view',
+      render: (row: ShoppingCartBook) => (
+        <Popconfirm
+          title="¿Deseas eliminar el libro de la compra?"
+          okText="Sí, eliminar"
+          cancelText="¡No!"
+          onConfirm={remove(row.book.id)}
+        >
+          <Button type="primary" shape="circle" icon={<DeleteFilled />} />
+        </Popconfirm>
       ),
     },
   ];
@@ -109,6 +102,7 @@ const ShoppingCart: React.FC<Props> = ({ books, fetchBook }) => {
       />
 
       <Table
+        rowKey={(book) => book.book.id}
         loading={isLoading}
         dataSource={books}
         columns={columns}
