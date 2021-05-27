@@ -9,6 +9,7 @@ import PrivateRoute from './PrivateRoute';
 import HOME, {
   NEW_BOOK,
   SIGN_IN,
+  FORGOT_PASSWORD,
   LIST_LOCAL_BOOKS,
   LIBRARIES,
   NEW_USER,
@@ -22,6 +23,7 @@ import HOME, {
 
 const RegisterFormView = React.lazy(() => import('src/views/Books.RegisterForm'));
 const SignInView = React.lazy(() => import('src/views/Users.SignIn'));
+const ForgotPasswordView = React.lazy(() => import('src/views/Users.ForgotPassword'));
 const SearchLocalBooksView = React.lazy(() => import('src/views/Search.LocalBooksList'));
 const LibrariesListView = React.lazy(() => import('src/views/Libraries.ListView'));
 const ListUsers = React.lazy(() => import('src/views/Users.List'));
@@ -45,6 +47,9 @@ const Router: React.FC = () => {
           </Route>
           <Route exact path={SIGN_IN}>
             <SignInView />
+          </Route>
+          <Route exact path={FORGOT_PASSWORD}>
+            <ForgotPasswordView />
           </Route>
           <PrivateRoute
             exact
