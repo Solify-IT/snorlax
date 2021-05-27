@@ -4,7 +4,7 @@ import { useHistory, useParams } from 'react-router-dom';
 import useNavigation from 'src/hooks/navigation';
 import { useBackend } from 'src/integrations/backend';
 import { Book } from 'src/@types';
-import { LIST_LOCAL_BOOKS } from 'src/Components/Router/routes';
+// import { LIST_LOCAL_BOOKS } from 'src/Components/Router/routes';
 import BooksUpdateForm from './Books.UpdateForm';
 import { StateType } from './Books.Update.type';
 
@@ -36,21 +36,7 @@ const UpdateForm: React.FC = () => {
 
   const onFinish = async (values: StateType) => {
     setIsLoading(true);
-    const [, error] = await backend.books.updateOneK({ ...values });
-
-    if (error) {
-      notification.error({
-        message: '¡Ocurrió un error al guardar!',
-        description: 'Intentalo después.',
-      });
-    } else {
-      notification.success({
-        message: '¡Cambios guardados!',
-        description: '',
-      });
-      history.push(LIST_LOCAL_BOOKS);
-    }
-
+    console.log(values);
     setIsLoading(false);
   };
 

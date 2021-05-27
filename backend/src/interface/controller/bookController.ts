@@ -139,8 +139,6 @@ export default class BookController {
       isbn,
       price,
       libraryId,
-      library,
-      generos,
       amount,
     } = context.request.body;
 
@@ -149,15 +147,12 @@ export default class BookController {
       isbn,
       price,
       libraryId,
-      library,
-      generos,
       amount,
     };
 
     const [idd, error] = await wrapError(
-      this.bookInteractor.updateBookAmount(id, bookData),
+      this.bookInteractor.updateBookAmount(bookData),
     );
-
     if (error) {
       context.next(error);
       return;

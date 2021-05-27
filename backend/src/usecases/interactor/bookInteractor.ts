@@ -116,19 +116,19 @@ export default class BookInteractor {
     }
   }
 
-  async updateBookAmount(bookId: string, bookData:Omit<LocalBook, 'id'>): Promise<LocalBook> {
+  async updateBookAmount(bookData: LocalBook): Promise<LocalBook> {
     // TODO: Agregar movement type(Entrada o salida) a tabla de movimientos
-    const book = await this.getBook(bookId);
+    const book = await this.getBook(bookData.id);
     // Check if book exists in library
     const [bookResult] = await Promise.all([
-      this.bookRepository.updateBook(bookId, bookData),
+      this.bookRepository.updateBook(bookData),
     ]);
 
     if (!bookResult) {
       const message = 'Book not found in library';
       this.logger.error(
         message, {
-          bookId, logger: 'BookInteractor:updateBookAmount',
+          bookData, logger: 'BookInteractor:updateBookAmount',
         },
       );
       throw new NotFoundError(message);

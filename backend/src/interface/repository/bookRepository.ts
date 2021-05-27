@@ -101,10 +101,10 @@ export default class BookRepository extends BaseRepository implements IBookRepos
     return books;
   }
 
-  async updateBook(bookId: string, bookData: Omit<LocalBook, 'id'>): Promise<LocalBook> {
-    const book = await this.datastore.update<LocalBook, Omit<LocalBook, 'id'>>(
+  async updateBook(bookData: LocalBook): Promise<LocalBook> {
+    const book = await this.datastore.update<LocalBook, LocalBook>(
       BOOK_TABLE_NAME,
-      `id = '${bookId}'`,
+      `id = '${bookData.id}'`,
       bookData,
     );
     return book;
