@@ -1,5 +1,7 @@
 import React, { useMemo } from 'react';
-import { Redirect, Route, RouteProps } from 'react-router-dom';
+import {
+  Redirect, Route, RouteProps, useLocation,
+} from 'react-router-dom';
 import useAuth, { AuthUserType } from 'src/hooks/auth';
 import { SIGN_IN } from './routes';
 
@@ -11,6 +13,7 @@ const PrivateRoute: React.FC<RouteProps & Props> = ({
   children, hasAccess, ...rest
 }) => {
   const { idToken, user } = useAuth();
+  const { pathname } = useLocation();
 
   const userHasAccess: boolean = useMemo(() => {
     if (!user) return false;
@@ -23,7 +26,7 @@ const PrivateRoute: React.FC<RouteProps & Props> = ({
       {...rest}
       render={() => (idToken && user && userHasAccess
         ? children
-        : <Redirect to={SIGN_IN} />
+        : <Redirect to={{ pathname: SIGN_IN, state: { from: pathname } }} />
       )}
     />
   );

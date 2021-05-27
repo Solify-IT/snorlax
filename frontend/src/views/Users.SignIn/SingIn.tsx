@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Redirect, useHistory } from 'react-router-dom';
+import { Redirect, useHistory, useLocation } from 'react-router-dom';
 import {
   Form, Input, Button, Row, Col, notification, Alert,
 } from 'antd';
@@ -17,6 +17,7 @@ const SignIn = () => {
   const { setAuthToken, getHomeForRole, user } = useAuth();
   const backend = useBackend();
   const { setTitles } = useNavigation();
+  const { state } = useLocation<{ from?: string }>();
   const history = useHistory();
   const [isLoading, setIsLoading] = useState(false);
   const [formError, setFormError] = useState<string | undefined>(undefined);
@@ -80,6 +81,8 @@ const SignIn = () => {
   useEffect(() => {
     setTitles({ title: '¡Bienvenido!', subtitle: 'Inicia sesión con tu correo y contraseña' });
   }, []);
+
+  if (user && state && state.from) return <Redirect to={state.from} />;
 
   if (user) return <Redirect to={getHomeForRole(user.role.name)} />;
 
