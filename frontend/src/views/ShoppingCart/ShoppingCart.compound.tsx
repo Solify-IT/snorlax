@@ -1,4 +1,4 @@
-import { message } from 'antd';
+import { message, notification } from 'antd';
 import React, { useEffect, useMemo, useState } from 'react';
 import { Redirect } from 'react-router-dom';
 import { Book } from 'src/@types';
@@ -110,6 +110,33 @@ const ShoppingCart: React.FC = () => {
     setIsLoading(false);
   };
 
+  const onFinishSale = async () => {
+    if (!books) return;
+    setIsLoading(true);
+
+    const payload: { id: string, amount: number }[] = [];
+
+    books.forEach((b) => {
+      payload.push({ id: b.book.id, amount: b.amount });
+    });
+
+    const [res, err] = await backend.libraries.post<
+    { status: number }, { books: typeof payload }
+    >(`/${user.libraryId}/sell`, {
+      books: payload,
+    });
+
+    if (err || !res || res.data.status !== 200) {
+      notification.error({ message: 'Ocurrió un error al completar la venta' });
+      setIsLoading(false);
+      return;
+    }
+
+    notification.success({ message: 'Venta completada exitosamente' });
+    setBooks([]);
+    setIsLoading(false);
+  };
+
   return (
     <ShoppingCartComp
       updateAmount={updateAmount}
@@ -118,6 +145,7 @@ const ShoppingCart: React.FC = () => {
       remove={remove}
       isLoading={isLoading}
       total={total}
+      onFinishSale={onFinishSale}
     />
   );
 };
