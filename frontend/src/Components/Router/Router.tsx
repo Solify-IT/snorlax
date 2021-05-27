@@ -93,14 +93,13 @@ const Router: React.FC = () => {
           >
             <DetailViewBook />
           </PrivateRoute>
-
-        <PrivateRoute
-          exact
-          path={UPDATE_LIBRRY}
-          hasAccess={(user) => isAdmin(user)}
-        >
-          <UpdateLibrary />
-        </PrivateRoute>
+          <PrivateRoute
+            exact
+            path={UPDATE_LIBRRY}
+            hasAccess={(user) => isAdmin(user)}
+          >
+            <UpdateLibrary />
+          </PrivateRoute>
 
           <PrivateRoute
             exact
