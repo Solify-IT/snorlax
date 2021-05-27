@@ -12,6 +12,9 @@ RUN source .env
 RUN yarn install
 
 COPY src ./src
+COPY ./tests ./
+COPY ./scripts ./
+
 
 COPY tsconfig.json ./
 

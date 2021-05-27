@@ -6,6 +6,8 @@ import { useHistory } from 'react-router-dom';
 import { BookFormType, Catalogue, ExternalBook } from 'src/@types';
 import BookForm from 'src/Components/Book.Form';
 import PossibleBooks from 'src/Components/PossibleBooks';
+import { toBookDetail } from 'src/Components/Router/routes';
+import useAuth from 'src/hooks/auth';
 import useNavigation from 'src/hooks/navigation';
 import { useBackend } from 'src/integrations/backend';
 
@@ -43,6 +45,7 @@ const RegisterForm: React.FC = () => {
   const backend = useBackend();
   const history = useHistory();
   const [form] = Form.useForm();
+  const { user } = useAuth();
 
   useEffect(() => {
     setTitles({
@@ -51,10 +54,15 @@ const RegisterForm: React.FC = () => {
     // eslint-disable-next-line
   }, [INITIAL_STATE, selected]);
 
+  if (!user) {
+    notification.error({ message: 'No tienes permisos para entrar' });
+    return null;
+  }
+
   const onFinish = async (values: BookFormType) => {
     setIsLoading(true);
     const [result, error] = await backend.books.createOne({
-      ...values, libraryId: 'e11e5635-094c-4224-836f-b0caa13986f3',
+      ...values, libraryId: user.libraryId,
     });
 
     if (error) {
@@ -69,7 +77,7 @@ const RegisterForm: React.FC = () => {
         btn: (
           <Button
             type="primary"
-            onClick={() => history.push(`/books/${result!.data.id}`)}
+            onClick={() => history.push(toBookDetail(result!.data.id))}
           >
             Ir al detalle
           </Button>

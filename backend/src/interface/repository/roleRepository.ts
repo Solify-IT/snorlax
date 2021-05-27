@@ -13,4 +13,10 @@ export default class LibraryRepository extends BaseRepository implements ILibrar
   async listAll(): Promise<Library[]> {
     return this.datastore.get(`SELECT * FROM ${LIBRARY_TABLE_NAME}`);
   }
+
+  async createLibrary(libraryData: Library): Promise<Library['id']> {
+    return this.datastore.insert<Library>(LIBRARY_TABLE_NAME, {
+      ...libraryData,
+    });
+  }
 }

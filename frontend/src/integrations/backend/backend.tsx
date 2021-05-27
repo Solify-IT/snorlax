@@ -4,7 +4,7 @@ import {
   BookFormType, Catalogue, Library, LocalBook,
 } from 'src/@types';
 import {
-  BACKEND_MAIN_EP, BOOKS_ROOT, LIBRARIES_ROOT, USERS_ROOT, CATALOGUE_ROOT,
+  BACKEND_MAIN_EP, BOOKS_ROOT, LIBRARIES_ROOT, USERS_ROOT, USERS_ROOT_ID, CATALOGUE_ROOT,
 } from 'src/settings';
 import User, { UserInput } from 'src/@types/user';
 import useAuth from 'src/hooks/auth';
@@ -19,6 +19,8 @@ export class Backend {
 
   users: CRUD<User, UserInput, UserInput>;
 
+  usersId : CRUD<User, UserInput, UserInput>;
+
   libraries: CRUD<Library, unknown, unknown>;
 
   catalogue: CRUD<Catalogue, unknown, unknown>;
@@ -31,6 +33,11 @@ export class Backend {
     this.users = new CRUD(
       `${this.rootEndpoint}${USERS_ROOT}`, config,
     );
+
+    this.usersId = new CRUD(
+      `${this.rootEndpoint}${USERS_ROOT_ID}`, config,
+    );
+
     this.libraries = new CRUD(
       `${this.rootEndpoint}${LIBRARIES_ROOT}`, config,
     );

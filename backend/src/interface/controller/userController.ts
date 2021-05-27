@@ -50,6 +50,36 @@ export default class UserController {
     context.response.status(200).json({ id });
   }
 
+  // PUT /users { userData }
+  async updateUser(context: IContext): Promise<void> {
+    const {
+      email,
+      disabled,
+      displayName,
+      libraryId,
+      roleId,
+    } = context.request.body;
+
+    const userData = {
+      email,
+      disabled: JSON.parse(disabled),
+      displayName,
+      libraryId,
+      roleId,
+    };
+
+    const [id, error] = await wrapError(
+      this.userInteractor.updateUser(userData),
+    );
+
+    if (error) {
+      context.next(error);
+      return;
+    }
+
+    context.response.status(200).json({ id });
+  }
+
   // GET /users/roles
   async listAllRoles(context: IContext): Promise<void> {
     if (!isAdmin(context.request.currentUser.role.name)) {
@@ -90,6 +120,23 @@ export default class UserController {
     context.response.status(200).json({ users });
   }
 
+  async getUser(context: IContext): Promise<void> {
+    const {
+      id,
+    } = context.request.query;
+    const [users, error] = await wrapError(
+      this.userInteractor.getUser(
+        id as string,
+      ),
+    );
+
+    if (error) {
+      context.next(error);
+      return;
+    }
+    context.response.status(200).json({ users });
+  }
+
   // GET /users/sign-in
   async signIn(context: IContext): Promise<void> {
     const { idToken } = context.request.body;
@@ -101,7 +148,6 @@ export default class UserController {
       context.next(error);
       return;
     }
-
     context.response.status(200).json({ token });
   }
 }

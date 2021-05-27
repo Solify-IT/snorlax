@@ -16,6 +16,8 @@ export type RegisterBookInputData = Omit<LocalBook & {
 } & CatalogueInputData, 'id' | 'library'>;
 
 export default class BookInteractor {
+  [x: string]: any;
+
   private bookRepository: IBookRepository;
 
   private libraryInteractor: LibraryInteractor;
@@ -145,5 +147,14 @@ export default class BookInteractor {
         unitaryCost: bookData.unitaryCost,
       });
     }
+  }
+
+  async getBook(bookId: string): Promise<LocalBook> {
+    const localBook = await this.bookRepository.findById(bookId);
+    if (!localBook) {
+      this.logger.error('Local Book not found', { logger: 'bookInteractor:getbook', bookId });
+      throw new NotFoundError('Local Book not found');
+    }
+    return localBook;
   }
 }

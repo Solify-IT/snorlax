@@ -8,6 +8,8 @@ export const ADMIN = '/admin';
 
 export const BOOKS = `${INVENTORY}/libros`;
 export const NEW_BOOK = `${BOOKS}/nuevo`;
+export const BOOK_DETAIL = `${BOOKS}/:id`;
+
 export const LIST_LOCAL_BOOKS = `${BOOKS}/buscar`;
 
 export const toBookDetail = (
@@ -15,6 +17,8 @@ export const toBookDetail = (
 ) => `${BOOKS}/${uuid}`;
 
 export const LIBRARIES = `${ADMIN}/librerías`;
+export const NEW_LIBRARY = `${LIBRARIES}/nuevo`;
+
 export const toLibraryDetail = (
   uuid: string,
 ) => `${LIBRARIES}/${uuid}`;
@@ -22,9 +26,14 @@ export const toLibraryDetail = (
 export const USERS = `${ADMIN}/usuarios`;
 export const LIST_USERS = `${USERS}/lista-local`;
 export const NEW_USER = `${USERS}/nuevo`;
+export const UPDATE_USER = `${USERS}/modificar-usuario/:id`;
+export const UPDATE_USER_ID = `${USERS}/modificar-usuario`;
+
 export const toUserDetail = (
   uuid: string,
-) => `${USERS}/${uuid}`;
+) => `${UPDATE_USER_ID}/${uuid}`;
+export const toUserList = (
+) => `${LIST_USERS}`;
 
 export const menuItemKeys = {
   intentory: 'inventory',
