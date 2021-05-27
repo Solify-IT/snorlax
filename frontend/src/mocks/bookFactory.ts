@@ -12,6 +12,7 @@ export const LocalBookFactory = Sync.makeFactory<LocalBook>({
   price: each(() => faker.datatype.number(2000)),
   libraryId: each(() => faker.datatype.uuid()),
   library: each(() => LibraryFactory.build()),
+  amount: each(() => faker.datatype.number(2000)),
 });
 
 export const ExternalBookFactory = CatalogueFactory;

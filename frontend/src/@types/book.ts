@@ -8,6 +8,7 @@ export type LocalBook = CommonType & {
   libraryId: string;
   library: Library;
   generos?: string[],
+  amount:number,
 };
 
 export type LocalBookInput = Omit<LocalBook, 'library'>;

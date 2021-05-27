@@ -8,18 +8,18 @@ export const ADMIN = '/admin';
 
 export const BOOKS = `${INVENTORY}/libros`;
 export const NEW_BOOK = `${BOOKS}/nuevo`;
-export const MODIFY_BOOK = `${BOOKS}/:id/modificar`;
+
 export const BOOK_DETAIL = `${BOOKS}/:id`;
-export const BOOK_UPDATE = `${BOOKS}/:id`;
+export const BOOK_UPDATE = `${BOOKS}/:id/actualizar`;
 export const LIST_LOCAL_BOOKS = `${BOOKS}/buscar`;
 
 export const toBookDetail = (
   uuid: string,
-) => `${BOOK_DETAIL}/${uuid}`;
+) => `${BOOKS}/${uuid}`;
 
 export const toBookUpdate = (
   uuid: string,
-) => `${BOOK_UPDATE}/${uuid}`;
+) => `${BOOKS}/${uuid}/actualizar`;
 
 export const LIBRARIES = `${ADMIN}/librerías`;
 

@@ -18,7 +18,6 @@ import HOME, {
   BOOK_UPDATE,
 } from './routes';
 
-const UpdateFormView = React.lazy(() => import('src/views/Books.UpdateForm'));
 const RegisterFormView = React.lazy(() => import('src/views/Books.RegisterForm'));
 const SignInView = React.lazy(() => import('src/views/Users.SignIn'));
 const SearchLocalBooksView = React.lazy(() => import('src/views/Search.LocalBooksList'));
@@ -27,6 +26,7 @@ const ListUsers = React.lazy(() => import('src/views/Users.List'));
 const RegisterUser = React.lazy(() => import('src/views/Users.CreateForm'));
 const UpdateUser = React.lazy(() => import('src/views/Users.Update'));
 const DetailViewBook = React.lazy(() => import('src/views/Books.FormViewBook'));
+const UpdateForm = React.lazy(() => import('src/views/Books.UpdateForm'));
 
 const Router: React.FC = () => (
 
@@ -71,7 +71,9 @@ const Router: React.FC = () => (
           <ListUsers />
         </PrivateRoute>
         <PrivateRoute
+          exact
           path={BOOK_DETAIL}
+          hasAccess={(user) => isAdmin(user)}
         >
           <DetailViewBook />
         </PrivateRoute>
@@ -88,7 +90,7 @@ const Router: React.FC = () => (
           path={BOOK_UPDATE}
           hasAccess={(user) => isAdmin(user)}
         >
-          <UpdateFormView />
+          <UpdateForm />
         </PrivateRoute>
       </Switch>
     </React.Suspense>

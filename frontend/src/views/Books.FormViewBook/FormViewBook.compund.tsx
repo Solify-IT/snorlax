@@ -25,7 +25,7 @@ const FormViewBook: React.FC = () => {
       setIsLoading(false);
       return;
     }
-
+    console.log(result.data);
     setBook(result.data.book);
     setIsLoading(false);
   }, [backend.books]);
