@@ -1,5 +1,5 @@
 import { message } from 'antd';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Redirect } from 'react-router-dom';
 import { Book } from 'src/@types';
 import { SIGN_IN } from 'src/Components/Router/routes';
@@ -15,6 +15,13 @@ const ShoppingCart: React.FC = () => {
   const [books, setBooks] = useState<{ book: Book, amount: number }[]>();
   const backend = useBackend();
   const [isLoading, setIsLoading] = useState(false);
+  const total = useMemo(() => {
+    let tot = 0;
+    books?.forEach((b) => {
+      tot += b.amount * b.book.price;
+    });
+    return tot;
+  }, [books]);
 
   useEffect(() => {
     if (!user || !SHOW_SHOPPING_CART) return;
@@ -110,6 +117,7 @@ const ShoppingCart: React.FC = () => {
       fetchBook={fetchBook}
       remove={remove}
       isLoading={isLoading}
+      total={total}
     />
   );
 };
