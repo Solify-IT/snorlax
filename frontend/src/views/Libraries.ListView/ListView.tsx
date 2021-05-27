@@ -1,5 +1,6 @@
 import { Table, Typography } from 'antd';
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Library } from 'src/@types';
 import { toLibraryDetail } from 'src/Components/Router/routes';
 import Props from './ListView.type';
@@ -30,6 +31,14 @@ const LibrariesListView: React.FC<Props> = ({ libraries, isLoading }) => {
       title: 'Ciudad',
       dataIndex: 'city',
       key: 'city',
+    },
+    {
+      title: 'Modificar Libreria',
+      dataIndex: 'displayName',
+      key: 'displayName',
+      render: (name: string, row: Library) => (
+        <Link to={toLibraryDetail(row.id)}>Modificar</Link>
+      ),
     },
   ];
 

@@ -18,10 +18,14 @@ export const toBookDetail = (
 
 export const LIBRARIES = `${ADMIN}/librerías`;
 export const NEW_LIBRARY = `${LIBRARIES}/nuevo`;
+export const UPDATE_LIBRRY = `${LIBRARIES}/modificar-libreria/:id`;
+export const UPDATE_LIBRARY_ID = `${LIBRARIES}/modificar-libreria`;
 
 export const toLibraryDetail = (
   uuid: string,
-) => `${LIBRARIES}/${uuid}`;
+) => `${UPDATE_LIBRARY_ID}/${uuid}`;
+export const toLibraryList = (
+) => `${LIBRARIES}`;
 
 export const USERS = `${ADMIN}/usuarios`;
 export const LIST_USERS = `${USERS}/lista-local`;
