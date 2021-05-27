@@ -4,6 +4,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import useAuth from 'src/hooks/auth';
 import { isAdmin } from 'src/utils/auth';
+import { SHOW_SHOPPING_CART_NAV } from 'src/utils/featureToggles';
 import {
   INVENTORY, SALES_POINT, ADMIN, menuItemKeys, LIST_LOCAL_BOOKS, LIBRARIES,
 } from '../Router/routes';
@@ -32,9 +33,11 @@ const NavHeader: React.FC<{ goTo(path: string): () => void }> = ({ goTo }) => {
         <Menu.Item key={`header-${itemKeys.intentory}`} onClick={goTo(LIST_LOCAL_BOOKS)}>
           Inventario
         </Menu.Item>
-        <Menu.Item key={`header-${itemKeys.salesPoint}`} onClick={goTo(SALES_POINT)}>
-          Punto de venta
-        </Menu.Item>
+        {SHOW_SHOPPING_CART_NAV && (
+          <Menu.Item key={`header-${itemKeys.salesPoint}`} onClick={goTo(SALES_POINT)}>
+            Punto de venta
+          </Menu.Item>
+        )}
         {user && isAdmin(user) && (
           <Menu.Item key={`header-${itemKeys.admin}`} onClick={goTo(LIBRARIES)}>
             Administración
