@@ -15,6 +15,7 @@ import HOME, {
   BOOK_DETAIL,
   INVENTORY,
   NEW_LIBRARY,
+  SALES_POINT,
 } from './routes';
 
 const RegisterFormView = React.lazy(() => import('src/views/Books.RegisterForm'));
@@ -26,6 +27,7 @@ const RegisterUser = React.lazy(() => import('src/views/Users.CreateForm'));
 const RegisterLibrary = React.lazy(() => import('src/views/Library.CreateLibrary'));
 const UpdateUser = React.lazy(() => import('src/views/Users.Update'));
 const DetailViewBook = React.lazy(() => import('src/views/Books.FormViewBook'));
+const ShoppingCart = React.lazy(() => import('src/views/ShoppingCart'));
 
 const Router: React.FC = () => (
 
@@ -88,6 +90,14 @@ const Router: React.FC = () => (
           hasAccess={(user) => isAdmin(user)}
         >
           <UpdateUser />
+        </PrivateRoute>
+
+        <PrivateRoute
+          exact
+          path={SALES_POINT}
+          hasAccess={(user) => isAdmin(user)}
+        >
+          <ShoppingCart />
         </PrivateRoute>
       </Switch>
     </React.Suspense>
