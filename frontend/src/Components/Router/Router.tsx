@@ -1,3 +1,4 @@
+import { Typography } from 'antd';
 import React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import useAuth from 'src/hooks/auth';
@@ -96,6 +97,11 @@ const Router: React.FC = () => {
           >
             <UpdateUser />
           </PrivateRoute>
+          <Route>
+            {currUser
+              ? <Typography.Title>¡No se encontró la página que estabas buscando!</Typography.Title>
+              : <Redirect to={SIGN_IN} />}
+          </Route>
         </Switch>
       </React.Suspense>
     </PageHeader>

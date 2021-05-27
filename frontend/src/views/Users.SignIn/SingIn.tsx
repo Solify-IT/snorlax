@@ -82,7 +82,7 @@ const SignIn = () => {
     setTitles({ title: '¡Bienvenido!', subtitle: 'Inicia sesión con tu correo y contraseña' });
   }, []);
 
-  if (user && state.from) return <Redirect to={state.from} />;
+  if (user && state && state.from) return <Redirect to={state.from} />;
 
   if (user) return <Redirect to={getHomeForRole(user.role.name)} />;
 
