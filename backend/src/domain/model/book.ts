@@ -12,6 +12,15 @@ export type LocalBook = CommonType & {
 
 export type LocalBookInput = Omit<LocalBook, 'library'>;
 
+export type SaleInput = {
+  bookId: string,
+  amount: number,
+}[];
+
+export type SaleMovementInput = {
+  book: SaleInput[];
+};
+
 export type ExternalBook = {
   authors: string[],
   title: string,

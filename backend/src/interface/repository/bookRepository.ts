@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { v4 as uuidv4 } from 'uuid';
 import {
-  Book, BOOK_TABLE_NAME, CATALOGUE_TABLE_NAME, LocalBook, LocalBookInput,
+  Book, BOOK_TABLE_NAME, CATALOGUE_TABLE_NAME, LocalBook, LocalBookInput, MOVEMENT_TABLE_NAME,
 } from 'src/domain/model';
 import { IBookRepository } from 'src/usecases';
 import { InvalidDataError } from 'src/usecases/errors';
 import { Maybe } from 'src/@types';
+import { SaleInput, SaleMovementInput } from 'src/domain/model/book';
 import BaseRepository from './BaseRepository';
 
 export default class BookRepository extends BaseRepository implements IBookRepository {
@@ -78,6 +79,13 @@ export default class BookRepository extends BaseRepository implements IBookRepos
     );
 
     return result;
+  }
+
+  async registerBooksSell(saleData:Omit<SaleMovementInput, 'id'>): Promise<SaleMovementInput[]> {
+    const id = uuidv4();
+    return this.datastore.insertMultiple<SaleMovementInput>(MOVEMENT_TABLE_NAME, {
+      ...saleData,
+    });
   }
 
   findAll(): Promise<Book[]> {
