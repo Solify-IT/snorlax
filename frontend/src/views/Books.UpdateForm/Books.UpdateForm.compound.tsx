@@ -4,13 +4,11 @@ import { useHistory, useParams } from 'react-router-dom';
 import useNavigation from 'src/hooks/navigation';
 import { useBackend } from 'src/integrations/backend';
 import { Book } from 'src/@types';
-import useMetadataProvider from 'src/integrations/metadataProvider';
 import { LIST_LOCAL_BOOKS } from 'src/Components/Router/routes';
 import BooksUpdateForm from './Books.UpdateForm';
 import { StateType } from './Books.Update.type';
 
 const UpdateForm: React.FC = () => {
-  const metadataClient = useMetadataProvider();
   const history = useHistory();
   const backend = useBackend();
   const [isLoading, setIsLoading] = useState(false);
@@ -21,7 +19,7 @@ const UpdateForm: React.FC = () => {
   const fetchBook = useCallback(async () => {
     setIsLoading(true);
 
-    const [result, error] = await backend.books.getOneById<{ books: Book }>(id);
+    const [result, error] = await backend.books.getOneById<{ book: Book }>(id);
 
     if (error || !result) {
       notification.error({
@@ -32,27 +30,13 @@ const UpdateForm: React.FC = () => {
       return;
     }
 
-    const [metadata, metadataError] = await metadataClient.getByISBN(result.data.books.isbn);
-    if (metadataError || !metadata) {
-      notification.error({
-        message: 'Ocurrió un error al cargar el libro!',
-        description: 'Intentalo más tarde',
-      });
-      setIsLoading(false);
-      return;
-    }
-
-    setBook(result.data.books);
+    setBook(result.data.book);
     setIsLoading(false);
   }, [backend.books]);
 
   const onFinish = async (values: StateType) => {
     setIsLoading(true);
-    const [, error] = await backend.movements.createOne({
-      ...values,
-      libraryId: 'e11e5635-094c-4224-836f-b0caa13986f3',
-      amount: Math.abs(values.amount - values.newAmount),
-    });
+    const [, error] = await backend.books.updateOneK({ ...values });
 
     if (error) {
       notification.error({

@@ -12,11 +12,6 @@ const INITIAL_STATE = {
   isloan: false,
 };
 
-const layout = {
-  labelCol: { span: 6 },
-  wrapperCol: { span: 18 },
-};
-
 const tailLayout = {
   wrapperCol: { offset: 6, span: 18 },
 };
@@ -32,89 +27,78 @@ const UpdateForm: React.FC<Props> = ({ book, onFinish, onFinishFailed }) => {
   }, [INITIAL_STATE]);
 
   return (
-    <>
-      <Row>
-        <Col span={12}>
-          <Form
-            {...layout}
-            form={form}
-            name="modifyBook"
-            initialValues={book}
-            onFinish={onFinish}
-            onFinishFailed={onFinishFailed}
-          >
-            <Row>
-              <Col span={12}>
-                <Form.Item
-                  label="ISBN"
-                  name="isbn"
-                >
-                  <Input placeholder="ISBN" disabled value="isbn1" />
-                </Form.Item>
-              </Col>
-            </Row>
+    <Row justify="space-around" align="middle">
+      <Col span={12}>
+        <Form
+          form={form}
+          name="modifyBook"
+          initialValues={book}
+          onFinish={onFinish}
+          onFinishFailed={onFinishFailed}
+        >
 
-            <Row>
-              <Col span={12}>
-                <Form.Item
-                  label="Título"
-                  name="title"
-                >
-                  <Input placeholder="Título" disabled value="Título Test" />
-                </Form.Item>
-              </Col>
-            </Row>
-
-            <Row>
-              <Col span={6}>
-                <Form.Item
-                  label="Precio"
-                  name="price"
-                >
-                  <Input placeholder="PRECIO" disabled value="100" />
-                </Form.Item>
-              </Col>
-            </Row>
-
-            <Row>
-              <Col span={12}>
-                <Form.Item label="¿Es consigna?" name="isLoan">
-                  <Switch />
-                </Form.Item>
-              </Col>
-            </Row>
-
-            <Row>
-              <Col span={6}>
-                <Form.Item
-                  label="Cantidad Previa"
-                  name="amount"
-                >
-                  <Input placeholder="Cantidad" disabled value="Cantidad" />
-                </Form.Item>
-              </Col>
-              <Col span={6}>
-                <Form.Item
-                  label="Cantidad Nueva"
-                  name="newAmount"
-                >
-                  <Input placeholder="Cantidad" />
-                </Form.Item>
-              </Col>
-            </Row>
-
-            <Form.Item {...tailLayout}>
-              <Button
-                type="primary"
-                htmlType="submit"
-              >
-                Guardar
-              </Button>
+          <Col>
+            <Form.Item
+              label="ISBN"
+              name="isbn"
+            >
+              <Input placeholder="ISBN" disabled value="isbn1" />
             </Form.Item>
-          </Form>
-        </Col>
-      </Row>
-    </>
+          </Col>
+
+          <Col span={12}>
+            <Form.Item
+              label="Título"
+              name="title"
+            >
+              <Input placeholder="Título" disabled value="Título Test" />
+            </Form.Item>
+          </Col>
+
+          <Col span={6}>
+            <Form.Item
+              label="Precio"
+              name="price"
+            >
+              <Input placeholder="PRECIO" disabled value="100" />
+            </Form.Item>
+          </Col>
+
+          <Col span={12}>
+            <Form.Item label="¿Es consigna?" name="isLoan">
+              <Switch />
+            </Form.Item>
+          </Col>
+
+          <Col span={8}>
+            <Form.Item
+              label="Cantidad Previa"
+              name="amount"
+            >
+              <Input placeholder="Cantidad" disabled value="Cantidad" />
+            </Form.Item>
+          </Col>
+
+          <Col span={8}>
+            <Form.Item
+              label="Cantidad Nueva"
+              name="newAmount"
+            >
+              <Input placeholder="Cantidad" />
+            </Form.Item>
+          </Col>
+
+          <Form.Item {...tailLayout}>
+            <Button
+              type="primary"
+              htmlType="submit"
+            >
+              Guardar
+            </Button>
+          </Form.Item>
+        </Form>
+      </Col>
+    </Row>
   );
 };
 export default UpdateForm;
