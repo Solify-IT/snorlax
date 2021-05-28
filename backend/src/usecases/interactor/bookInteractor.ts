@@ -141,16 +141,15 @@ export default class BookInteractor {
     const [bookResult] = await Promise.all([
       this.bookRepository.updateBook(bookData),
     ]);
-    const amount = Math.abs(book.amount - bookData.amount);
-    const result = await this.movementInteractor.registerMovement({
-      amount, isLoan: false, localBookId: bookData.id, type: 'fix',
-    });
 
-    if (result) {
-      return bookResult;
+    const amount = Math.abs(book.amount - bookData.amount);
+    if (amount) {
+      await this.movementInteractor.registerMovement({
+        amount, isLoan: false, localBookId: bookData.id, type: 'fix',
+      });
     }
 
-    throw new UnknownError('unknown');
+    return bookResult;
   }
 
   async listBooksByLibrary(

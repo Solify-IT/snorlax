@@ -62,7 +62,7 @@ const UpdateForm: React.FC = () => {
       ...values, libraryId: user.libraryId, id,
     });
 
-    if (error) {
+    if (error || !result) {
       notification.error({
         message: '¡Ocurrió un error al guardar!',
         description: 'Intentalo después.',
@@ -70,7 +70,7 @@ const UpdateForm: React.FC = () => {
     }
     if (result) {
       notification.success({
-        message: 'Lirbo modificado!',
+        message: '¡Libro modificado!',
       });
     }
 

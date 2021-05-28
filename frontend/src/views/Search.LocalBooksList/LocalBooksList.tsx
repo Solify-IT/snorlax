@@ -1,6 +1,6 @@
 import { EditOutlined, SearchOutlined } from '@ant-design/icons';
 import {
-  Button, Table, Tag, Tooltip, Typography,
+  Button, Col, Row, Table, Tag, Tooltip, Typography,
 } from 'antd';
 import React from 'react';
 import { Link, useHistory } from 'react-router-dom';
@@ -56,12 +56,11 @@ const LocalBooksList: React.FC<Props> = ({
     },
     {
       title: 'Disponibilidad',
-      dataIndex: 'price',
-      key: 'price',
-      render: (price: string) => (
+      dataIndex: 'amount',
+      key: 'amount',
+      render: (amount: number) => (
         <Typography.Text>
-
-          {price}
+          {amount}
           pz
         </Typography.Text>
       ),
@@ -73,14 +72,18 @@ const LocalBooksList: React.FC<Props> = ({
       dataIndex: '',
       key: 'view',
       render: (row: Book) => (
-        <>
-          <Tooltip title="Ver detalles">
-            <Button type="primary" shape="circle" icon={<SearchOutlined />} onClick={goTo(toBookDetail(row.id))} />
-          </Tooltip>
-          <Tooltip title="edit">
-            <Button type="primary" shape="circle" icon={<EditOutlined />} onClick={goTo(toBookUpdate(row.id))} />
-          </Tooltip>
-        </>
+        <Row>
+          <Col span={12}>
+            <Tooltip title="Ver detalles">
+              <Button type="primary" shape="circle" icon={<SearchOutlined />} onClick={goTo(toBookDetail(row.id))} />
+            </Tooltip>
+          </Col>
+          <Col span={12}>
+            <Tooltip title="Editar">
+              <Button type="primary" shape="circle" icon={<EditOutlined />} onClick={goTo(toBookUpdate(row.id))} />
+            </Tooltip>
+          </Col>
+        </Row>
       ),
     },
   ];
