@@ -91,11 +91,11 @@ export default class BookController {
   // POST /books/movement { movementData }
   async registerBooksSell(context: IContext): Promise<void> {
     const {
-      book,
-    } = context.request.body;
+      books,
+    } = context.request.body as SaleMovementInput;
 
     const saleData: SaleMovementInput = {
-      book,
+      books,
     };
 
     const [id, error] = await wrapError(

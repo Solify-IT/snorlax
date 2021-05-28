@@ -1,7 +1,9 @@
+/* eslint-disable no-restricted-syntax */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { v4 as uuidv4 } from 'uuid';
 import {
-  Book, BOOK_TABLE_NAME, CATALOGUE_TABLE_NAME, LocalBook, LocalBookInput, MOVEMENT_TABLE_NAME,
+  Book, BOOK_TABLE_NAME, CATALOGUE_TABLE_NAME, LocalBook, LocalBookInput, Movement,
+  MOVEMENT_TABLE_NAME,
 } from 'src/domain/model';
 import { IBookRepository } from 'src/usecases';
 import { InvalidDataError } from 'src/usecases/errors';
@@ -81,11 +83,15 @@ export default class BookRepository extends BaseRepository implements IBookRepos
     return result;
   }
 
-  async registerBooksSell(saleData:Omit<SaleMovementInput, 'id'>): Promise<SaleMovementInput[]> {
-    const id = uuidv4();
-    return this.datastore.insertMultiple<SaleMovementInput>(MOVEMENT_TABLE_NAME, {
-      ...saleData,
-    });
+  async registerBooksSell(saleData: SaleMovementInput): Promise<void> {
+    let id = uuidv4();
+    for (const book of saleData.books) {
+      console.log(book.id);
+      this.datastore.insert<Movement>(MOVEMENT_TABLE_NAME, {
+        localBookId: book.id, amount: book.amount, isLoan: false, id,
+      });
+      id = uuidv4();
+    }
   }
 
   findAll(): Promise<Book[]> {

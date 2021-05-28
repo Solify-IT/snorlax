@@ -96,12 +96,10 @@ export default class BookInteractor {
 
   async registerBooksSell(
     saleData: SaleMovementInput,
-  ): Promise<SaleMovementInput[]> {
+  ): Promise<void> {
     this.logger.info('Creating new movement.', { logger: 'BookInteractor:registerBooksSell' });
 
-    const result = await this.bookRepository.registerBooksSell({
-      book: saleData.book,
-    });
+    const result = await this.bookRepository.registerBooksSell(saleData);
 
     return result;
   }
