@@ -7,6 +7,7 @@ export async function up(pgm: MigrationBuilder): Promise<void> {
     amount: {
       type: 'numeric',
       notNull: false,
+      default: 1,
     },
   });
 }
