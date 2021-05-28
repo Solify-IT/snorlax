@@ -37,6 +37,22 @@ const UpdateForm: React.FC = () => {
   const onFinish = async (values: StateType) => {
     setIsLoading(true);
     console.log(values);
+
+    const [result, error] = await backend.books.updateOne({ values });
+
+    if (error) {
+      notification.error({
+        message: '¡Ocurrió un error al guardar!',
+        description: 'Intentalo después.',
+      });
+    }
+    if (result) {
+      notification.success({
+        message: '¡Usuario modificado!',
+        description: 'Puedes modificar más usuarios o verificar el detalle del usuario.',
+      });
+    }
+
     setIsLoading(false);
   };
 

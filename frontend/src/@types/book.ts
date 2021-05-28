@@ -6,8 +6,6 @@ export type LocalBook = CommonType & {
   isbn: string,
   price: number,
   libraryId: string;
-  library: Library;
-  generos?: string[],
   amount:number,
 };
 
