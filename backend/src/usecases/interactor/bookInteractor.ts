@@ -1,5 +1,5 @@
 import {
-  LocalBook, Book, CatalogueInputData, Catalogue,
+  LocalBook, Book, CatalogueInputData, Catalogue, LocalBookInput,
 } from 'src/domain/model';
 import { Maybe } from 'src/@types';
 import { IBookRepository } from '..';
@@ -116,7 +116,7 @@ export default class BookInteractor {
     }
   }
 
-  async updateBookAmount(bookData: LocalBook): Promise<LocalBook> {
+  async updateBookAmount(bookData: LocalBookInput): Promise<LocalBook> {
     // TODO: Agregar movement type(Entrada o salida) a tabla de movimientos
     const book = await this.getBook(bookData.id);
     // Check if book exists in library

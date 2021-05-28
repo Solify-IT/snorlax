@@ -1,10 +1,12 @@
 import CommonType from './common';
 import Catalogue from './catalogue';
+import { Library } from './library';
 
 export type LocalBook = CommonType & {
   isbn: string,
   price: number,
   libraryId: string
+  library: Library;
   amount: number;
 };
 

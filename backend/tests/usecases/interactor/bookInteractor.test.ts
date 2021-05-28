@@ -405,9 +405,13 @@ describe('modifyBookAmount', () => {
 
     const [result, error] = await wrapError(
       interactor.updateBookAmount(
-        library.id,
-        'test',
-        10,
+        {
+          id: 'test',
+          isbn: 'test-isbn',
+          libraryId: library.id,
+          price: 10,
+          amount: 10,
+        },
       ),
     );
 
