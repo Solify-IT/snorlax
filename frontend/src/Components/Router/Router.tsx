@@ -1,3 +1,4 @@
+/* eslint-disable import/no-named-as-default-member */
 import { Typography } from 'antd';
 import React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
@@ -17,6 +18,7 @@ import HOME, {
   UPDATE_LIBRRY,
   BOOK_DETAIL,
   INVENTORY,
+  BOOK_UPDATE,
   NEW_LIBRARY,
   SALES_POINT,
 } from './routes';
@@ -31,6 +33,7 @@ const RegisterLibrary = React.lazy(() => import('src/views/Library.CreateLibrary
 const UpdateUser = React.lazy(() => import('src/views/Users.Update'));
 const UpdateLibrary = React.lazy(() => import('src/views/Library.Update'));
 const DetailViewBook = React.lazy(() => import('src/views/Books.FormViewBook'));
+const UpdateForm = React.lazy(() => import('src/views/Books.UpdateForm'));
 const ShoppingCart = React.lazy(() => import('src/views/ShoppingCart'));
 
 const Router: React.FC = () => {
@@ -89,6 +92,7 @@ const Router: React.FC = () => {
             <ListUsers />
           </PrivateRoute>
           <PrivateRoute
+            exact
             path={BOOK_DETAIL}
           >
             <DetailViewBook />
@@ -109,6 +113,13 @@ const Router: React.FC = () => {
             <UpdateUser />
           </PrivateRoute>
 
+          <PrivateRoute
+            exact
+            path={BOOK_UPDATE}
+            hasAccess={(user) => isAdmin(user)}
+          >
+            <UpdateForm />
+          </PrivateRoute>
           <PrivateRoute
             exact
             path={SALES_POINT}

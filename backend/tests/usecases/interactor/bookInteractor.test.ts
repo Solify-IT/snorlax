@@ -393,3 +393,36 @@ describe('listBooksByLibrary', () => {
     jest.clearAllMocks();
   });
 });
+
+describe('modifyBookAmount', () => {
+  it('should return movement id of new movement', async () => {
+    const expectedId = 'expected';
+    const library = LibraryFactory.build();
+    const localBook = LocalBookFactory.build({ id: expectedId });
+
+    jest.spyOn(
+      bookRepository, 'findById',
+    ).mockImplementationOnce(async () => localBook);
+    jest.spyOn(
+      bookRepository, 'updateBook',
+    ).mockImplementationOnce(async () => localBook);
+    jest.spyOn(
+      movementRepository, 'registerMovement',
+    ).mockImplementationOnce(async () => expectedId);
+
+    const [result, error] = await wrapError(
+      interactor.updateBookAmount(
+        {
+          id: expectedId,
+          isbn: 'test-isbn',
+          libraryId: library.id,
+          price: 10,
+          amount: 10,
+        },
+      ),
+    );
+
+    expect(error).toBe(null);
+    expect(result?.id).toBe(expectedId);
+  });
+});

@@ -39,6 +39,7 @@ describe('registerBook', () => {
       isbn: bookData.isbn,
       libraryId: bookData.libraryId,
       price: bookData.price,
+      amount: 0,
     });
 
     expect(res).not.toBe(null);

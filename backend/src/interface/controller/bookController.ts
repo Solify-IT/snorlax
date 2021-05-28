@@ -53,11 +53,11 @@ export default class BookController {
     }
 
     const bookData: RegisterBookInputData = {
-      isLoan: JSON.parse(isLoan),
+      isLoan: JSON.parse(isLoan || false),
       isbn,
       libraryId,
-      price: JSON.parse(price || '0'),
-      amount: JSON.parse(amount || '0'),
+      price: JSON.parse(price || 0),
+      amount: parseInt(JSON.parse(amount || 0), 10),
       area,
       author,
       coverType,
@@ -65,7 +65,7 @@ export default class BookController {
       coverImageUrl,
       distribuitor,
       editoral,
-      pages: JSON.parse(pages || '0'),
+      pages: JSON.parse(pages || 0),
       provider,
       subCategory,
       title,
@@ -151,8 +151,37 @@ export default class BookController {
 
     if (error) {
       context.next(error);
+      return;
     }
 
     context.response.status(200).json({ book });
+  }
+
+  async updateBook(context: IContext): Promise<void> {
+    const {
+      id,
+      isbn,
+      price,
+      libraryId,
+      amount,
+    } = context.request.body;
+
+    const bookData = {
+      id,
+      isbn,
+      price,
+      libraryId,
+      amount: parseInt(JSON.parse(amount || '0'), 10),
+    };
+
+    const [idd, error] = await wrapError(
+      this.bookInteractor.updateBookAmount(bookData),
+    );
+    if (error) {
+      context.next(error);
+      return;
+    }
+
+    context.response.status(200).json({ idd });
   }
 }

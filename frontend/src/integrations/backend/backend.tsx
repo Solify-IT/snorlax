@@ -1,11 +1,17 @@
 import React from 'react';
 import { AxiosRequestConfig } from 'axios';
 import {
-  BookFormType, Catalogue, Library, LocalBook,
+  BookFormType, Catalogue, Library, LocalBook, Movement,
 } from 'src/@types';
 import {
-  BACKEND_MAIN_EP, BOOKS_ROOT, LIBRARIES_ROOT, LIBRARIES_ROOT_ID,
-  USERS_ROOT, USERS_ROOT_ID, CATALOGUE_ROOT,
+  BACKEND_MAIN_EP,
+  BOOKS_ROOT,
+  LIBRARIES_ROOT,
+  USERS_ROOT,
+  CATALOGUE_ROOT,
+  MOVEMENTS_ROOT,
+  USERS_ROOT_ID,
+  LIBRARIES_ROOT_ID,
 } from 'src/settings';
 import User, { UserInput } from 'src/@types/user';
 import useAuth from 'src/hooks/auth';
@@ -17,7 +23,7 @@ export type RegisterBook = BookFormType & { libraryId: Library['id'] };
 export class Backend {
   rootEndpoint: string;
 
-  books: CRUD<LocalBook, RegisterBook, RegisterBook>;
+  books: CRUD<LocalBook, RegisterBook, RegisterBook & { id: string }>;
 
   users: CRUD<User, UserInput, UserInput>;
 
@@ -28,6 +34,8 @@ export class Backend {
   libraries: CRUD<Library, unknown, unknown>;
 
   catalogue: CRUD<Catalogue, unknown, unknown>;
+
+  movements: CRUD<Movement, unknown, unknown>;
 
   public constructor(rootEndpoint: string, config?: AxiosRequestConfig) {
     this.rootEndpoint = rootEndpoint;
@@ -51,6 +59,9 @@ export class Backend {
     );
     this.catalogue = new CRUD(
       `${this.rootEndpoint}${CATALOGUE_ROOT}`, config,
+    );
+    this.movements = new CRUD(
+      `${this.rootEndpoint}${MOVEMENTS_ROOT}`, config,
     );
   }
 }
