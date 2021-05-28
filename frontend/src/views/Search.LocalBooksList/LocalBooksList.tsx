@@ -16,7 +16,7 @@ const LocalBooksList: React.FC<Props> = ({
   const goTo = (path: string) => () => history.push(path);
   const columns = [
     {
-      title: 'Title',
+      title: 'Título',
       dataIndex: 'title',
       key: 'title',
       render: (title: string, row: Book) => (
@@ -74,7 +74,7 @@ const LocalBooksList: React.FC<Props> = ({
       key: 'view',
       render: (row: Book) => (
         <>
-          <Tooltip title="search">
+          <Tooltip title="Ver detalles">
             <Button type="primary" shape="circle" icon={<SearchOutlined />} onClick={goTo(toBookDetail(row.id))} />
           </Tooltip>
         </>

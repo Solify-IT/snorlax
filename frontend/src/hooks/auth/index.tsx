@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import User from 'src/@types/user';
-import HOME, { ADMIN, INVENTORY } from 'src/Components/Router/routes';
+import HOME, { INVENTORY, LIBRARIES } from 'src/Components/Router/routes';
 
 export type AuthUserType = {
   name: User['displayName'],
@@ -60,7 +60,7 @@ export const AuthContextProvider: React.FC = ({ children }) => {
   const getHomeForRole = useCallback((roleName: string): string => {
     switch (roleName) {
       case ADMIN_ROLE_NAME:
-        return ADMIN;
+        return LIBRARIES;
       case LIBRERO_ROLE_NAME:
         return INVENTORY;
       default:
