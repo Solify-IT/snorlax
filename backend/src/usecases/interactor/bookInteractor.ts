@@ -1,3 +1,5 @@
+/* eslint-disable no-await-in-loop */
+/* eslint-disable no-restricted-syntax */
 import {
   LocalBook, Book, CatalogueInputData, Catalogue, LocalBookInput,
 } from 'src/domain/model';
@@ -109,9 +111,28 @@ export default class BookInteractor {
   async registerBooksSell(
     saleData: SaleMovementInput,
   ): Promise<void> {
-    this.logger.info('Creating new movement.', { logger: 'BookInteractor:registerBooksSell' });
+    this.logger.info('Creating new sale.', { logger: 'BookInteractor:registerBooksSell' });
 
-    await this.bookRepository.registerBooksSell(saleData);
+    const modified: SaleMovementInput = { books: [] };
+
+    for (const book of saleData.books) {
+      let existing: LocalBook;
+      try {
+        existing = await this.getBook(book.id);
+        await this.updateBookAmount({
+          id: book.id,
+          isbn: existing.isbn,
+          libraryId: existing.libraryId,
+          price: existing.price,
+          amount: existing.amount - book.amount,
+        }, false);
+        modified.books.push(book);
+      } catch (e) {
+        this.logger.error({ message: 'Libro no encontrado al realizar la venta', bookId: book.id });
+      }
+    }
+
+    await this.bookRepository.registerBooksSell(modified);
   }
 
   private validateRegisterBookData(bookData: RegisterBookInputData): void {
@@ -134,7 +155,9 @@ export default class BookInteractor {
     }
   }
 
-  async updateBookAmount(bookData: LocalBookInput): Promise<LocalBook> {
+  async updateBookAmount(
+    bookData: LocalBookInput, saveMovement: boolean = true,
+  ): Promise<LocalBook> {
     const book = await this.getBook(bookData.id);
 
     if (!book) {
@@ -150,6 +173,8 @@ export default class BookInteractor {
     const [bookResult] = await Promise.all([
       this.bookRepository.updateBook(bookData),
     ]);
+
+    if (!saveMovement) return bookResult;
 
     const amount = Math.abs(book.amount - bookData.amount);
     if (amount) {

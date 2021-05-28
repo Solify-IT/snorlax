@@ -87,7 +87,7 @@ export default class BookRepository extends BaseRepository implements IBookRepos
     let id = uuidv4();
     for (const book of saleData.books) {
       this.datastore.insert<Movement>(MOVEMENT_TABLE_NAME, {
-        localBookId: book.id, amount: book.amount, isLoan: false, id,
+        localBookId: book.id, amount: book.amount, isLoan: false, id, type: 'out',
       });
       id = uuidv4();
     }
@@ -98,8 +98,8 @@ export default class BookRepository extends BaseRepository implements IBookRepos
   }
 
   async findById(id: string): Promise<Maybe<LocalBook>> {
-    const book = await this.datastore.getOneOrNull<LocalBook>(
-      `SELECT * FROM  ${BOOK_TABLE_NAME} l, ${CATALOGUE_TABLE_NAME} c WHERE l.isbn = c.isbn AND l.id = $1
+    const book = await this.datastore.getOneOrNull<any>(
+      `SELECT *, c.id as cId, l.id as id FROM  ${BOOK_TABLE_NAME} l, ${CATALOGUE_TABLE_NAME} c WHERE l.isbn = c.isbn AND l.id = $1
       `, [id],
     );
 

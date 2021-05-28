@@ -1,7 +1,10 @@
 import {
+  Button,
   Col, Divider, List, Row,
 } from 'antd';
 import React, { useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
+import { toBookUpdate } from 'src/Components/Router/routes';
 import useNavigation from 'src/hooks/navigation';
 import Props from './FormViewBook.type';
 
@@ -14,11 +17,20 @@ const INITIAL_STATE = {
 
 const FormViewBook: React.FC<Props> = ({ book }) => {
   const { setTitles } = useNavigation();
+  const history = useHistory();
 
   useEffect(() => {
     setTitles({
       title: book.title,
       subtitle: book.author,
+      extra: [
+        <Button
+          type="primary"
+          onClick={() => history.push(toBookUpdate(book.id))}
+        >
+          Editar datos
+        </Button>,
+      ],
     });
     // eslint-disable-next-line
   }, [INITIAL_STATE]);
