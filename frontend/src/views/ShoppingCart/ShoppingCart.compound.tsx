@@ -122,9 +122,7 @@ const ShoppingCart: React.FC = () => {
 
     const [res, err] = await backend.libraries.post<
     { status: number }, { books: typeof payload }
-    >(`/${user.libraryId}/sell`, {
-      books: payload,
-    });
+    >('/sell', { books: payload });
 
     if (err || !res || res.data.status !== 200) {
       notification.error({ message: 'Ocurrió un error al completar la venta' });
