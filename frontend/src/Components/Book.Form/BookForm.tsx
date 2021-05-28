@@ -76,9 +76,11 @@ const BookForm: React.FC<Props> = ({
         <InputNumber />
       </Form.Item>
 
-      <Form.Item label="¿Es consigna?" name="isLoan">
-        <Switch />
-      </Form.Item>
+      {!isUpdate && (
+        <Form.Item label="¿Es consigna?" name="isLoan">
+          <Switch />
+        </Form.Item>
+      )}
 
       <Form.Item
         label="Título"

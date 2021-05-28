@@ -14,12 +14,15 @@ const INITIAL_STATE = {
 
 const FormViewBook: React.FC<Props> = ({ book }) => {
   const { setTitles } = useNavigation();
+
   useEffect(() => {
     setTitles({
-      title: 'Informacion de libro', subtitle: '',
+      title: book.title,
+      subtitle: book.author,
     });
     // eslint-disable-next-line
   }, [INITIAL_STATE]);
+
   const data = [
     <b>Titulo </b>,
     <b>Precio </b>,

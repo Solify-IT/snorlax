@@ -93,6 +93,7 @@ const LocalBooksList: React.FC<Props> = ({
       loading={isLoading}
       dataSource={books}
       columns={columns}
+      rowKey="id"
       pagination={{
         total,
         showSizeChanger: true,
