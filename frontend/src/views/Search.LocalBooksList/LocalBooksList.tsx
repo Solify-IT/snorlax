@@ -20,7 +20,7 @@ const LocalBooksList: React.FC<Props> = ({
       dataIndex: 'title',
       key: 'title',
       render: (title: string, row: Book) => (
-        <Link to={toBookUpdate(row.id)}>{title}</Link>
+        <Link to={toBookDetail(row.id)}>{title}</Link>
       ),
     },
     {
