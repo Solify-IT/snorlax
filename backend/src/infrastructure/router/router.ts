@@ -88,6 +88,12 @@ export default class Router {
       });
     });
 
+    app.post('/libraries/sell', async (request, response, next) => {
+      await controller.books.registerBooksSell({
+        request, response, next, logger: controller.logger,
+      });
+    });
+
     app.get('/catalogue/:isbn', middleware, async (request, response, next) => {
       await controller.catalogue.findByISBNOrNull({
         request, response, next, logger: controller.logger,

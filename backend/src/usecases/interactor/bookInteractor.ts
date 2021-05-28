@@ -2,6 +2,7 @@ import {
   LocalBook, Book, CatalogueInputData, Catalogue,
 } from 'src/domain/model';
 import { Maybe } from 'src/@types';
+import { SaleMovementInput } from 'src/domain/model/book';
 import { IBookRepository } from '..';
 import { UnknownError } from '../errors';
 import InvalidDataError from '../errors/invalidDataError';
@@ -91,6 +92,14 @@ export default class BookInteractor {
     if (result !== '') return result;
 
     throw new UnknownError('unknown');
+  }
+
+  async registerBooksSell(
+    saleData: SaleMovementInput,
+  ): Promise<void> {
+    this.logger.info('Creating new movement.', { logger: 'BookInteractor:registerBooksSell' });
+
+    await this.bookRepository.registerBooksSell(saleData);
   }
 
   private validateRegisterBookData(bookData: RegisterBookInputData): void {
