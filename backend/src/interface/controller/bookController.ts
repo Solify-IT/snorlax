@@ -1,4 +1,5 @@
 import { wrapError } from 'src/@types';
+import { SaleMovementInput } from 'src/domain/model/book';
 import { UnauthorizedError } from 'src/usecases/errors';
 import BookInteractor, { RegisterBookInputData } from 'src/usecases/interactor/bookInteractor';
 import { isAdmin, isLibrero } from '../auth';
@@ -85,6 +86,28 @@ export default class BookController {
     }
 
     context.response.status(200).json({ id });
+  }
+
+  // POST /books/movement { movementData }
+  async registerBooksSell(context: IContext): Promise<void> {
+    const {
+      books,
+    } = context.request.body as SaleMovementInput;
+
+    const saleData: SaleMovementInput = {
+      books,
+    };
+
+    const [, error] = await wrapError(
+      this.bookInteractor.registerBooksSell(saleData),
+    );
+
+    if (error) {
+      context.next(error);
+      return;
+    }
+
+    context.response.status(200).json({ status: 200 });
   }
 
   // recibe GET /books?libraryId=<?>&isbn=<?>

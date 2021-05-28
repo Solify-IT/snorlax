@@ -14,8 +14,9 @@ import HOME, {
   LIBRARIES,
   NEW_USER,
   LIST_USERS,
-  BOOK_DETAIL,
   UPDATE_USER,
+  UPDATE_LIBRRY,
+  BOOK_DETAIL,
   INVENTORY,
   BOOK_UPDATE,
   NEW_LIBRARY,
@@ -30,6 +31,7 @@ const ListUsers = React.lazy(() => import('src/views/Users.List'));
 const RegisterUser = React.lazy(() => import('src/views/Users.CreateForm'));
 const RegisterLibrary = React.lazy(() => import('src/views/Library.CreateLibrary'));
 const UpdateUser = React.lazy(() => import('src/views/Users.Update'));
+const UpdateLibrary = React.lazy(() => import('src/views/Library.Update'));
 const DetailViewBook = React.lazy(() => import('src/views/Books.FormViewBook'));
 const UpdateForm = React.lazy(() => import('src/views/Books.UpdateForm'));
 const ShoppingCart = React.lazy(() => import('src/views/ShoppingCart'));
@@ -94,6 +96,13 @@ const Router: React.FC = () => {
             path={BOOK_DETAIL}
           >
             <DetailViewBook />
+          </PrivateRoute>
+          <PrivateRoute
+            exact
+            path={UPDATE_LIBRRY}
+            hasAccess={(user) => isAdmin(user)}
+          >
+            <UpdateLibrary />
           </PrivateRoute>
 
           <PrivateRoute

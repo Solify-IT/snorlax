@@ -7,6 +7,7 @@ import { IDatastore } from 'src/interface/repository';
 import NotFoundError from 'src/usecases/errors/notFoundError';
 import { ILogger } from 'src/usecases/interfaces/logger';
 import camelToSnakeCase from 'src/utils/camelToSnakeCase';
+import { SaleMovementInput } from 'src/domain/model/book';
 
 export default class Datastore implements IDatastore {
   private dbPool: Pool;

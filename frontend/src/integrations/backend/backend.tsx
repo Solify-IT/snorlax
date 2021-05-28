@@ -11,9 +11,11 @@ import {
   CATALOGUE_ROOT,
   MOVEMENTS_ROOT,
   USERS_ROOT_ID,
+  LIBRARIES_ROOT_ID,
 } from 'src/settings';
 import User, { UserInput } from 'src/@types/user';
 import useAuth from 'src/hooks/auth';
+import { LibraryInput } from 'src/@types/library';
 import CRUD from './crud';
 
 export type RegisterBook = BookFormType & { libraryId: Library['id'] };
@@ -26,6 +28,8 @@ export class Backend {
   users: CRUD<User, UserInput, UserInput>;
 
   usersId : CRUD<User, UserInput, UserInput>;
+
+  librariesId : CRUD<Library, LibraryInput, LibraryInput>;
 
   libraries: CRUD<Library, unknown, unknown>;
 
@@ -48,6 +52,10 @@ export class Backend {
 
     this.libraries = new CRUD(
       `${this.rootEndpoint}${LIBRARIES_ROOT}`, config,
+    );
+
+    this.librariesId = new CRUD(
+      `${this.rootEndpoint}${LIBRARIES_ROOT_ID}`, config,
     );
     this.catalogue = new CRUD(
       `${this.rootEndpoint}${CATALOGUE_ROOT}`, config,

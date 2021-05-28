@@ -1,13 +1,16 @@
 import { DeleteFilled } from '@ant-design/icons';
 import {
   Button,
-  InputNumber, Popconfirm, Table, Typography,
+  Col,
+  InputNumber,
+  Popconfirm,
+  Row,
+  Table,
+  Typography,
 } from 'antd';
 import Search from 'antd/lib/input/Search';
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { Book } from 'src/@types';
-import { toBookDetail } from 'src/Components/Router/routes';
 import formatISBN from 'src/utils/isbn';
 
 type ShoppingCartBook = { book: Book, amount: number };
@@ -18,19 +21,18 @@ interface Props {
   updateAmount(bookId: string): (amount: number | null) => void;
   remove(bookId: string): () => void;
   isLoading: boolean;
+  total: number;
+  onFinishSale(): Promise<void>;
 }
 
 const ShoppingCart: React.FC<Props> = ({
-  books, fetchBook, updateAmount, remove, isLoading,
+  books, fetchBook, updateAmount, remove, isLoading, total, onFinishSale,
 }) => {
   const columns = [
     {
       title: 'Título',
       dataIndex: ['book', 'title'],
       key: 'title',
-      render: (title: string, row: ShoppingCartBook) => (
-        <Link to={toBookDetail(row.book.id)}>{title}</Link>
-      ),
     },
     {
       title: 'ISBN',
@@ -108,6 +110,39 @@ const ShoppingCart: React.FC<Props> = ({
         columns={columns}
         pagination={false}
       />
+
+      <Row style={{ margin: '24px 0' }}>
+        <Col span={12}>
+          <Typography.Title level={3}>
+            Total:
+            {` $${total}`}
+          </Typography.Title>
+        </Col>
+        <Col
+          span={12}
+          style={{
+            display: 'flex',
+            justifyContent: 'flex-end',
+          }}
+        >
+          <span>
+            <Popconfirm
+              title="¿Deseas terminar la compra?"
+              okText="Sí, Terminar"
+              cancelText="No"
+              disabled={!books.length}
+              onConfirm={onFinishSale}
+            >
+              <Button
+                disabled={!books.length}
+                type="primary"
+              >
+                Terminar Venta
+              </Button>
+            </Popconfirm>
+          </span>
+        </Col>
+      </Row>
     </>
   );
 };

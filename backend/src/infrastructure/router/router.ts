@@ -82,6 +82,18 @@ export default class Router {
       });
     });
 
+    app.get('/libraries/id', async (request, response, next) => {
+      await controller.libraries.getLibrary({
+        request, response, next, logger: controller.logger,
+      });
+    });
+
+    app.patch('/libraries', async (request, response, next) => {
+      await controller.libraries.updateLibrary({
+        request, response, next, logger: controller.logger,
+      });
+    });
+
     app.get('/libraries', middleware, async (request, response, next) => {
       await controller.libraries.listAll({
         request, response, next, logger: controller.logger,
@@ -90,6 +102,12 @@ export default class Router {
 
     app.post('/libraries', async (request, response, next) => {
       await controller.libraries.createLibrary({
+        request, response, next, logger: controller.logger,
+      });
+    });
+
+    app.post('/libraries/sell', async (request, response, next) => {
+      await controller.books.registerBooksSell({
         request, response, next, logger: controller.logger,
       });
     });
