@@ -83,6 +83,15 @@ export default class BookInteractor {
       });
     } else if (existLocalBook) {
       result = existLocalBook[0].id;
+      await this.bookRepository.updateBook({
+        id: result,
+        isbn: bookData.isbn,
+        price: bookData.price,
+        libraryId: bookData.libraryId,
+        amount: parseInt(bookData.amount as unknown as string, 10) + parseInt(
+          existLocalBook[0].amount as unknown as string, 10,
+        ),
+      });
     }
 
     // Register the inventory movement

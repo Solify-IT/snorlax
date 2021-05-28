@@ -52,11 +52,11 @@ export default class BookController {
     }
 
     const bookData: RegisterBookInputData = {
-      isLoan: JSON.parse(isLoan),
+      isLoan: JSON.parse(isLoan || false),
       isbn,
       libraryId,
-      price: JSON.parse(price || '0'),
-      amount: JSON.parse(amount || '0'),
+      price: JSON.parse(price || 0),
+      amount: parseInt(JSON.parse(amount || 0), 10),
       area,
       author,
       coverType,
@@ -64,7 +64,7 @@ export default class BookController {
       coverImageUrl,
       distribuitor,
       editoral,
-      pages: JSON.parse(pages || '0'),
+      pages: JSON.parse(pages || 0),
       provider,
       subCategory,
       title,
@@ -147,7 +147,7 @@ export default class BookController {
       isbn,
       price,
       libraryId,
-      amount,
+      amount: parseInt(JSON.parse(amount || '0'), 10),
     };
 
     const [idd, error] = await wrapError(
