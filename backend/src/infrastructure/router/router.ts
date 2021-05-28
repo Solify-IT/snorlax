@@ -88,7 +88,7 @@ export default class Router {
       });
     });
 
-    app.post('/library/sell', async (request, response, next) => {
+    app.post('/libraries/sell', async (request, response, next) => {
       await controller.books.registerBooksSell({
         request, response, next, logger: controller.logger,
       });

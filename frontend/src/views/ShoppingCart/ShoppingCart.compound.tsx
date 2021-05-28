@@ -120,7 +120,7 @@ const ShoppingCart: React.FC = () => {
       payload.push({ id: b.book.id, amount: b.amount });
     });
 
-    const [res, err] = await backend.books.post<
+    const [res, err] = await backend.libraries.post<
     { status: number }, { books: typeof payload }
     >('/sell', { books: payload });
 

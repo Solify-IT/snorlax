@@ -98,7 +98,7 @@ export default class BookController {
       books,
     };
 
-    const [id, error] = await wrapError(
+    const [, error] = await wrapError(
       this.bookInteractor.registerBooksSell(saleData),
     );
 
@@ -107,7 +107,7 @@ export default class BookController {
       return;
     }
 
-    context.response.status(200).json({ id });
+    context.response.status(200).json({ status: 200 });
   }
 
   // recibe GET /books?libraryId=<?>&isbn=<?>
