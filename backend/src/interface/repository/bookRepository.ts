@@ -86,7 +86,6 @@ export default class BookRepository extends BaseRepository implements IBookRepos
   async registerBooksSell(saleData: SaleMovementInput): Promise<void> {
     let id = uuidv4();
     for (const book of saleData.books) {
-      console.log(book.id);
       this.datastore.insert<Movement>(MOVEMENT_TABLE_NAME, {
         localBookId: book.id, amount: book.amount, isLoan: false, id,
       });
