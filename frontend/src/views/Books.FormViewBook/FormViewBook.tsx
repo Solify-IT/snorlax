@@ -45,6 +45,7 @@ const FormViewBook: React.FC<Props> = ({ book }) => {
           <BookDetail name="Área" value={book.area} />
           <BookDetail name="Tema" value={book.theme} />
           <BookDetail name="Proveedor" value={book.provider} />
+          <BookDetail name="Número de páginas" value={book.pages} />
         </Space>
       </Col>
       <Col
