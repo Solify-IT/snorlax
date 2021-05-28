@@ -1,6 +1,6 @@
 import {
   Button,
-  Col, Divider, List, Row,
+  Col, Image, Row, Space, Typography,
 } from 'antd';
 import React, { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
@@ -8,12 +8,12 @@ import { toBookUpdate } from 'src/Components/Router/routes';
 import useNavigation from 'src/hooks/navigation';
 import Props from './FormViewBook.type';
 
-const INITIAL_STATE = {
-  isbn: '',
-  price: 0,
-  amount: 1,
-  isLoan: false,
-};
+const BookDetail: React.FC<{ name: string, value?: any }> = ({ name, value }) => (
+  <>
+    <Typography.Text strong>{`${name}: `}</Typography.Text>
+    <Typography.Text>{value || 'Vacío'}</Typography.Text>
+  </>
+);
 
 const FormViewBook: React.FC<Props> = ({ book }) => {
   const { setTitles } = useNavigation();
@@ -21,8 +21,7 @@ const FormViewBook: React.FC<Props> = ({ book }) => {
 
   useEffect(() => {
     setTitles({
-      title: book.title,
-      subtitle: book.author,
+      title: 'Información de libro',
       extra: [
         <Button
           type="primary"
@@ -33,53 +32,34 @@ const FormViewBook: React.FC<Props> = ({ book }) => {
       ],
     });
     // eslint-disable-next-line
-  }, [INITIAL_STATE]);
+  }, []);
 
-  const data = [
-    <b>Titulo </b>,
-    <b>Precio </b>,
-    <b>Autor</b>,
-    <b>Costo Unitario</b>,
-    <b>Proveedor</b>,
-  ];
-
-  const dat = [
-    book.title,
-    book.price,
-    book.author,
-    book.unitaryCost,
-    book.provider,
-  ];
   return (
-    <Row justify="space-around" align="middle">
-      <Col span={6}>
-        <Divider orientation="left">Titulos</Divider>
-        <List
-          header={<div>--------------------------------------</div>}
-          footer={<div>--------------------------------------</div>}
-          dataSource={data}
-          bordered
-          size="large"
-          renderItem={(item) => (
-            <List.Item>
-              {item}
-            </List.Item>
-          )}
-        />
+    <Row gutter={[32, 0]} style={{ marginTop: '48px' }}>
+      <Col span={12}>
+        <Typography.Title level={2}>{book.title}</Typography.Title>
+        <Typography.Title type="secondary" level={4}>{book.author}</Typography.Title>
+        <Space direction="vertical">
+          <BookDetail name="Sinópis" value={book.synopsis} />
+          <BookDetail name="Editorial" value={book.editoral} />
+          <BookDetail name="Área" value={book.area} />
+          <BookDetail name="Tema" value={book.theme} />
+          <BookDetail name="Proveedor" value={book.provider} />
+          <BookDetail name="Número de páginas" value={book.pages} />
+        </Space>
       </Col>
-      <Col span={14}>
-        <Divider orientation="left">Detalles</Divider>
-        <List
-          header={<div>--------------------------------------</div>}
-          footer={<div>--------------------------------------</div>}
-          dataSource={dat}
-          bordered
-          size="large"
-          renderItem={(item) => (
-            <List.Item>
-              {item}
-            </List.Item>
-          )}
+      <Col
+        span={12}
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <Image
+          width="50%"
+          src={book.coverImageUrl}
+          preview={false}
         />
       </Col>
     </Row>

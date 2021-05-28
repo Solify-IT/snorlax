@@ -2,6 +2,7 @@ import { notification } from 'antd';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Book } from 'src/@types';
+import Loader from 'src/Components/Loader';
 import { useBackend } from 'src/integrations/backend';
 import FormViewBookComp from './FormViewBook';
 
@@ -32,6 +33,8 @@ const FormViewBook: React.FC = () => {
   useEffect(() => {
     fetchBooks();
   }, [fetchBooks]);
+
+  if (isLoading) return <Loader isLoading />;
 
   if (!book) {
     return null;
