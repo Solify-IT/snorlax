@@ -37,7 +37,7 @@ const UpdateForm: React.FC = () => {
   const onFinish = async (values: StateType) => {
     setIsLoading(true);
     console.log(values);
-
+    /*
     const [result, error] = await backend.books.updateOne({ values });
 
     if (error) {
@@ -52,7 +52,7 @@ const UpdateForm: React.FC = () => {
         description: 'Puedes modificar más usuarios o verificar el detalle del usuario.',
       });
     }
-
+*/
     setIsLoading(false);
   };
 

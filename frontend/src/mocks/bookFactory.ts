@@ -3,7 +3,6 @@ import { Sync, each } from 'factory.ts';
 import {
   LocalBook,
 } from 'src/@types';
-import LibraryFactory from './libraryFactory';
 import CatalogueFactory from './catalogueFactory';
 
 export const LocalBookFactory = Sync.makeFactory<LocalBook>({
@@ -11,7 +10,6 @@ export const LocalBookFactory = Sync.makeFactory<LocalBook>({
   isbn: each(() => faker.datatype.string(10)),
   price: each(() => faker.datatype.number(2000)),
   libraryId: each(() => faker.datatype.uuid()),
-  library: each(() => LibraryFactory.build()),
   amount: each(() => faker.datatype.number(2000)),
 });
 
