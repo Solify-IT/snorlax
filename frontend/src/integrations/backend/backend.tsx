@@ -21,7 +21,7 @@ export type RegisterBook = BookFormType & { libraryId: Library['id'] };
 export class Backend {
   rootEndpoint: string;
 
-  books: CRUD<LocalBook, RegisterBook, RegisterBook>;
+  books: CRUD<LocalBook, RegisterBook, RegisterBook & { id: string }>;
 
   users: CRUD<User, UserInput, UserInput>;
 

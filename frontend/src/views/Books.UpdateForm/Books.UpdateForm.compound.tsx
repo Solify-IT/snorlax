@@ -1,12 +1,12 @@
 import { notification } from 'antd';
 import React, { useCallback, useState, useEffect } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+import { Redirect, useHistory, useParams } from 'react-router-dom';
 import useNavigation from 'src/hooks/navigation';
 import { useBackend } from 'src/integrations/backend';
-import { Book } from 'src/@types';
-// import { LIST_LOCAL_BOOKS } from 'src/Components/Router/routes';
+import { Book, BookFormType } from 'src/@types';
+import useAuth from 'src/hooks/auth';
+import { SIGN_IN } from 'src/Components/Router/routes';
 import BooksUpdateForm from './Books.UpdateForm';
-import { StateType } from './Books.Update.type';
 
 const UpdateForm: React.FC = () => {
   const history = useHistory();
@@ -15,6 +15,7 @@ const UpdateForm: React.FC = () => {
   const { setTitles } = useNavigation();
   const [book, setBook] = useState< Book | undefined >(undefined);
   const { id } = useParams<{ id: string }>();
+  const { user } = useAuth();
 
   const fetchBook = useCallback(async () => {
     setIsLoading(true);
@@ -34,28 +35,6 @@ const UpdateForm: React.FC = () => {
     setIsLoading(false);
   }, [backend.books]);
 
-  const onFinish = async (values: StateType) => {
-    setIsLoading(true);
-    console.log(values);
-    /*
-    const [result, error] = await backend.books.updateOne({ values });
-
-    if (error) {
-      notification.error({
-        message: '¡Ocurrió un error al guardar!',
-        description: 'Intentalo después.',
-      });
-    }
-    if (result) {
-      notification.success({
-        message: '¡Usuario modificado!',
-        description: 'Puedes modificar más usuarios o verificar el detalle del usuario.',
-      });
-    }
-*/
-    setIsLoading(false);
-  };
-
   const onFinishFailed = () => {
     notification.error({
       message: '¡Ocurrió un error al guardar!',
@@ -69,9 +48,34 @@ const UpdateForm: React.FC = () => {
     });
     fetchBook();
   }, [setTitles, history, fetchBook]);
+
   if (!book) {
     return null;
   }
+
+  if (!user) return <Redirect to={SIGN_IN} />;
+
+  const onFinish = async (values: BookFormType) => {
+    setIsLoading(true);
+
+    const [result, error] = await backend.books.updateOne(id, {
+      ...values, libraryId: user.libraryId, id,
+    });
+
+    if (error) {
+      notification.error({
+        message: '¡Ocurrió un error al guardar!',
+        description: 'Intentalo después.',
+      });
+    }
+    if (result) {
+      notification.success({
+        message: 'Lirbo modificado!',
+      });
+    }
+
+    setIsLoading(false);
+  };
 
   return (
     <BooksUpdateForm
