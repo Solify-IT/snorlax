@@ -398,7 +398,14 @@ describe('modifyBookAmount', () => {
   it('should return movement id of new movement', async () => {
     const expectedId = 'expected';
     const library = LibraryFactory.build();
+    const localBook = LocalBookFactory.build({ id: expectedId });
 
+    jest.spyOn(
+      bookRepository, 'findById',
+    ).mockImplementationOnce(async () => localBook);
+    jest.spyOn(
+      bookRepository, 'updateBook',
+    ).mockImplementationOnce(async () => localBook);
     jest.spyOn(
       movementRepository, 'registerMovement',
     ).mockImplementationOnce(async () => expectedId);
@@ -406,7 +413,7 @@ describe('modifyBookAmount', () => {
     const [result, error] = await wrapError(
       interactor.updateBookAmount(
         {
-          id: 'test',
+          id: expectedId,
           isbn: 'test-isbn',
           libraryId: library.id,
           price: 10,
@@ -416,6 +423,6 @@ describe('modifyBookAmount', () => {
     );
 
     expect(error).toBe(null);
-    expect(result).toBe(expectedId);
+    expect(result?.id).toBe(expectedId);
   });
 });
