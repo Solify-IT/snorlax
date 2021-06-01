@@ -10,7 +10,6 @@ interface Props {
 }
 
 const ListView: React.FC<Props> = ({ users, loading }) => {
-
   const columns = [
     {
       title: 'Nombre',

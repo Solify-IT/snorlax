@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Redirect, useHistory, useLocation } from 'react-router-dom';
+import { Redirect, useHistory } from 'react-router-dom';
 import {
   Form, Input, Button, Row, Col, notification, Alert,
 } from 'antd';
@@ -22,7 +22,6 @@ const SignIn = () => {
   const { setAuthToken, getHomeForRole, user } = useAuth();
   const backend = useBackend();
   const { setTitles } = useNavigation();
-  const { state } = useLocation<{ from?: string }>();
   const history = useHistory();
   const [isLoading, setIsLoading] = useState(false);
   const [formError, setFormError] = useState<string | undefined>(undefined);

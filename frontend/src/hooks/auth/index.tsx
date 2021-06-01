@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import User from 'src/@types/user';
-import HOME, { INVENTORY, LIBRARIES, SALES_POINT} from 'src/Components/Router/routes';
+import HOME, { INVENTORY, LIBRARIES, SALES_POINT } from 'src/Components/Router/routes';
 
 export type AuthUserType = {
   name: User['displayName'],

@@ -1,9 +1,11 @@
-import { LogoutOutlined , UserOutlined} from '@ant-design/icons';
+import { LogoutOutlined, UserOutlined } from '@ant-design/icons';
 import { Layout, Menu } from 'antd';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import useAuth from 'src/hooks/auth';
-import { isAdmin, isAlmacenista, isCajero, isLibrero } from 'src/utils/auth';
+import {
+  isAdmin, isAlmacenista, isCajero, isLibrero,
+} from 'src/utils/auth';
 import { SHOW_SHOPPING_CART_NAV } from 'src/utils/featureToggles';
 import {
   INVENTORY, SALES_POINT, ADMIN, menuItemKeys, LIST_LOCAL_BOOKS, LIBRARIES,
@@ -30,14 +32,13 @@ const NavHeader: React.FC<{ goTo(path: string): () => void }> = ({ goTo }) => {
     <Header className="header">
       <div className="logo" />
       <Menu style={{ position: 'relative' }} theme="dark" mode="horizontal" selectedKeys={selectedKeys}>
-       
 
-        {user && (isAdmin(user) || isAlmacenista(user) || isLibrero(user) ) &&(
+        {user && (isAdmin(user) || isAlmacenista(user) || isLibrero(user)) && (
           <Menu.Item key={`header-${itemKeys.intentory}`} onClick={goTo(LIST_LOCAL_BOOKS)}>
-          Inventario
-        </Menu.Item>
+            Inventario
+          </Menu.Item>
         )}
-        {user && (isAdmin(user) || isCajero(user) || isLibrero(user) ) && SHOW_SHOPPING_CART_NAV && (
+        {user && (isAdmin(user) || isCajero(user) || isLibrero(user)) && SHOW_SHOPPING_CART_NAV && (
           <Menu.Item key={`header-${itemKeys.salesPoint}`} onClick={goTo(SALES_POINT)}>
             Punto de venta
           </Menu.Item>
@@ -48,7 +49,7 @@ const NavHeader: React.FC<{ goTo(path: string): () => void }> = ({ goTo }) => {
           </Menu.Item>
         )}
         {user && (
-          <Menu.Item icon={<UserOutlined/>}  >
+          <Menu.Item icon={<UserOutlined />}>
             {user.name}
           </Menu.Item>
         )}

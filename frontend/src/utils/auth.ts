@@ -1,9 +1,8 @@
-import { ADMIN_ROLE_NAME, AuthUserType, LIBRERO_ROLE_NAME, CAJERO_ROLE_NAME, ALMACENISTA_ROLE_NAME} from 'src/hooks/auth';
+import {
+  ADMIN_ROLE_NAME, AuthUserType, LIBRERO_ROLE_NAME, CAJERO_ROLE_NAME, ALMACENISTA_ROLE_NAME,
+} from 'src/hooks/auth';
 
-export const isAdmin = (user: AuthUserType) => {
-    console.log('IS ADMIN', user.role.name === ADMIN_ROLE_NAME);
-    return user.role.name === ADMIN_ROLE_NAME;
-}
+export const isAdmin = (user: AuthUserType) => user.role.name === ADMIN_ROLE_NAME;
 
 export const isLibrero = (user: AuthUserType) => user.role.name === LIBRERO_ROLE_NAME;
 

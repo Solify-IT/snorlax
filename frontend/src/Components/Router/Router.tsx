@@ -2,7 +2,9 @@ import { Typography } from 'antd';
 import React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import useAuth from 'src/hooks/auth';
-import { isAdmin, isAlmacenista, isCajero, isLibrero } from 'src/utils/auth';
+import {
+  isAdmin, isAlmacenista, isCajero, isLibrero,
+} from 'src/utils/auth';
 import Loader from '../Loader';
 import PageHeader from '../PageHeader';
 import PrivateRoute from './PrivateRoute';
@@ -51,15 +53,15 @@ const Router: React.FC = () => {
           <PrivateRoute
             exact
             path={NEW_BOOK}
-            hasAccess={(user) => isAdmin(user) || isLibrero(user) ||  isAlmacenista(user) }
+            hasAccess={(user) => isAdmin(user) || isLibrero(user) || isAlmacenista(user)}
           >
             <RegisterFormView />
           </PrivateRoute>
           <PrivateRoute
             exact
             path={[LIST_LOCAL_BOOKS, INVENTORY]}
-            hasAccess={(user) => isAdmin(user) || isLibrero(user) ||  isAlmacenista(user)}
-            
+            hasAccess={(user) => isAdmin(user) || isLibrero(user) || isAlmacenista(user)}
+
           >
             <SearchLocalBooksView />
           </PrivateRoute>
@@ -73,7 +75,7 @@ const Router: React.FC = () => {
           <PrivateRoute
             exact
             path={NEW_USER}
-            hasAccess={(user) => isAdmin(user) }
+            hasAccess={(user) => isAdmin(user)}
           >
             <RegisterUser />
           </PrivateRoute>
@@ -87,13 +89,13 @@ const Router: React.FC = () => {
           <PrivateRoute
             exact
             path={LIST_USERS}
-            hasAccess={(user) => isAdmin(user) || isLibrero(user) ||  isAlmacenista(user)}
+            hasAccess={(user) => isAdmin(user) || isLibrero(user) || isAlmacenista(user)}
           >
             <ListUsers />
           </PrivateRoute>
           <PrivateRoute
             path={BOOK_DETAIL}
-            hasAccess={(user) => isAdmin(user) || isLibrero(user) ||  isAlmacenista(user) }
+            hasAccess={(user) => isAdmin(user) || isLibrero(user) || isAlmacenista(user)}
           >
             <DetailViewBook />
           </PrivateRoute>
@@ -116,7 +118,7 @@ const Router: React.FC = () => {
           <PrivateRoute
             exact
             path={SALES_POINT}
-            hasAccess={(user) => isAdmin(user) || isLibrero(user)|| isCajero(user)}
+            hasAccess={(user) => isAdmin(user) || isLibrero(user) || isCajero(user)}
           >
             <ShoppingCart />
           </PrivateRoute>
