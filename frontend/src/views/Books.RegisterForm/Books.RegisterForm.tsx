@@ -110,7 +110,7 @@ const RegisterForm: React.FC = () => {
           form={form}
           initialState={
             selected.selected
-              ? { ...selected.selected, price: INITIAL_STATE.price }
+              ? { ...selected.selected, price: INITIAL_STATE.price, amount: INITIAL_STATE.amount }
               : INITIAL_STATE
           }
           isLoading={isLoading}

@@ -153,13 +153,6 @@ const FormUpdate: React.FC<Props> = ({ user }) => {
       </Form.Item>
 
       <Form.Item
-        label="Usuario Activo"
-        name="disabled"
-      >
-        <Switch defaultChecked={user.disabled} />
-      </Form.Item>
-
-      <Form.Item
         label="Rol"
         name="roleId"
         rules={[{
@@ -173,6 +166,13 @@ const FormUpdate: React.FC<Props> = ({ user }) => {
             <Select.Option key={role.id} value={role.id}>{role.name}</Select.Option>
           ))}
         </Select>
+      </Form.Item>
+
+      <Form.Item
+        label="¿Descativado?"
+        name="disabled"
+      >
+        <Switch defaultChecked={user.disabled} />
       </Form.Item>
 
       <Form.Item {...tailLayout}>

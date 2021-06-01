@@ -5,6 +5,7 @@ import authMiddleware from './authMiddleware';
 export default class Router {
   constructor(app: Application, controller: IAppController) {
     const middleware = authMiddleware(controller.users.userInteractor.userRepository);
+
     app.post('/books', middleware, async (request, response, next) => {
       await controller.books.registerBook(
         {
@@ -15,6 +16,22 @@ export default class Router {
 
     app.get('/books', middleware, async (request, response, next) => {
       await controller.books.listBooksByLibrary(
+        {
+          request, response, next, logger: controller.logger,
+        },
+      );
+    });
+
+    app.patch('/books/:id', middleware, async (request, response, next) => {
+      await controller.books.updateBook(
+        {
+          request, response, next, logger: controller.logger,
+        },
+      );
+    });
+
+    app.post('/movements', async (request, response, next) => {
+      await controller.movements.registerMovement(
         {
           request, response, next, logger: controller.logger,
         },
@@ -52,6 +69,7 @@ export default class Router {
         request, response, next, logger: controller.logger,
       });
     });
+
     app.patch('/users', async (request, response, next) => {
       await controller.users.updateUser({
         request, response, next, logger: controller.logger,

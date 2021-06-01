@@ -21,6 +21,7 @@ const BookForm: React.FC<Props> = ({
   onISBNChange,
   isLoading,
   isManualInsert,
+  isUpdate,
 }) => {
   useEffect(() => {
     const currISBN = form.getFieldValue('isbn');
@@ -46,7 +47,11 @@ const BookForm: React.FC<Props> = ({
           len: 13,
         }]}
       >
-        <Input value={initialState.isbn} onChange={onISBNChange} />
+        <Input
+          disabled={isUpdate}
+          value={initialState.isbn}
+          onChange={onISBNChange}
+        />
       </Form.Item>
 
       <Form.Item
@@ -71,9 +76,11 @@ const BookForm: React.FC<Props> = ({
         <InputNumber />
       </Form.Item>
 
-      <Form.Item label="¿Es consigna?" name="isLoan">
-        <Switch />
-      </Form.Item>
+      {!isUpdate && (
+        <Form.Item label="¿Es consigna?" name="isLoan">
+          <Switch />
+        </Form.Item>
+      )}
 
       <Form.Item
         label="Título"

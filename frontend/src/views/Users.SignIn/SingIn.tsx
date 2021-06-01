@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Redirect, useHistory } from 'react-router-dom';
 import {
-  Form, Input, Button, Row, Col, notification, Alert,
+  Form, Input, Button, Row, Col, notification, Alert, Image,
 } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { wrapError } from 'src/@types';
@@ -10,6 +10,7 @@ import useFirebase from 'src/hooks/firebase';
 import useNavigation from 'src/hooks/navigation';
 import { useBackend } from 'src/integrations/backend';
 import Firebase from 'src/integrations/firebase/firebase';
+import Logo from 'src/images/ReliBooksLogoBlu.png';
 import styles from './SignIn.styles.module.css';
 
 export const ADMIN_ROLE_NAME = 'Admin';
@@ -97,6 +98,19 @@ const SignIn = () => {
 
   return (
     <Row>
+      <Col
+        offset={8}
+        span={8}
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          marginTop: '48px',
+          marginBottom: '48px',
+        }}
+      >
+        <Image preview={false} src={Logo} />
+      </Col>
       <Col span={8} offset={8}>
         {formError && (
           <Alert
