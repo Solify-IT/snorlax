@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import User from 'src/@types/user';
-import HOME, { INVENTORY, LIBRARIES } from 'src/Components/Router/routes';
+import HOME, { INVENTORY, LIBRARIES, SALES_POINT} from 'src/Components/Router/routes';
 
 export type AuthUserType = {
   name: User['displayName'],
@@ -13,7 +13,9 @@ export type AuthUserType = {
 };
 
 export const ADMIN_ROLE_NAME = 'Admin';
+export const CAJERO_ROLE_NAME = 'Cajero';
 export const LIBRERO_ROLE_NAME = 'Librero';
+export const ALMACENISTA_ROLE_NAME = 'Almacenista';
 
 export const AUTH_DATA_KEY = 'authData';
 
@@ -62,6 +64,10 @@ export const AuthContextProvider: React.FC = ({ children }) => {
       case ADMIN_ROLE_NAME:
         return LIBRARIES;
       case LIBRERO_ROLE_NAME:
+        return INVENTORY;
+      case CAJERO_ROLE_NAME:
+        return SALES_POINT;
+      case ALMACENISTA_ROLE_NAME:
         return INVENTORY;
       default:
         return HOME;

@@ -12,6 +12,11 @@ import { useBackend } from 'src/integrations/backend';
 import Firebase from 'src/integrations/firebase/firebase';
 import styles from './SignIn.styles.module.css';
 
+export const ADMIN_ROLE_NAME = 'Admin';
+export const CAJERO_ROLE_NAME = 'Cajero';
+export const LIBRERO_ROLE_NAME = 'Librero';
+export const ALMACENISTA_ROLE_NAME = 'Almacenista';
+
 const SignIn = () => {
   const firebase = useFirebase();
   const { setAuthToken, getHomeForRole, user } = useAuth();
@@ -72,7 +77,6 @@ const SignIn = () => {
       notification.error({ message: 'Ocurrió un error.' });
       return;
     }
-
     setIsLoading(false);
     history.push(getHomeForRole(userData.role.name));
     notification.success({ message: '¡Inicio de sesión exitoso!' });
@@ -82,9 +86,15 @@ const SignIn = () => {
     setTitles({ title: '¡Bienvenido!', subtitle: 'Inicia sesión con tu correo y contraseña' });
   }, []);
 
-  if (user && state && state.from) return <Redirect to={state.from} />;
+  // TODO: Only redirect if user has permission to go to state.from
+  // if (user && state && state.from) {
+  //   console.log('Third in sign in');
+  //   return <Redirect to={state.from} />;
+  // }
 
-  if (user) return <Redirect to={getHomeForRole(user.role.name)} />;
+  if (user) {
+    return <Redirect to={getHomeForRole(user.role.name)} />;
+  }
 
   return (
     <Row>

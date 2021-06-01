@@ -3,7 +3,7 @@ import { Layout, Menu } from 'antd';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import useAuth from 'src/hooks/auth';
-import { isAdmin } from 'src/utils/auth';
+import { isAdmin, isAlmacenista, isCajero, isLibrero } from 'src/utils/auth';
 import { SHOW_SHOPPING_CART_NAV } from 'src/utils/featureToggles';
 import {
   INVENTORY, SALES_POINT, ADMIN, menuItemKeys, LIST_LOCAL_BOOKS, LIBRARIES,
@@ -22,6 +22,7 @@ const NavHeader: React.FC<{ goTo(path: string): () => void }> = ({ goTo }) => {
     if (pathname.includes(INVENTORY)) newSelectedKeys.push(`header-${itemKeys.intentory}`);
     if (pathname.includes(SALES_POINT)) newSelectedKeys.push(`header-${itemKeys.salesPoint}`);
     if (pathname.includes(ADMIN)) newSelectedKeys.push(`header-${itemKeys.admin}`);
+    console.log('Pathname', pathname);
 
     setSelectedKeys(newSelectedKeys);
   }, [pathname, itemKeys.intentory, itemKeys.admin, itemKeys.salesPoint]);
@@ -30,10 +31,14 @@ const NavHeader: React.FC<{ goTo(path: string): () => void }> = ({ goTo }) => {
     <Header className="header">
       <div className="logo" />
       <Menu style={{ position: 'relative' }} theme="dark" mode="horizontal" selectedKeys={selectedKeys}>
-        <Menu.Item key={`header-${itemKeys.intentory}`} onClick={goTo(LIST_LOCAL_BOOKS)}>
+       
+
+        {user && (isAdmin(user) || isAlmacenista(user) || isLibrero(user) ) &&(
+          <Menu.Item key={`header-${itemKeys.intentory}`} onClick={goTo(LIST_LOCAL_BOOKS)}>
           Inventario
         </Menu.Item>
-        {SHOW_SHOPPING_CART_NAV && (
+        )}
+        {user && (isAdmin(user) || isCajero(user) || isLibrero(user) ) && SHOW_SHOPPING_CART_NAV && (
           <Menu.Item key={`header-${itemKeys.salesPoint}`} onClick={goTo(SALES_POINT)}>
             Punto de venta
           </Menu.Item>
