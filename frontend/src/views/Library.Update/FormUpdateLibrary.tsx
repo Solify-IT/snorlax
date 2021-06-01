@@ -84,7 +84,7 @@ const FormUpdateLibrary: React.FC<Props> = ({ library }) => {
       scrollToFirstError
     >
       <Form.Item
-        label="name"
+        label="Nombre librería"
         name="name"
       >
         <Input disabled />
