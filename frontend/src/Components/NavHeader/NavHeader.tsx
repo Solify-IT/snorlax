@@ -1,4 +1,4 @@
-import { LogoutOutlined } from '@ant-design/icons';
+import { LogoutOutlined , UserOutlined} from '@ant-design/icons';
 import { Layout, Menu } from 'antd';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useLocation } from 'react-router-dom';
@@ -22,7 +22,6 @@ const NavHeader: React.FC<{ goTo(path: string): () => void }> = ({ goTo }) => {
     if (pathname.includes(INVENTORY)) newSelectedKeys.push(`header-${itemKeys.intentory}`);
     if (pathname.includes(SALES_POINT)) newSelectedKeys.push(`header-${itemKeys.salesPoint}`);
     if (pathname.includes(ADMIN)) newSelectedKeys.push(`header-${itemKeys.admin}`);
-    console.log('Pathname', pathname);
 
     setSelectedKeys(newSelectedKeys);
   }, [pathname, itemKeys.intentory, itemKeys.admin, itemKeys.salesPoint]);
@@ -46,6 +45,11 @@ const NavHeader: React.FC<{ goTo(path: string): () => void }> = ({ goTo }) => {
         {user && isAdmin(user) && (
           <Menu.Item key={`header-${itemKeys.admin}`} onClick={goTo(LIBRARIES)}>
             Administración
+          </Menu.Item>
+        )}
+        {user && (
+          <Menu.Item icon={<UserOutlined/>}  >
+            {user.name}
           </Menu.Item>
         )}
         {user && (
