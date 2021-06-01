@@ -10,6 +10,7 @@ interface Props {
 }
 
 const ListView: React.FC<Props> = ({ users, loading }) => {
+
   const columns = [
     {
       title: 'Nombre',
@@ -33,8 +34,13 @@ const ListView: React.FC<Props> = ({ users, loading }) => {
     },
     {
       title: 'Correo',
-      dataIndex: ['email', 'name'],
+      dataIndex: 'email',
       key: 'email',
+      render: (email: string) => (
+        <Typography.Text>
+          {email}
+        </Typography.Text>
+      ),
     },
     {
       title: 'Estado',
