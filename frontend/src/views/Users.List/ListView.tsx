@@ -32,6 +32,11 @@ const ListView: React.FC<Props> = ({ users, loading }) => {
       key: 'roleName',
     },
     {
+      title: 'Correo',
+      dataIndex: ['email', 'name'],
+      key: 'email',
+    },
+    {
       title: 'Estado',
       dataIndex: 'disabled',
       key: 'disabled',

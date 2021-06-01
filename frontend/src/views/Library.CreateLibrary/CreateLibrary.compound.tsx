@@ -107,7 +107,7 @@ const RegisterLibrary: React.FC = () => {
       </Form.Item>
 
       <Form.Item
-        label="Nombre"
+        label="Nombre librería"
         name="name"
         rules={[{
           required: true,

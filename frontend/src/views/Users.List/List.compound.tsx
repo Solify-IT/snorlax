@@ -24,6 +24,7 @@ const ListUsers: React.FC = () => {
     }
 
     setUsers(result.data.users);
+    console.log(result.data.users[0].email);
     setIsLoading(false);
   }, [backend.users]);
 
