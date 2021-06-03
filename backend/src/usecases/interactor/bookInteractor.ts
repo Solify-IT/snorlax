@@ -4,7 +4,7 @@ import {
   LocalBook, Book, CatalogueInputData, Catalogue, LocalBookInput,
 } from 'src/domain/model';
 import { Maybe } from 'src/@types';
-import { SaleMovementInput } from 'src/domain/model/book';
+import { SaleMovementInput, ReturnMovementInput } from 'src/domain/model/book';
 import { IBookRepository } from '..';
 import { UnknownError } from '../errors';
 import InvalidDataError from '../errors/invalidDataError';
@@ -100,7 +100,7 @@ export default class BookInteractor {
     // Register the inventory movement
     // TODO: also save the user and turn in which the movement was registered
     await this.movementInteractor.registerMovement({
-      amount: bookData.amount, localBookId: result, isLoan: bookData.isLoan, type: 'in',
+      amount: bookData.amount, localBookId: result, isLoan: bookData.isLoan, type: 'in-buy',
     });
 
     if (result !== '') return result;
@@ -133,6 +133,33 @@ export default class BookInteractor {
     }
 
     await this.bookRepository.registerBooksSell(modified);
+  }
+
+  async registerBooksReturn(
+    returnData: ReturnMovementInput,
+  ): Promise<void> {
+    this.logger.info('Creating new Return.', { logger: 'BookInteractor:registerBooksReturn' });
+
+    const modified: ReturnMovementInput = { books: [] };
+
+    for (const book of returnData.books) {
+      let existing: LocalBook;
+      try {
+        existing = await this.getBook(book.id);
+        await this.updateBookAmount({
+          id: book.id,
+          isbn: existing.isbn,
+          libraryId: existing.libraryId,
+          price: existing.price,
+          amount: existing.amount - book.amount,
+        }, false);
+        modified.books.push(book);
+      } catch (e) {
+        this.logger.error({ message: 'Libro no encontrado al realizar la venta', bookId: book.id });
+      }
+    }
+
+    await this.bookRepository.registerBooksReturn(modified);
   }
 
   private validateRegisterBookData(bookData: RegisterBookInputData): void {
