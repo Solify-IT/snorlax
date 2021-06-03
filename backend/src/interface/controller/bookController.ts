@@ -110,7 +110,7 @@ export default class BookController {
     context.response.status(200).json({ status: 200 });
   }
 
-  async registerBookReturn(context: IContext): Promise<void> {
+  async registerBookReturnEditorial(context: IContext): Promise<void> {
     const {
       books,
     } = context.request.body as ReturnMovementInput;
@@ -118,7 +118,7 @@ export default class BookController {
       books,
     };
     const [, error] = await wrapError(
-      this.bookInteractor.registerBooksReturn(returnData),
+      this.bookInteractor.registerBooksReturnEditorial(returnData),
     );
 
     if (error) {

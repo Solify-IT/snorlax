@@ -93,7 +93,7 @@ export default class BookRepository extends BaseRepository implements IBookRepos
     }
   }
 
-  async registerBooksReturn(returnData: ReturnMovementInput): Promise<void> {
+  async registerBooksReturnEditorial(returnData: ReturnMovementInput): Promise<void> {
     let id = uuidv4();
     for (const book of returnData.books) {
       this.datastore.insert<Movement>(MOVEMENT_TABLE_NAME, {

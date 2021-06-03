@@ -113,7 +113,7 @@ export default class Router {
     });
 
     app.post('/libraries/return', async (request, response, next) => {
-      await controller.books.registerBookReturn({
+      await controller.books.registerBookReturnEditorial({
         request, response, next, logger: controller.logger,
       });
     });

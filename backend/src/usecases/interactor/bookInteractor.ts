@@ -135,10 +135,10 @@ export default class BookInteractor {
     await this.bookRepository.registerBooksSell(modified);
   }
 
-  async registerBooksReturn(
+  async registerBooksReturnEditorial(
     returnData: ReturnMovementInput,
   ): Promise<void> {
-    this.logger.info('Creating new Return.', { logger: 'BookInteractor:registerBooksReturn' });
+    this.logger.info('Creating new Return.', { logger: 'BookInteractor:registerBooksReturnEditorial' });
 
     const modified: ReturnMovementInput = { books: [] };
 
@@ -159,7 +159,7 @@ export default class BookInteractor {
       }
     }
 
-    await this.bookRepository.registerBooksReturn(modified);
+    await this.bookRepository.registerBooksReturnEditorial(modified);
   }
 
   private validateRegisterBookData(bookData: RegisterBookInputData): void {

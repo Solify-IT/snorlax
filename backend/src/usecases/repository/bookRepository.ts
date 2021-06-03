@@ -9,7 +9,7 @@ export interface IBookRepository {
   registerBook(bookData: Omit<LocalBookInput, 'id'>): Promise<LocalBook['id']>;
   updateBook(bookdata: LocalBookInput): Promise<LocalBook>;
   registerBooksSell(saleData: SaleMovementInput): Promise<void>;
-  registerBooksReturn(returnData: ReturnMovementInput): Promise<void>;
+  registerBooksReturnEditorial(returnData: ReturnMovementInput): Promise<void>;
   listBooksByLibrary(
     page: number, perPage: number, libraryId?: string, isbn?:string,
   ): Promise<{ localBooks: Book[], total: number }>;
