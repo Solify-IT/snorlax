@@ -48,7 +48,7 @@ const LocalBooksList: React.FC<Props> = ({
       key: 'libraryName',
       render: (libraryName: string) => (
         <Typography.Text>
-          
+
           {libraryName}
         </Typography.Text>
       ),
@@ -59,7 +59,7 @@ const LocalBooksList: React.FC<Props> = ({
       dataIndex: 'libraryPhone',
       key: 'libraryPhone',
       render: (libraryPhone: string) => (
-        <Typography.Text>          
+        <Typography.Text>
           {libraryPhone}
         </Typography.Text>
       ),

@@ -64,7 +64,7 @@ export default class Client {
           unitaryCost: item.saleInfo && item.saleInfo.listPrice ? item.saleInfo.listPrice.amount || '' : '',
           synopsis: item.volumeInfo.description || '',
           libraryName: item.volumeInfo.libraryName || '',
-          libraryPhone:  item.volumeInfo.libraryPhone || '',
+          libraryPhone: item.volumeInfo.libraryPhone || '',
         });
       });
     }
