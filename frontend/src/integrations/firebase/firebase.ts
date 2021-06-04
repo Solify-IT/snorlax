@@ -27,6 +27,10 @@ export default class Firebase {
     this.authApp.useDeviceLanguage();
   }
 
+  async passwordReset(email: string): Promise<void> {
+    await this.authApp.sendPasswordResetEmail(email);
+  }
+
   async doSignInWithEmail(email: string, password: string): Promise<LoginReturnType> {
     const user = await this.authApp.signInWithEmailAndPassword(email, password);
 
