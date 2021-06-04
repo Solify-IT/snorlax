@@ -218,6 +218,8 @@ export default class BookInteractor {
         title: bookData.title,
         type: bookData.type,
         unitaryCost: bookData.unitaryCost,
+        libraryName: bookData.libraryName,
+        libraryPhone: bookData.libraryPhone,
       });
     }
   }

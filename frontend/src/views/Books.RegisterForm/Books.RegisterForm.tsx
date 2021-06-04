@@ -31,6 +31,8 @@ const INITIAL_STATE = {
   subCategory: '',
   distribuitor: '',
   synopsis: '',
+  libraryName: '',
+  libraryPhone: '',
   pages: 0,
 };
 

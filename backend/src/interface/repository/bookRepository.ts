@@ -2,7 +2,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { v4 as uuidv4 } from 'uuid';
 import {
-  Book, BOOK_TABLE_NAME, CATALOGUE_TABLE_NAME, LocalBook, LocalBookInput, Movement,
+  Book, BOOK_TABLE_NAME, CATALOGUE_TABLE_NAME, LIBRARY_TABLE_NAME,
+  LocalBook, LocalBookInput, Movement,
   MOVEMENT_TABLE_NAME,
 } from 'src/domain/model';
 import { IBookRepository } from 'src/usecases';
@@ -42,12 +43,16 @@ export default class BookRepository extends BaseRepository implements IBookRepos
           b.created_at as local_book_created_at,
           c.created_at as catalogue_created_at,
           b.updated_at as local_book_updated_at,
-          c.updated_at as catalogue_updated_at
+          c.updated_at as catalogue_updated_at,
+          l.name as library_name,
+          l.phone_number as library_phone
         FROM
           ${BOOK_TABLE_NAME} as b,
-          ${CATALOGUE_TABLE_NAME} as c
+          ${CATALOGUE_TABLE_NAME} as c,
+          ${LIBRARY_TABLE_NAME} as l
         WHERE
           c.isbn = b.isbn
+          AND l.id = b.library_id
           AND price > 0 ${isbn == null && libraryId != null ? ' AND library_id = $3' : ''} 
           ${isbn != null && libraryId == null ? ' AND b.isbn = $3' : ''}
           ${isbn != null && libraryId != null ? ' AND library_id = $3  AND b.isbn = $4' : ''}
