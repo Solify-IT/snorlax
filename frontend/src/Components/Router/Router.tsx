@@ -1,8 +1,11 @@
+/* eslint-disable import/no-named-as-default-member */
 import { Typography } from 'antd';
 import React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import useAuth from 'src/hooks/auth';
-import { isAdmin } from 'src/utils/auth';
+import {
+  isAdmin, isAlmacenista, isCajero, isLibrero,
+} from 'src/utils/auth';
 import Loader from '../Loader';
 import PageHeader from '../PageHeader';
 import PrivateRoute from './PrivateRoute';
@@ -15,8 +18,10 @@ import HOME, {
   NEW_USER,
   LIST_USERS,
   UPDATE_USER,
+  UPDATE_LIBRRY,
   BOOK_DETAIL,
   INVENTORY,
+  BOOK_UPDATE,
   NEW_LIBRARY,
   SALES_POINT,
 } from './routes';
@@ -30,7 +35,9 @@ const ListUsers = React.lazy(() => import('src/views/Users.List'));
 const RegisterUser = React.lazy(() => import('src/views/Users.CreateForm'));
 const RegisterLibrary = React.lazy(() => import('src/views/Library.CreateLibrary'));
 const UpdateUser = React.lazy(() => import('src/views/Users.Update'));
+const UpdateLibrary = React.lazy(() => import('src/views/Library.Update'));
 const DetailViewBook = React.lazy(() => import('src/views/Books.FormViewBook'));
+const UpdateForm = React.lazy(() => import('src/views/Books.UpdateForm'));
 const ShoppingCart = React.lazy(() => import('src/views/ShoppingCart'));
 
 const Router: React.FC = () => {
@@ -54,12 +61,15 @@ const Router: React.FC = () => {
           <PrivateRoute
             exact
             path={NEW_BOOK}
+            hasAccess={(user) => isAdmin(user) || isLibrero(user) || isAlmacenista(user)}
           >
             <RegisterFormView />
           </PrivateRoute>
           <PrivateRoute
             exact
             path={[LIST_LOCAL_BOOKS, INVENTORY]}
+            hasAccess={(user) => isAdmin(user) || isLibrero(user) || isAlmacenista(user)}
+
           >
             <SearchLocalBooksView />
           </PrivateRoute>
@@ -87,14 +97,23 @@ const Router: React.FC = () => {
           <PrivateRoute
             exact
             path={LIST_USERS}
-            hasAccess={(user) => isAdmin(user)}
+            hasAccess={(user) => isAdmin(user) || isLibrero(user) || isAlmacenista(user)}
           >
             <ListUsers />
           </PrivateRoute>
           <PrivateRoute
+            exact
             path={BOOK_DETAIL}
+            hasAccess={(user) => isAdmin(user) || isLibrero(user) || isAlmacenista(user)}
           >
             <DetailViewBook />
+          </PrivateRoute>
+          <PrivateRoute
+            exact
+            path={UPDATE_LIBRRY}
+            hasAccess={(user) => isAdmin(user)}
+          >
+            <UpdateLibrary />
           </PrivateRoute>
 
           <PrivateRoute
@@ -107,8 +126,15 @@ const Router: React.FC = () => {
 
           <PrivateRoute
             exact
-            path={SALES_POINT}
+            path={BOOK_UPDATE}
             hasAccess={(user) => isAdmin(user)}
+          >
+            <UpdateForm />
+          </PrivateRoute>
+          <PrivateRoute
+            exact
+            path={SALES_POINT}
+            hasAccess={(user) => isAdmin(user) || isLibrero(user) || isCajero(user)}
           >
             <ShoppingCart />
           </PrivateRoute>

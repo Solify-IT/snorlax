@@ -1,11 +1,14 @@
+/* eslint-disable no-restricted-syntax */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { v4 as uuidv4 } from 'uuid';
 import {
-  Book, BOOK_TABLE_NAME, CATALOGUE_TABLE_NAME, LocalBook, LocalBookInput,
+  Book, BOOK_TABLE_NAME, CATALOGUE_TABLE_NAME, LocalBook, LocalBookInput, Movement,
+  MOVEMENT_TABLE_NAME,
 } from 'src/domain/model';
 import { IBookRepository } from 'src/usecases';
 import { InvalidDataError } from 'src/usecases/errors';
 import { Maybe } from 'src/@types';
+import { SaleInput, SaleMovementInput } from 'src/domain/model/book';
 import BaseRepository from './BaseRepository';
 
 export default class BookRepository extends BaseRepository implements IBookRepository {
@@ -80,8 +83,27 @@ export default class BookRepository extends BaseRepository implements IBookRepos
     return result;
   }
 
+  async registerBooksSell(saleData: SaleMovementInput): Promise<void> {
+    let id = uuidv4();
+    for (const book of saleData.books) {
+      this.datastore.insert<Movement>(MOVEMENT_TABLE_NAME, {
+        localBookId: book.id, amount: book.amount, isLoan: false, id, type: 'out',
+      });
+      id = uuidv4();
+    }
+  }
+
   findAll(): Promise<Book[]> {
     throw new Error('Method not implemented.');
+  }
+
+  async findById(id: string): Promise<Maybe<LocalBook>> {
+    const book = await this.datastore.getOneOrNull<any>(
+      `SELECT *, c.id as cId, l.id as id FROM  ${BOOK_TABLE_NAME} l, ${CATALOGUE_TABLE_NAME} c WHERE l.isbn = c.isbn AND l.id = $1
+      `, [id],
+    );
+
+    return book;
   }
 
   async findByISBN(isbn: string): Promise<LocalBook[]> {
@@ -92,10 +114,11 @@ export default class BookRepository extends BaseRepository implements IBookRepos
     return books;
   }
 
-  async findById(id: string): Promise<Maybe<LocalBook>> {
-    const book = await this.datastore.getOneOrNull<LocalBook>(
-      `SELECT * FROM  ${BOOK_TABLE_NAME} l, ${CATALOGUE_TABLE_NAME} c WHERE l.isbn = c.isbn AND l.id = $1
-      `, [id],
+  async updateBook(bookData: LocalBook): Promise<LocalBook> {
+    const book = await this.datastore.update<LocalBook, LocalBook>(
+      BOOK_TABLE_NAME,
+      `id = '${bookData.id}'`,
+      bookData,
     );
     return book;
   }

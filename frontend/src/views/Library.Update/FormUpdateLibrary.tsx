@@ -3,21 +3,12 @@ import {
 } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { LibraryInput } from 'src/@types/library';
 import { UserInput } from 'src/@types/user';
-import { toLibraryDetail } from 'src/Components/Router/routes';
+import { toLibraryList } from 'src/Components/Router/routes';
 import useNavigation from 'src/hooks/navigation';
-import { useBackend } from 'src/integrations/backend';
 
-const INITIAL_STATE: LibraryInput = {
-  email: '',
-  name: '',
-  phoneNumber: '',
-  state: '',
-  city: '',
-  address: '',
-  inCharge: '',
-};
+import { useBackend } from 'src/integrations/backend';
+import Props from './FormUpdateLibrary.type';
 
 const layout = {
   labelCol: { span: 6 },
@@ -28,23 +19,17 @@ const tailLayout = {
   wrapperCol: { offset: 6, span: 18 },
 };
 
-const RegisterLibrary: React.FC = () => {
-  const { setTitles } = useNavigation();
+const FormUpdateLibrary: React.FC<Props> = ({ library }) => {
+  const [form] = Form.useForm();
   const [isFormLoading, setIsFormLoading] = useState(false);
   const backend = useBackend();
   const history = useHistory();
-  const [form] = Form.useForm();
-
-  useEffect(() => {
-    setTitles({
-      title: 'Crear nueva librería', subtitle: 'Ingresa todos los campos requeridos',
-    });
-    // eslint-disable-next-line
-    }, [INITIAL_STATE]);
+  const { setTitles } = useNavigation();
 
   const onFinish = async (values: UserInput) => {
     setIsFormLoading(true);
-    const [result, error] = await backend.libraries.createOne({ ...values });
+
+    const [result, error] = await backend.libraries.updateOneK({ ...values });
 
     if (error) {
       notification.error({
@@ -54,17 +39,10 @@ const RegisterLibrary: React.FC = () => {
     }
     if (result) {
       notification.success({
-        message: '¡Librería creada!',
-        description: 'Puedes añadir más librerias o ir al detalle del libro agregado.',
-        btn: (
-          <Button
-            type="primary"
-            onClick={() => history.push(toLibraryDetail(result!.data.id))}
-          >
-            Ir al detalle
-          </Button>
-        ),
+        message: '¡Libreria modificada!',
+        description: 'Puedes modificar más librerías o verificar el detalle de la librería.',
       });
+      history.push(toLibraryList());
       form.resetFields();
     }
 
@@ -78,11 +56,27 @@ const RegisterLibrary: React.FC = () => {
     });
   };
 
+  useEffect(() => {
+    setTitles({
+      title: 'Modificar Librerias', subtitle: '',
+    });
+    // eslint-disable-next-line
+      }, []);
+
+  const INITIAL_STATE = {
+    email: library.email,
+    name: library.name,
+    phoneNumber: library.phoneNumber,
+    state: library.state,
+    city: library.city,
+    address: library.address,
+    inCharge: library.inCharge,
+  };
   return (
     <Form
       {...layout}
       form={form}
-      name="registerLibrary"
+      name="updateLibrary"
       initialValues={INITIAL_STATE}
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
@@ -90,7 +84,14 @@ const RegisterLibrary: React.FC = () => {
       scrollToFirstError
     >
       <Form.Item
-        label="E-Mail"
+        label="Nombre librería"
+        name="name"
+      >
+        <Input disabled />
+      </Form.Item>
+
+      <Form.Item
+        label="email"
         name="email"
         rules={[
           {
@@ -107,23 +108,14 @@ const RegisterLibrary: React.FC = () => {
       </Form.Item>
 
       <Form.Item
-        label="Nombre librería"
-        name="name"
-        rules={[{
-          required: true,
-          message: 'Ingresar el nombre',
-        }]}
-      >
-        <Input />
-      </Form.Item>
-
-      <Form.Item
-        label="Celular"
+        label="Numero celular"
         name="phoneNumber"
-        rules={[{
-          required: true,
-          message: 'Ingresar el numero celular',
-        }]}
+        rules={[
+          {
+            required: true,
+            message: 'Debes ingresar un numero celular',
+          },
+        ]}
       >
         <Input />
       </Form.Item>
@@ -131,10 +123,12 @@ const RegisterLibrary: React.FC = () => {
       <Form.Item
         label="Estado"
         name="state"
-        rules={[{
-          required: true,
-          message: 'Ingresar el estado',
-        }]}
+        rules={[
+          {
+            required: true,
+            message: 'Debes ingresar un estado',
+          },
+        ]}
       >
         <Input />
       </Form.Item>
@@ -142,46 +136,53 @@ const RegisterLibrary: React.FC = () => {
       <Form.Item
         label="Ciudad"
         name="city"
-        rules={[{
-          required: true,
-          message: 'Ingresar la ciudad',
-        }]}
+        rules={[
+          {
+            required: true,
+            message: 'Debes ingresar una ciudad',
+          },
+        ]}
       >
         <Input />
       </Form.Item>
 
       <Form.Item
-        label="Direccion"
+        label="Dirección"
         name="address"
-        rules={[{
-          required: true,
-          message: 'Ingresar la dirección',
-        }]}
+        rules={[
+          {
+            required: true,
+            message: 'Debes ingresar una dirección',
+          },
+        ]}
       >
         <Input />
       </Form.Item>
 
       <Form.Item
-        label="Persona a cargo"
+        label="En Cargo"
         name="inCharge"
-        rules={[{
-          required: true,
-          message: 'Ingresar la persona encargada',
-        }]}
+        rules={[
+          {
+            required: true,
+            message: 'Debes ingresar un encargado',
+          },
+        ]}
       >
         <Input />
       </Form.Item>
+
       <Form.Item {...tailLayout}>
         <Button
           loading={isFormLoading}
           type="primary"
           htmlType="submit"
         >
-          Registrar Libreria
+          Modificar Librería
         </Button>
       </Form.Item>
     </Form>
   );
 };
 
-export default RegisterLibrary;
+export default FormUpdateLibrary;

@@ -9,20 +9,29 @@ export const ADMIN = '/admin';
 
 export const BOOKS = `${INVENTORY}/libros`;
 export const NEW_BOOK = `${BOOKS}/nuevo`;
-export const BOOK_DETAIL = `${BOOKS}/:id`;
 
+export const BOOK_DETAIL = `${BOOKS}/:id`;
+export const BOOK_UPDATE = `${BOOKS}/:id/actualizar`;
 export const LIST_LOCAL_BOOKS = `${BOOKS}/buscar`;
 
 export const toBookDetail = (
   uuid: string,
 ) => `${BOOKS}/${uuid}`;
 
+export const toBookUpdate = (
+  uuid: string,
+) => `${BOOKS}/${uuid}/actualizar`;
+
 export const LIBRARIES = `${ADMIN}/librerías`;
 export const NEW_LIBRARY = `${LIBRARIES}/nuevo`;
+export const UPDATE_LIBRRY = `${LIBRARIES}/modificar-libreria/:id`;
+export const UPDATE_LIBRARY_ID = `${LIBRARIES}/modificar-libreria`;
 
 export const toLibraryDetail = (
   uuid: string,
-) => `${LIBRARIES}/${uuid}`;
+) => `${UPDATE_LIBRARY_ID}/${uuid}`;
+export const toLibraryList = (
+) => `${LIBRARIES}`;
 
 export const USERS = `${ADMIN}/usuarios`;
 export const LIST_USERS = `${USERS}/lista-local`;

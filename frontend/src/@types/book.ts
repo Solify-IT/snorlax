@@ -1,4 +1,3 @@
-import { Library } from './library';
 import CommonType from './common';
 import Catalogue from './catalogue';
 
@@ -6,8 +5,7 @@ export type LocalBook = CommonType & {
   isbn: string,
   price: number,
   libraryId: string;
-  library: Library;
-  generos?: string[],
+  amount:number,
 };
 
 export type LocalBookInput = Omit<LocalBook, 'library'>;

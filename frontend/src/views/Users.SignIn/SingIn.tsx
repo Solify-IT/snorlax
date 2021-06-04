@@ -3,10 +3,9 @@ import {
   Link,
   Redirect,
   useHistory,
-  useLocation,
 } from 'react-router-dom';
 import {
-  Form, Input, Button, Row, Col, notification, Alert,
+  Form, Input, Button, Row, Col, notification, Alert, Image,
 } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { wrapError } from 'src/@types';
@@ -16,14 +15,19 @@ import useNavigation from 'src/hooks/navigation';
 import { useBackend } from 'src/integrations/backend';
 import Firebase from 'src/integrations/firebase/firebase';
 import { FORGOT_PASSWORD } from 'src/Components/Router/routes';
+import Logo from 'src/images/ReliBooksLogoBlu.png';
 import styles from './SignIn.styles.module.css';
+
+export const ADMIN_ROLE_NAME = 'Admin';
+export const CAJERO_ROLE_NAME = 'Cajero';
+export const LIBRERO_ROLE_NAME = 'Librero';
+export const ALMACENISTA_ROLE_NAME = 'Almacenista';
 
 const SignIn = () => {
   const firebase = useFirebase();
   const { setAuthToken, getHomeForRole, user } = useAuth();
   const backend = useBackend();
   const { setTitles } = useNavigation();
-  const { state } = useLocation<{ from?: string }>();
   const history = useHistory();
   const [isLoading, setIsLoading] = useState(false);
   const [formError, setFormError] = useState<string | undefined>(undefined);
@@ -77,7 +81,6 @@ const SignIn = () => {
       notification.error({ message: 'Ocurrió un error.' });
       return;
     }
-
     setIsLoading(false);
     history.push(getHomeForRole(userData.role.name));
     notification.success({ message: '¡Inicio de sesión exitoso!' });
@@ -87,12 +90,31 @@ const SignIn = () => {
     setTitles({ title: '¡Bienvenido!', subtitle: 'Inicia sesión con tu correo y contraseña' });
   }, []);
 
-  if (user && state && state.from) return <Redirect to={state.from} />;
+  // TODO: Only redirect if user has permission to go to state.from
+  // if (user && state && state.from) {
+  //   console.log('Third in sign in');
+  //   return <Redirect to={state.from} />;
+  // }
 
-  if (user) return <Redirect to={getHomeForRole(user.role.name)} />;
+  if (user) {
+    return <Redirect to={getHomeForRole(user.role.name)} />;
+  }
 
   return (
     <Row>
+      <Col
+        offset={8}
+        span={8}
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          marginTop: '48px',
+          marginBottom: '48px',
+        }}
+      >
+        <Image preview={false} src={Logo} />
+      </Col>
       <Col span={8} offset={8}>
         {formError && (
           <Alert

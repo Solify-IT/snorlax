@@ -13,6 +13,7 @@ export const LocalBookFactory = Sync.makeFactory<LocalBook>({
   price: each(() => faker.datatype.number(2000)),
   libraryId: each(() => faker.datatype.uuid()),
   library: each(() => LibraryFactory.build()),
+  amount: each(() => faker.datatype.number(2000)),
 });
 
 export const ExternalBookFactory = Sync.makeFactory<ExternalBook>({
@@ -37,7 +38,7 @@ export const givenALocalBook = async (
     await givenALibrary(datastore, lib);
   }
   await datastore.insert<LocalBookInput>(BOOK_TABLE_NAME, {
-    id: book.id, isbn: book.isbn, libraryId: lib.id, price: book.price,
+    id: book.id, isbn: book.isbn, libraryId: lib.id, price: book.price, amount: book.amount,
   });
 
   return book;
