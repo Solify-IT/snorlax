@@ -22,6 +22,8 @@ const CatalogueFactory = Sync.makeFactory<Catalogue>({
   title: each(() => faker.random.words(5)),
   type: each(() => faker.random.word()),
   unitaryCost: each(() => faker.datatype.float(5000)),
+  libraryName: each(() => faker.random.word()),
+  libraryPhone: each(() => faker.random.word()),
 });
 
 export const givenACatalogueItem = async (
