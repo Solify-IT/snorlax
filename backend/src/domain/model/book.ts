@@ -17,8 +17,17 @@ export type SaleInput = {
   amount: number,
 };
 
+export type ReturnInput = {
+  id: string,
+  amount: number,
+};
+
 export type SaleMovementInput = {
   books: SaleInput[];
+};
+
+export type ReturnMovementInput = {
+  books: ReturnInput[];
 };
 
 export type ExternalBook = {

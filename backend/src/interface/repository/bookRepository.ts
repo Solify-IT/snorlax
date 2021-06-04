@@ -9,7 +9,7 @@ import {
 import { IBookRepository } from 'src/usecases';
 import { InvalidDataError } from 'src/usecases/errors';
 import { Maybe } from 'src/@types';
-import { SaleInput, SaleMovementInput } from 'src/domain/model/book';
+import { ReturnMovementInput, SaleMovementInput } from 'src/domain/model/book';
 import BaseRepository from './BaseRepository';
 
 export default class BookRepository extends BaseRepository implements IBookRepository {
@@ -92,7 +92,17 @@ export default class BookRepository extends BaseRepository implements IBookRepos
     let id = uuidv4();
     for (const book of saleData.books) {
       this.datastore.insert<Movement>(MOVEMENT_TABLE_NAME, {
-        localBookId: book.id, amount: book.amount, isLoan: false, id, type: 'out',
+        localBookId: book.id, amount: book.amount, isLoan: false, id, type: 'out-sale',
+      });
+      id = uuidv4();
+    }
+  }
+
+  async registerBooksReturnEditorial(returnData: ReturnMovementInput): Promise<void> {
+    let id = uuidv4();
+    for (const book of returnData.books) {
+      this.datastore.insert<Movement>(MOVEMENT_TABLE_NAME, {
+        localBookId: book.id, amount: book.amount, isLoan: false, id, type: 'out-return',
       });
       id = uuidv4();
     }
