@@ -5,6 +5,7 @@ export const FORGOT_PASSWORD = '/recover-password';
 
 export const INVENTORY = '/inventario';
 export const SALES_POINT = '/punto-de-venta';
+export const RETURNS = `${SALES_POINT}/devoluciones`;
 export const ADMIN = '/admin';
 
 export const BOOKS = `${INVENTORY}/libros`;
@@ -48,6 +49,7 @@ export const toUserList = (
 export const menuItemKeys = {
   intentory: 'inventory',
   salesPoint: 'salesPoint',
+  returns: 'returns',
   admin: 'admin',
 };
 
@@ -65,6 +67,14 @@ export const sideMenuItems = {
     books: {
       newBook: 'section-inventory-books-new',
       list: 'section-inventory-books-list',
+    },
+  },
+};
+
+export const sideMenuItemsPost = {
+  salesPoint: {
+    books: {
+      sales_Point: 'section-sales_point',
     },
   },
 };

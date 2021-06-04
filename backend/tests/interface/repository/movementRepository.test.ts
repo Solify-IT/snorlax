@@ -31,7 +31,7 @@ describe('registerMovement', () => {
     );
 
     const [result, error] = await wrapError(repository.registerMovement({
-      amount: 10, localBookId: localBook.id, isLoan: false, type: 'out',
+      amount: 10, localBookId: localBook.id, isLoan: false, type: 'out-return',
     }));
 
     expect(error).toBe(null);

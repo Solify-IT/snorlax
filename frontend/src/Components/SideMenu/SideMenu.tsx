@@ -7,8 +7,11 @@ import {
   LIBRARIES,
   LIST_LOCAL_BOOKS,
   LIST_USERS,
+  RETURNS,
+  SALES_POINT,
   sideMenuItems,
   sideMenuItemsOpen,
+  sideMenuItemsPost,
 } from '../Router/routes';
 
 const SideMenu: React.FC<{ goTo(path: string): () => void }> = ({ goTo }) => {
@@ -26,6 +29,16 @@ const SideMenu: React.FC<{ goTo(path: string): () => void }> = ({ goTo }) => {
             onClick={goTo(LIST_LOCAL_BOOKS)}
           >
             Buscar Libros
+          </Menu.Item>
+        </Menu.SubMenu>
+      )}
+      {pathname.includes(SALES_POINT) && (
+        <Menu.SubMenu key="accions" title="Acciones">
+          <Menu.Item
+            key={sideMenuItemsPost.salesPoint.books.sales_Point}
+            onClick={goTo(RETURNS)}
+          >
+            Devoluciones
           </Menu.Item>
         </Menu.SubMenu>
       )}
