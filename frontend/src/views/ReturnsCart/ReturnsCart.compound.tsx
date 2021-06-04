@@ -122,7 +122,7 @@ const ReturnsCart: React.FC = () => {
 
     const [res, err] = await backend.libraries.post<
     { status: number }, { books: typeof payload }
-    >('/return', { books: payload });
+    >('/return-editorial', { books: payload });
 
     if (err || !res || res.data.status !== 200) {
       notification.error({ message: 'Ocurrió un error al completar la devolucion' });

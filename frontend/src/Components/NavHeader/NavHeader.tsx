@@ -6,7 +6,7 @@ import useAuth from 'src/hooks/auth';
 import {
   isAdmin, isAlmacenista, isCajero, isLibrero,
 } from 'src/utils/auth';
-import { SHOW_SHOPPING_CART_NAV } from 'src/utils/featureToggles';
+import { SHOW_RETURNS_CART_NAV, SHOW_SHOPPING_CART_NAV } from 'src/utils/featureToggles';
 import {
   INVENTORY, SALES_POINT, ADMIN, menuItemKeys, LIST_LOCAL_BOOKS, LIBRARIES,
 } from '../Router/routes';
@@ -34,14 +34,16 @@ const NavHeader: React.FC<{ goTo(path: string): () => void }> = ({ goTo }) => {
       <Menu style={{ position: 'relative' }} theme="dark" mode="horizontal" selectedKeys={selectedKeys}>
 
         {user && (isAdmin(user) || isAlmacenista(user) || isLibrero(user)) && (
+
           <Menu.Item key={`header-${itemKeys.intentory}`} onClick={goTo(LIST_LOCAL_BOOKS)}>
             Inventario
           </Menu.Item>
         )}
-        {user && (isAdmin(user) || isCajero(user) || isLibrero(user)) && SHOW_SHOPPING_CART_NAV && (
-          <Menu.Item key={`header-${itemKeys.salesPoint}`} onClick={goTo(SALES_POINT)}>
-            Punto de venta
-          </Menu.Item>
+        {user && (isAdmin(user) || isCajero(user) || isLibrero(user))
+         && SHOW_SHOPPING_CART_NAV && SHOW_RETURNS_CART_NAV && (
+         <Menu.Item key={`header-${itemKeys.salesPoint}`} onClick={goTo(SALES_POINT)}>
+           Punto de venta
+         </Menu.Item>
         )}
         {user && isAdmin(user) && (
           <Menu.Item key={`header-${itemKeys.admin}`} onClick={goTo(LIBRARIES)}>
