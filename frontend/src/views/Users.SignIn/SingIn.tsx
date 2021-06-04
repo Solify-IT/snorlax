@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Redirect, useHistory, useLocation } from 'react-router-dom';
+import {
+  Link,
+  Redirect,
+  useHistory,
+  useLocation,
+} from 'react-router-dom';
 import {
   Form, Input, Button, Row, Col, notification, Alert,
 } from 'antd';
@@ -10,6 +15,7 @@ import useFirebase from 'src/hooks/firebase';
 import useNavigation from 'src/hooks/navigation';
 import { useBackend } from 'src/integrations/backend';
 import Firebase from 'src/integrations/firebase/firebase';
+import { FORGOT_PASSWORD } from 'src/Components/Router/routes';
 import styles from './SignIn.styles.module.css';
 
 const SignIn = () => {
@@ -24,7 +30,6 @@ const SignIn = () => {
 
   const onFinish = async (values: { email: string; password: string }) => {
     setIsLoading(true);
-
     let [fireBResult, fireBError] = await wrapError(
       firebase.doSignInWithEmail(values.email, values.password),
     );
@@ -121,9 +126,9 @@ const SignIn = () => {
             />
           </Form.Item>
           <Form.Item>
-            <a className={styles.loginFormForgot} href="https://www.google.com/">
+            <Link className={styles.loginFormForgot} to={(FORGOT_PASSWORD)}>
               Recuperar contraseña
-            </a>
+            </Link>
           </Form.Item>
 
           <Form.Item>
