@@ -7,13 +7,14 @@ import BaseRepository from './BaseRepository';
 
 export default class MovementRepository extends BaseRepository implements IMovementRepository {
   listAllMovements(): Promise<Movement[]> {
-    return this.datastore.get(`SELECT to_char(${MOVEMENT_TABLE_NAME}.created_at,'YYYY-MM-DD HH-MI-SS') as fecha ,${MOVEMENT_TABLE_NAME}.typ
+    return this.datastore.get(`SELECT to_char(${MOVEMENT_TABLE_NAME}.created_at,'YYYY-MM-DD HH-MI-SS') as fecha ,${MOVEMENT_TABLE_NAME}.type as typ,
      count(${MOVEMENT_TABLE_NAME}.created_at) as total_count,
+     sum(${BOOK_TABLE_NAME}.amount) as units,
       sum(${BOOK_TABLE_NAME}.price) as total
     FROM ${MOVEMENT_TABLE_NAME} ,${BOOK_TABLE_NAME} 
     WHERE ${BOOK_TABLE_NAME}.id = ${MOVEMENT_TABLE_NAME}.local_book_id
     GROUP BY fecha,typ
-    ORDER BY fecha`);
+    ORDER BY fecha desc`);
   }
 
   async registerMovement(movementData: MovementInputData): Promise<Movement['id']> {
