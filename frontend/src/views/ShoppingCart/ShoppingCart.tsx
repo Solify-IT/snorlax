@@ -82,14 +82,7 @@ const ShoppingCart: React.FC<Props> = ({
 
   const onSearch = (value?: string) => value && fetchBook(value);
 
-  const onSearchChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-    const newVal = e.target.value;
-    if (newVal.length !== 13) {
-      return;
-    }
-
-    fetchBook(newVal);
-  };
+ 
 
   return (
     <>
@@ -97,10 +90,9 @@ const ShoppingCart: React.FC<Props> = ({
         allowClear
         enterButton="Añadir"
         size="large"
-        placeholder="Ingresa el ISBN del libro a vender"
+        placeholder="Ingresa el ISBN, Autor o titulo del libro a vender"
         onSearch={onSearch}
         loading={isLoading}
-        onChange={onSearchChange}
         style={{ margin: '12px 0 24px 0' }}
         autoFocus
       />

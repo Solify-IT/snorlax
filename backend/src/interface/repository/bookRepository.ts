@@ -22,14 +22,18 @@ export default class BookRepository extends BaseRepository implements IBookRepos
     let valuesQuery1 = [(page - 1) * perPage, perPage, libraryId];
     let valuesQuery2 = [libraryId];
 
+   
     // Case Library not null isbn not null
     if (isbn != null && libraryId == null) {
+      isbn = "%" + isbn + "%";
       valuesQuery1 = [(page - 1) * perPage, perPage, isbn];
       valuesQuery2 = [isbn];
     }
 
     // Case Library not null isbn not null
     if (isbn != null && libraryId != null) {
+      isbn =  "%" + isbn + "%";
+      console.log(isbn);
       valuesQuery1 = [(page - 1) * perPage, perPage, libraryId, isbn];
       valuesQuery2 = [libraryId, isbn];
     }
@@ -54,8 +58,8 @@ export default class BookRepository extends BaseRepository implements IBookRepos
           c.isbn = b.isbn
           AND l.id = b.library_id
           AND price > 0 ${isbn == null && libraryId != null ? ' AND library_id = $3' : ''} 
-          ${isbn != null && libraryId == null ? ' AND b.isbn = $3' : ''}
-          ${isbn != null && libraryId != null ? ' AND library_id = $3  AND b.isbn = $4' : ''}
+          ${isbn != null && libraryId == null ? ' AND (b.isbn ILIKE $3 OR c.author ILIKE $3 OR c.title ILIKE $3)' : ''}
+          ${isbn != null && libraryId != null ? ' AND library_id = $3  AND (b.isbn ILIKE $4 OR c.author ILIKE $4 OR c.title ILIKE $4)' : ''}
         OFFSET $1 LIMIT $2`,
         valuesQuery1,
       ),

@@ -70,11 +70,6 @@ const ShoppingCart: React.FC = () => {
   const fetchBook = async (isbn: string) => {
     setTicketData(null);
     setIsLoading(true);
-    if (isbn.length !== 13) {
-      message.warning('El ISBN no es válido');
-      setIsLoading(false);
-      return;
-    }
 
     const [res, err] = await backend.books.getAll<{
       total: number,

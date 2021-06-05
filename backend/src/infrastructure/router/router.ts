@@ -22,6 +22,7 @@ export default class Router {
       );
     });
 
+
     app.patch('/books/:id', middleware, async (request, response, next) => {
       await controller.books.updateBook(
         {
