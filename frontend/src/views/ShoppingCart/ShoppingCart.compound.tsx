@@ -15,6 +15,7 @@ const ShoppingCart: React.FC = () => {
   const [books, setBooks] = useState<{ book: Book, amount: number }[]>();
   const backend = useBackend();
   const [isLoading, setIsLoading] = useState(false);
+  const [ticketData, setTicketData] = useState<{ libraryName: string, books: any, total: number } | null>(null);
   const total = useMemo(() => {
     let tot = 0;
     books?.forEach((b) => {
@@ -67,6 +68,7 @@ const ShoppingCart: React.FC = () => {
   };
 
   const fetchBook = async (isbn: string) => {
+    setTicketData(null);
     setIsLoading(true);
     if (isbn.length !== 13) {
       message.warning('El ISBN no es válido');
@@ -111,6 +113,7 @@ const ShoppingCart: React.FC = () => {
   };
 
   const onFinishSale = async () => {
+  
     if (!books) return;
     setIsLoading(true);
 
@@ -130,7 +133,9 @@ const ShoppingCart: React.FC = () => {
       return;
     }
 
+
     notification.success({ message: 'Venta completada exitosamente' });
+    setTicketData({libraryName: user.library.name, books: [...books], total});
     setBooks([]);
     setIsLoading(false);
   };
@@ -144,6 +149,7 @@ const ShoppingCart: React.FC = () => {
       isLoading={isLoading}
       total={total}
       onFinishSale={onFinishSale}
+      ticketData={ticketData}
     />
   );
 };

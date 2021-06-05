@@ -12,6 +12,7 @@ import Search from 'antd/lib/input/Search';
 import React from 'react';
 import { Book } from 'src/@types';
 import formatISBN from 'src/utils/isbn';
+import Ticket from './Ticket';
 
 type ShoppingCartBook = { book: Book, amount: number };
 
@@ -23,10 +24,11 @@ interface Props {
   isLoading: boolean;
   total: number;
   onFinishSale(): Promise<void>;
+  ticketData: { libraryName: string, books: any, total: number } | null;
 }
 
 const ShoppingCart: React.FC<Props> = ({
-  books, fetchBook, updateAmount, remove, isLoading, total, onFinishSale,
+  books, fetchBook, updateAmount, remove, isLoading, total, onFinishSale, ticketData
 }) => {
   const columns = [
     {
@@ -143,6 +145,7 @@ const ShoppingCart: React.FC<Props> = ({
           </span>
         </Col>
       </Row>
+      {ticketData != null ? <Ticket ticketData={ticketData} /> : null}
     </>
   );
 };
