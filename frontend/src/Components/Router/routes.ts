@@ -6,6 +6,8 @@ export const FORGOT_PASSWORD = '/recover-password';
 export const INVENTORY = '/inventario';
 export const SALES_POINT = '/punto-de-venta';
 export const RETURNS = `${SALES_POINT}/devoluciones`;
+export const MOVEMENTS = `${SALES_POINT}/movimientos`;
+
 export const ADMIN = '/admin';
 
 export const BOOKS = `${INVENTORY}/libros`;

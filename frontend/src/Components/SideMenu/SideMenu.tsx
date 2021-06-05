@@ -7,15 +7,14 @@ import {
   LIBRARIES,
   LIST_LOCAL_BOOKS,
   LIST_USERS,
+  MOVEMENTS,
   RETURNS,
   SALES_POINT,
-  sideMenuItems,
-  sideMenuItemsOpen,
-  sideMenuItemsPost,
 } from '../Router/routes';
 
 const SideMenu: React.FC<{ goTo(path: string): () => void }> = ({ goTo }) => {
   const { pathname } = useLocation();
+  console.log('pathname', pathname);
 
   return (
     <Menu
@@ -23,9 +22,9 @@ const SideMenu: React.FC<{ goTo(path: string): () => void }> = ({ goTo }) => {
       style={{ height: '100%', borderRight: 0 }}
     >
       {pathname.includes(INVENTORY) && (
-        <Menu.SubMenu key={sideMenuItemsOpen.inventory.books} title="Libros">
+        <Menu.SubMenu key="books" title="Libros">
           <Menu.Item
-            key={sideMenuItems.inventory.books.list}
+            key="books:list"
             onClick={goTo(LIST_LOCAL_BOOKS)}
           >
             Buscar Libros
@@ -33,25 +32,31 @@ const SideMenu: React.FC<{ goTo(path: string): () => void }> = ({ goTo }) => {
         </Menu.SubMenu>
       )}
       {pathname.includes(SALES_POINT) && (
-        <Menu.SubMenu key="accions" title="Acciones">
+        <Menu.SubMenu key="actions" title="Acciones">
           <Menu.Item
-            key={sideMenuItemsPost.salesPoint.books.sales_Point}
+            key="actions:devolutions"
             onClick={goTo(RETURNS)}
           >
             Devoluciones
+          </Menu.Item>
+          <Menu.Item
+            key="actions:movements"
+            onClick={goTo(MOVEMENTS)}
+          >
+            Movimientos
           </Menu.Item>
         </Menu.SubMenu>
       )}
       {pathname.includes(ADMIN) && (
         <>
           <Menu.SubMenu key="users" title="Usuarios">
-            <Menu.Item key="3" onClick={goTo(LIST_USERS)}>
+            <Menu.Item key="users:list" onClick={goTo(LIST_USERS)}>
               Lista de usuarios
             </Menu.Item>
           </Menu.SubMenu>
-          <Menu.SubMenu key={sideMenuItemsOpen.admin.libraries} title="Librerías">
+          <Menu.SubMenu key="libraries" title="Librerías">
             <Menu.Item
-              key={sideMenuItems.inventory.books.list}
+              key="libraries:list"
               onClick={goTo(LIBRARIES)}
             >
               Lista de Librerías
