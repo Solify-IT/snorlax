@@ -1,7 +1,10 @@
+import * as fs from 'fs';
 import { wrapError } from 'src/@types';
+import parse from 'csv-parse/lib/sync';
 import { SaleMovementInput, ReturnMovementInput } from 'src/domain/model/book';
 import { UnauthorizedError } from 'src/usecases/errors';
 import BookInteractor, { RegisterBookInputData } from 'src/usecases/interactor/bookInteractor';
+import { InventoryCSV } from 'src/domain/model/catalogue';
 import { isAdmin, isLibrero } from '../auth';
 import { IContext } from './context';
 
@@ -112,6 +115,33 @@ export default class BookController {
     }
 
     context.response.status(200).json({ status: 200 });
+  }
+
+  async registerBookInventory(context: IContext): Promise<void> {
+    const {
+      file,
+    } = context.request;
+
+    fs.readFile(file.path, 'utf8', async (err, data) => {
+      if (err) {
+        context.response.status(500).json({ status: 500 });
+        return;
+      }
+      const records: InventoryCSV[] = parse(data, {
+        columns: true,
+        skipEmptyLines: true,
+      });
+
+      const [, error] = await wrapError(
+        this.bookInteractor.registerBookInventory(context.request.currentUser, records),
+      );
+      if (error) {
+        context.next(error);
+        return;
+      }
+
+      context.response.status(201).json({ data: records });
+    });
   }
 
   async registerBookReturnEditorial(context: IContext): Promise<void> {

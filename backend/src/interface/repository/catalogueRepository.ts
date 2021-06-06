@@ -11,6 +11,13 @@ export default class CatalogueRepository extends BaseRepository implements ICata
     );
   }
 
+  async findByISBNs(isbns: any[]): Promise<any> {
+    const recordIdsSQL = isbns.map((isbn) => `'${isbn}'`).join(', ');
+    return this.datastore.get<any>(
+      `SELECT * FROM ${CATALOGUE_TABLE_NAME} WHERE isbn in (${recordIdsSQL})`,
+    );
+  }
+
   async registerCatalogue(catalogueData: CatalogueInputData): Promise<Catalogue['id']> {
     const id = uuid();
     return this.datastore.insert(CATALOGUE_TABLE_NAME, { ...catalogueData, id });

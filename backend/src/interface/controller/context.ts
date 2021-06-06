@@ -12,6 +12,7 @@ export interface CookieOptions {
 }
 interface ParsedQs { [key: string]: undefined | string | string[] | ParsedQs | ParsedQs[] }
 export interface IRequest {
+  file: any
   query: ParsedQs;
   params: {
     [param: string]: string,
