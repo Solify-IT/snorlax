@@ -71,7 +71,7 @@ const ListView: React.FC<Props> = ({ users, loading, onFinishDrop }) => {
           <Col span={12}>
             <Tooltip title="Eliminar">
               <Popconfirm
-                title="¿Deseas terminar la compra?"
+                title="¿Deseas Eliminar Usuario?"
                 okText="Sí, Terminar"
                 cancelText="No"
                 onConfirm={() => {
