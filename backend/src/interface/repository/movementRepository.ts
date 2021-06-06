@@ -9,8 +9,8 @@ export default class MovementRepository extends BaseRepository implements IMovem
   listAllMovements(): Promise<Movement[]> {
     return this.datastore.get(`SELECT to_char(${MOVEMENT_TABLE_NAME}.created_at,'YYYY-MM-DD HH-MI-SS') as fecha ,${MOVEMENT_TABLE_NAME}.type as typ,
      count(${MOVEMENT_TABLE_NAME}.created_at) as total_count,
-     sum(${BOOK_TABLE_NAME}.amount) as units,
-      sum(${BOOK_TABLE_NAME}.price) as total
+     sum(${MOVEMENT_TABLE_NAME}.amount) as units,
+     sum(${MOVEMENT_TABLE_NAME}.amount * CAST(${MOVEMENT_TABLE_NAME}.total AS int)) as total
     FROM ${MOVEMENT_TABLE_NAME} ,${BOOK_TABLE_NAME} 
     WHERE ${BOOK_TABLE_NAME}.id = ${MOVEMENT_TABLE_NAME}.local_book_id
     GROUP BY fecha,typ

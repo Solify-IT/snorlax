@@ -13,10 +13,10 @@ import React from 'react';
 import { Book } from 'src/@types';
 import formatISBN from 'src/utils/isbn';
 
-type ReturnsCartBook = { book: Book, amount: number };
+type ReturnsClientBook = { book: Book, amount: number };
 
 interface Props {
-  books: ReturnsCartBook[];
+  books: ReturnsClientBook[];
   fetchBook(isbn: string): void;
   updateAmount(bookId: string): (amount: number | null) => void;
   remove(bookId: string): () => void;
@@ -25,7 +25,7 @@ interface Props {
   onFinishReturn(): Promise<void>;
 }
 
-const ReturnsCart: React.FC<Props> = ({
+const ReturnsClient: React.FC<Props> = ({
   books, fetchBook, updateAmount, remove, isLoading, total, onFinishReturn,
 }) => {
   const columns = [
@@ -57,18 +57,18 @@ const ReturnsCart: React.FC<Props> = ({
       title: 'Cantidad',
       dataIndex: '',
       key: 'view',
-      render: (row: ReturnsCartBook) => (
+      render: (row: ReturnsClientBook) => (
         <InputNumber onChange={updateAmount(row.book.id)} value={row.amount} />
       ),
     },
     {
-      title: '¿Eliminar?',
+      title: '¿Devolucion?',
       dataIndex: '',
       key: 'view',
-      render: (row: ReturnsCartBook) => (
+      render: (row: ReturnsClientBook) => (
         <Popconfirm
-          title="¿Deseas eliminar el libro de la compra?"
-          okText="Sí, eliminar"
+          title="¿Deseas terminar la devolucion?"
+          okText="Sí, devolver"
           cancelText="¡No!"
           onConfirm={remove(row.book.id)}
         >
@@ -127,7 +127,7 @@ const ReturnsCart: React.FC<Props> = ({
         >
           <span>
             <Popconfirm
-              title="¿Deseas terminar la devolucion?"
+              title="¿Deseas terminar la compra?"
               okText="Sí, Terminar"
               cancelText="No"
               disabled={!books.length}
@@ -147,4 +147,4 @@ const ReturnsCart: React.FC<Props> = ({
   );
 };
 
-export default ReturnsCart;
+export default ReturnsClient;

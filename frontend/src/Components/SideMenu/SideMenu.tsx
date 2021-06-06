@@ -9,6 +9,7 @@ import {
   LIST_USERS,
   MOVEMENTS,
   RETURNS,
+  RETURNSCLIENT,
   SALES_POINT,
 } from '../Router/routes';
 
@@ -33,16 +34,24 @@ const SideMenu: React.FC<{ goTo(path: string): () => void }> = ({ goTo }) => {
       {pathname.includes(SALES_POINT) && (
         <Menu.SubMenu key="actions" title="Acciones">
           <Menu.Item
-            key="actions:devolutions"
-            onClick={goTo(RETURNS)}
-          >
-            Devoluciones
-          </Menu.Item>
-          <Menu.Item
             key="actions:movements"
             onClick={goTo(MOVEMENTS)}
           >
             Movimientos
+          </Menu.Item>
+          <Menu.Item
+            key="actions:devolutions editorial"
+            onClick={goTo(RETURNS)}
+          >
+            Devoluciones
+            Editorial
+          </Menu.Item>
+          <Menu.Item
+            key="actions:devolutions client"
+            onClick={goTo(RETURNSCLIENT)}
+          >
+            Devoluciones
+            Cliente
           </Menu.Item>
         </Menu.SubMenu>
       )}
