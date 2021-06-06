@@ -4,7 +4,7 @@ import {
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Library, wrapError } from 'src/@types';
-import User, { StoredRole, StoredUser, UserInput } from 'src/@types/user';
+import { StoredRole, UserInput } from 'src/@types/user';
 import { toUserList } from 'src/Components/Router/routes';
 import useNavigation from 'src/hooks/navigation';
 
@@ -27,8 +27,8 @@ const FormUpdate: React.FC<Props> = ({ user }) => {
   const backend = useBackend();
   const history = useHistory();
   const [metadata, setMetadata] = useState<{
-    roles: StoredRole[], libraries: Library[], users: StoredUser[],
-  }>({ roles: [], libraries: [], users: [] });
+    roles: StoredRole[], libraries: Library[]
+  }>({ roles: [], libraries: [] });
   const { setTitles } = useNavigation();
 
   const fetchMetadata = async () => {
@@ -37,11 +37,10 @@ const FormUpdate: React.FC<Props> = ({ user }) => {
       Promise.all([
         backend.libraries.getAll<{ libraries: Library[] }>(),
         backend.users.get<{ roles: StoredRole[] }>('/roles'),
-        backend.usersId.getAll<{ users: User[] }>(`id=${user.id}`),
       ]),
     );
 
-    if (error || !result || !result[0][0] || !result[1][0] || !result[2][0]) {
+    if (error || !result || !result[0][0] || !result[1][0]) {
       notification.error({
         message: 'Ocurrió un problema al cargar.', description: 'Intentalo más tarde.',
       });
@@ -52,7 +51,6 @@ const FormUpdate: React.FC<Props> = ({ user }) => {
     setMetadata({
       libraries: result[0][0]!.data.libraries,
       roles: result[1][0]!.data.roles,
-      users: result[2][0]!.data.users,
     });
     setIsMedatadaLoading(false);
   };

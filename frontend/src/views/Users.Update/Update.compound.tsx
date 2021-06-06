@@ -19,7 +19,7 @@ const Update: React.FC = () => {
 
   const fetchUsers = useCallback(async () => {
     setIsLoading(true);
-    const [result, error] = await backend.usersId.getOneById<{ users: User[] }>(`?id=${id}`);
+    const [result, error] = await backend.users.get<{ users: User[] }>(id);
     if (error || !result) {
       notification.error({
         message: 'Error al cargar informacion del libro',
