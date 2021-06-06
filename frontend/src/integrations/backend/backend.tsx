@@ -1,10 +1,10 @@
 import React from 'react';
 import { AxiosRequestConfig } from 'axios';
 import {
-  BookFormType, Catalogue, Library, LocalBook, Movement
+  BookFormType, Catalogue, Library, LocalBook, Movement,
 } from 'src/@types';
 import {
-  TodaySale
+  TodaySale,
 } from 'src/@types/movement';
 import {
   BACKEND_MAIN_EP,

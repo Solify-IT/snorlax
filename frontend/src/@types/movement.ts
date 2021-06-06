@@ -1,4 +1,3 @@
-import { TODAY_SALE } from 'src/settings';
 import CommonType from './common';
 
 type Movement = CommonType & {

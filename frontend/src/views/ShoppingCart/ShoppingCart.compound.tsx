@@ -1,5 +1,7 @@
 import { message, notification } from 'antd';
-import React, { useEffect, useMemo, useState, useCallback } from 'react';
+import React, {
+  useEffect, useMemo, useState, useCallback,
+} from 'react';
 import { Redirect } from 'react-router-dom';
 import { Book } from 'src/@types';
 import { SIGN_IN } from 'src/Components/Router/routes';
@@ -7,30 +9,31 @@ import useAuth from 'src/hooks/auth';
 import useNavigation from 'src/hooks/navigation';
 import { useBackend } from 'src/integrations/backend';
 import { SHOW_SHOPPING_CART } from 'src/utils/featureToggles';
-import ShoppingCartComp from './ShoppingCart';
 import {
-  AggregatedSale
+  AggregatedSale,
 } from 'src/@types/movement';
+import ShoppingCartComp from './ShoppingCart';
 
 const ShoppingCart: React.FC = () => {
   const { user, getHomeForRole } = useAuth();
   const { setTitles } = useNavigation();
-  const [books, setBooks] = useState<{ book: Book, amount: number,total:number }[]>();
+  const [books, setBooks] = useState<{ book: Book, amount: number, total:number }[]>();
   const backend = useBackend();
   const [isLoading, setIsLoading] = useState(false);
-  const [ticketData, setTicketData] = useState<{ libraryName: string, books: any, total: number } | null>(null);
+  const [ticketData, setTicketData] = useState<{
+    libraryName: string, books: any, total: number } | null>(null);
   const [sales, setSales] = useState<Array<AggregatedSale>>([]);
   const fetchTodaySale = useCallback(
-    async function fetchTodaySale() {
+    async () => {
       const now = new Date(Date.now());
       const year = now.getUTCFullYear();
       const month = (now.getMonth() + 1) < 10 ? `0${(now.getMonth() + 1).toString()}` : (now.getMonth() + 1).toString();
       const day = now.getUTCDate() < 10 ? `0${now.getUTCDate()}` : now.getUTCDate().toString();
-      const [res, err] = await backend.todaySale.getAllObject(`date=${year}-${month}-${day}`);
+      const [res] = await backend.todaySale.getAllObject(`date=${year}-${month}-${day}`);
       if (res != null) {
         setSales(res.data.sale);
       }
-    }, [setSales]
+    }, [setSales],
   );
 
   useEffect(() => {
@@ -67,13 +70,13 @@ const ShoppingCart: React.FC = () => {
 
     if (!amount) {
       setBooks(books.map((b) => (
-        b.book.id === bookId ? { book: b.book, amount: 1 ,total:b.book.price} : b
+        b.book.id === bookId ? { book: b.book, amount: 1, total: b.book.price } : b
       )));
       return;
     }
 
     setBooks(books.map((b) => (
-      b.book.id === bookId ? { book: b.book, amount,total:b.book.price} : b
+      b.book.id === bookId ? { book: b.book, amount, total: b.book.price } : b
     )));
   };
 
@@ -108,7 +111,7 @@ const ShoppingCart: React.FC = () => {
       return;
     }
 
-    const newBook = { book: res.data.books[0], amount: 1,total: res.data.books[0].price};
+    const newBook = { book: res.data.books[0], amount: 1, total: res.data.books[0].price };
 
     if (books) {
       const alreadyExists = books.findIndex((b) => b.book.id === newBook.book.id);
@@ -128,14 +131,13 @@ const ShoppingCart: React.FC = () => {
   };
 
   const onFinishSale = async () => {
-  
     if (!books) return;
     setIsLoading(true);
 
-    const payload: { id: string, amount: number,total:number }[] = [];
+    const payload: { id: string, amount: number, total:number }[] = [];
 
     books.forEach((b) => {
-      payload.push({ id: b.book.id, amount: b.amount ,total: b.total });
+      payload.push({ id: b.book.id, amount: b.amount, total: b.total });
     });
 
     const [res, err] = await backend.libraries.post<
@@ -150,7 +152,7 @@ const ShoppingCart: React.FC = () => {
 
     fetchTodaySale();
     notification.success({ message: 'Venta completada exitosamente' });
-    setTicketData({libraryName: user.library.name, books: [...books], total});
+    setTicketData({ libraryName: user.library.name, books: [...books], total });
     setBooks([]);
     setIsLoading(false);
   };
