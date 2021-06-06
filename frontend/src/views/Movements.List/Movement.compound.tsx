@@ -22,7 +22,6 @@ const ListMovements: React.FC = () => {
       notification.error({ message: 'Ocurrió un error al cargar los movimientos!', description: 'Intentalo más tarde' });
       return;
     }
-    console.log(result.data);
     setMovements(result.data.movements);
     setIsLoading(false);
   }, [backend.movements]);
