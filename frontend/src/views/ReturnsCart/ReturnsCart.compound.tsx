@@ -12,7 +12,7 @@ import ReturnsCartComp from './ReturnsCart';
 const ReturnsCart: React.FC = () => {
   const { user, getHomeForRole } = useAuth();
   const { setTitles } = useNavigation();
-  const [books, setBooks] = useState<{ book: Book, amount: number }[]>();
+  const [books, setBooks] = useState<{ book: Book, amount: number, total:number }[]>();
   const backend = useBackend();
   const [isLoading, setIsLoading] = useState(false);
   const total = useMemo(() => {
@@ -27,7 +27,7 @@ const ReturnsCart: React.FC = () => {
     if (!user || !SHOW_RETURNS_CART) return;
 
     setTitles({
-      title: 'Devoluciones de Libros',
+      title: 'Devoluciones de Libros a Editorial',
       subtitle: 'Añade libros por su ISBN',
     });
   }, []);
@@ -46,13 +46,13 @@ const ReturnsCart: React.FC = () => {
 
     if (!amount) {
       setBooks(books.map((b) => (
-        b.book.id === bookId ? { book: b.book, amount: 1 } : b
+        b.book.id === bookId ? { book: b.book, amount: 1, total: b.book.price } : b
       )));
       return;
     }
 
     setBooks(books.map((b) => (
-      b.book.id === bookId ? { book: b.book, amount } : b
+      b.book.id === bookId ? { book: b.book, amount, total: b.book.price } : b
     )));
   };
 
@@ -91,7 +91,7 @@ const ReturnsCart: React.FC = () => {
       return;
     }
 
-    const newBook = { book: res.data.books[0], amount: 1 };
+    const newBook = { book: res.data.books[0], amount: 1, total: res.data.books[0].price };
 
     if (books) {
       const alreadyExists = books.findIndex((b) => b.book.id === newBook.book.id);
@@ -114,10 +114,10 @@ const ReturnsCart: React.FC = () => {
     if (!books) return;
     setIsLoading(true);
 
-    const payload: { id: string, amount: number }[] = [];
+    const payload: { id: string, amount: number, total:number }[] = [];
 
     books.forEach((b) => {
-      payload.push({ id: b.book.id, amount: b.amount });
+      payload.push({ id: b.book.id, amount: b.amount, total: b.book.price });
     });
 
     const [res, err] = await backend.libraries.post<

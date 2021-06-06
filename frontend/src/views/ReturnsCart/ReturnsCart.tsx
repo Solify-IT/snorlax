@@ -127,7 +127,7 @@ const ReturnsCart: React.FC<Props> = ({
         >
           <span>
             <Popconfirm
-              title="¿Deseas terminar la compra?"
+              title="¿Deseas terminar la devolucion?"
               okText="Sí, Terminar"
               cancelText="No"
               disabled={!books.length}
