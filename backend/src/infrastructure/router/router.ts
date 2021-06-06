@@ -66,8 +66,14 @@ export default class Router {
       });
     });
 
-    app.get('/users/id', async (request, response, next) => {
+    app.get('/users/:id', async (request, response, next) => {
       await controller.users.getUser({
+        request, response, next, logger: controller.logger,
+      });
+    });
+
+    app.delete('/users/:id', async (request, response, next) => {
+      await controller.users.dropUser({
         request, response, next, logger: controller.logger,
       });
     });

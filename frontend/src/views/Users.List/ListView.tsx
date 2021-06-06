@@ -1,15 +1,21 @@
-import { Table, Typography } from 'antd';
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import {
+  Button, Col, Popconfirm, Row, Table, Tooltip, Typography,
+} from 'antd';
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { StoredUser } from 'src/@types/user';
 import { toUserDetail } from 'src/Components/Router/routes';
 
 interface Props {
   users: StoredUser[];
   loading: boolean;
+  onFinishDrop(id: string): Promise<void>;
 }
 
-const ListView: React.FC<Props> = ({ users, loading }) => {
+const ListView: React.FC<Props> = ({ users, loading, onFinishDrop }) => {
+  const history = useHistory();
+  const goTo = (path: string) => () => history.push(path);
   const columns = [
     {
       title: 'Nombre',
@@ -52,11 +58,32 @@ const ListView: React.FC<Props> = ({ users, loading }) => {
       ),
     },
     {
-      title: 'Modificar Usuario',
-      dataIndex: 'displayName',
-      key: 'displayName',
-      render: (name: string, row: StoredUser) => (
-        <Link to={toUserDetail(row.id)}>Modificar</Link>
+      title: 'Acciones',
+      dataIndex: '',
+      key: 'view',
+      render: (row: StoredUser) => (
+        <Row>
+          <Col span={12}>
+            <Tooltip title="Editar usuario">
+              <Button type="primary" shape="circle" icon={<EditOutlined />} onClick={goTo(toUserDetail(row.id))} />
+            </Tooltip>
+          </Col>
+          <Col span={12}>
+            <Tooltip title="Eliminar">
+              <Popconfirm
+                title="¿Deseas Eliminar Usuario?"
+                okText="Sí, Terminar"
+                cancelText="No"
+                onConfirm={() => {
+                  onFinishDrop(row.id);
+                }}
+              >
+                <Button type="primary" shape="circle" icon={<DeleteOutlined />} />
+              </Popconfirm>
+            </Tooltip>
+          </Col>
+
+        </Row>
       ),
     },
   ];

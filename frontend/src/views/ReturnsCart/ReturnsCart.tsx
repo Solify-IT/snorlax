@@ -22,11 +22,11 @@ interface Props {
   remove(bookId: string): () => void;
   isLoading: boolean;
   total: number;
-  onFinishSale(): Promise<void>;
+  onFinishReturn(): Promise<void>;
 }
 
 const ReturnsCart: React.FC<Props> = ({
-  books, fetchBook, updateAmount, remove, isLoading, total, onFinishSale,
+  books, fetchBook, updateAmount, remove, isLoading, total, onFinishReturn,
 }) => {
   const columns = [
     {
@@ -131,7 +131,7 @@ const ReturnsCart: React.FC<Props> = ({
               okText="Sí, Terminar"
               cancelText="No"
               disabled={!books.length}
-              onConfirm={onFinishSale}
+              onConfirm={onFinishReturn}
             >
               <Button
                 disabled={!books.length}
