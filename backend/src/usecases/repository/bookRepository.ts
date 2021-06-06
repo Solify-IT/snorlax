@@ -10,6 +10,7 @@ export interface IBookRepository {
   updateBook(bookdata: LocalBookInput): Promise<LocalBook>;
   registerBooksSell(saleData: SaleMovementInput): Promise<void>;
   registerBooksReturnEditorial(returnData: ReturnMovementInput): Promise<void>;
+  registerBooksReturnClient(returnData: ReturnMovementInput): Promise<void>;
   listBooksByLibrary(
     page: number, perPage: number, libraryId?: string, isbn?:string,
   ): Promise<{ localBooks: Book[], total: number }>;

@@ -13,6 +13,16 @@ import { ReturnMovementInput, SaleMovementInput } from 'src/domain/model/book';
 import BaseRepository from './BaseRepository';
 
 export default class BookRepository extends BaseRepository implements IBookRepository {
+  async registerBooksReturnClient(returnData: ReturnMovementInput): Promise<void> {
+    let id = uuidv4();
+    for (const book of returnData.books) {
+      this.datastore.insert<Movement>(MOVEMENT_TABLE_NAME, {
+        localBookId: book.id, amount: book.amount, isLoan: false, total: book.total, id, type: 'Devolucion cliente',
+      });
+      id = uuidv4();
+    }
+  }
+
   async listBooksByLibrary(
     page: number, perPage: number, libraryId?: string, isbn?: string,
   ): Promise<{ localBooks: Book[], total: number }> {
@@ -106,7 +116,7 @@ export default class BookRepository extends BaseRepository implements IBookRepos
     let id = uuidv4();
     for (const book of returnData.books) {
       this.datastore.insert<Movement>(MOVEMENT_TABLE_NAME, {
-        localBookId: book.id, amount: book.amount, isLoan: false, total: 0, id, type: 'Devolucion Editorial',
+        localBookId: book.id, amount: book.amount, isLoan: false, total: book.total, id, type: 'Devolucion Editorial',
       });
       id = uuidv4();
     }
