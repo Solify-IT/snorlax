@@ -34,7 +34,6 @@ export default class BookRepository extends BaseRepository implements IBookRepos
     if (isbn != null && libraryId != null) {
       // eslint-disable-next-line no-param-reassign
       isbn = `%${isbn}%`;
-      console.log(isbn);
       valuesQuery1 = [(page - 1) * perPage, perPage, libraryId, isbn];
       valuesQuery2 = [libraryId, isbn];
     }
