@@ -14,7 +14,6 @@ import {
 
 const SideMenu: React.FC<{ goTo(path: string): () => void }> = ({ goTo }) => {
   const { pathname } = useLocation();
-  console.log('pathname', pathname);
 
   return (
     <Menu
