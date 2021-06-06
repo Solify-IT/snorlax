@@ -15,8 +15,10 @@ export default class BookController {
       date,
     } = context.request.query;
 
+    const ts = Number.parseInt(date as string, 10);
+
     const [sale, error] = await wrapError(
-      this.movementInteractor.getTodaySale(date),
+      this.movementInteractor.getTodaySale(ts),
     );
 
     if (error) {
