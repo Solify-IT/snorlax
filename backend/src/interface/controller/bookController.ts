@@ -133,6 +133,25 @@ export default class BookController {
     context.response.status(200).json({ status: 200 });
   }
 
+  async registerBookReturnClient(context: IContext): Promise<void> {
+    const {
+      books,
+    } = context.request.body as ReturnMovementInput;
+    const returnData: ReturnMovementInput = {
+      books,
+    };
+    const [, error] = await wrapError(
+      this.bookInteractor.registerBooksReturnClient(returnData),
+    );
+
+    if (error) {
+      context.next(error);
+      return;
+    }
+
+    context.response.status(200).json({ status: 200 });
+  }
+
   // recibe GET /books?libraryId=<?>&isbn=<?>
   async listBooksByLibrary(context: IContext): Promise<void> {
     const {

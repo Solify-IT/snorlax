@@ -162,6 +162,34 @@ export default class BookInteractor {
     await this.bookRepository.registerBooksReturnEditorial(modified);
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-dupe-class-members
+  async registerBooksReturnClient(
+    returnData: ReturnMovementInput,
+  ): Promise<void> {
+    this.logger.info('Creating new Return.', { logger: 'BookInteractor:registerBooksReturnClient' });
+
+    const modified: ReturnMovementInput = { books: [] };
+
+    for (const book of returnData.books) {
+      let existing: LocalBook;
+      try {
+        existing = await this.getBook(book.id);
+        await this.updateBookAmount({
+          id: book.id,
+          isbn: existing.isbn,
+          libraryId: existing.libraryId,
+          price: existing.price,
+          amount: existing.amount + book.amount,
+        }, false);
+        modified.books.push(book);
+      } catch (e) {
+        this.logger.error({ message: 'Libro no encontrado al realizar la venta', bookId: book.id });
+      }
+    }
+
+    await this.bookRepository.registerBooksReturnClient(modified);
+  }
+
   private validateRegisterBookData(bookData: RegisterBookInputData): void {
     let message = '';
 
