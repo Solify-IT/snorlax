@@ -10,6 +10,19 @@ export default class BookController {
     this.movementInteractor = movementInteractor;
   }
 
+  async seeMovements(context: IContext): Promise<void> {
+    const [movements, error] = await wrapError(
+      this.movementInteractor.listAllmovements(),
+    );
+
+    if (error) {
+      context.next(error);
+      return;
+    }
+
+    context.response.status(200).json({ movements });
+  }
+
   async registerMovement(context: IContext): Promise<void> {
     const {
       localBookId,

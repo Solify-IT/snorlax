@@ -13,6 +13,10 @@ export default class MovementInteractor {
     this.logger = logger;
   }
 
+  async listAllmovements(): Promise<Movement[]> {
+    return this.movementRepository.listAllMovements();
+  }
+
   async registerMovement(data: MovementInputData): Promise<Movement['id']> {
     this.validateMovementData(data);
     return this.movementRepository.registerMovement(data);
