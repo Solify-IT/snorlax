@@ -3,6 +3,7 @@ import CommonType from './common';
 type Movement = CommonType & {
   localBookId: string;
   amount: number;
+  type:string;
   isLoan: boolean;
 };
 

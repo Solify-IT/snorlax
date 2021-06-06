@@ -100,7 +100,7 @@ export default class BookInteractor {
     // Register the inventory movement
     // TODO: also save the user and turn in which the movement was registered
     await this.movementInteractor.registerMovement({
-      amount: bookData.amount, localBookId: result, isLoan: bookData.isLoan, type: 'in-buy',
+      amount: bookData.amount, localBookId: result, isLoan: bookData.isLoan, type: 'Compra',
     });
 
     if (result !== '') return result;
@@ -206,7 +206,7 @@ export default class BookInteractor {
     const amount = Math.abs(book.amount - bookData.amount);
     if (amount) {
       await this.movementInteractor.registerMovement({
-        amount, isLoan: false, localBookId: bookData.id, type: 'fix',
+        amount, isLoan: false, localBookId: bookData.id, type: 'Actualizar',
       });
     }
 

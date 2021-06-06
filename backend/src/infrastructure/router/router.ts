@@ -38,6 +38,14 @@ export default class Router {
       );
     });
 
+    app.get('/movements', async (request, response, next) => {
+      await controller.movements.seeMovements(
+        {
+          request, response, next, logger: controller.logger,
+        },
+      );
+    });
+
     app.get('/books/:bookId', middleware, async (request, response, next) => {
       await controller.books.getBookById(
         {

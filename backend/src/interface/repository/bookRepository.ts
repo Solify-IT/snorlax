@@ -96,7 +96,7 @@ export default class BookRepository extends BaseRepository implements IBookRepos
     let id = uuidv4();
     for (const book of saleData.books) {
       this.datastore.insert<Movement>(MOVEMENT_TABLE_NAME, {
-        localBookId: book.id, amount: book.amount, isLoan: false, id, type: 'out-sale',
+        localBookId: book.id, amount: book.amount, isLoan: false, id, type: 'Venta',
       });
       id = uuidv4();
     }
@@ -106,7 +106,7 @@ export default class BookRepository extends BaseRepository implements IBookRepos
     let id = uuidv4();
     for (const book of returnData.books) {
       this.datastore.insert<Movement>(MOVEMENT_TABLE_NAME, {
-        localBookId: book.id, amount: book.amount, isLoan: false, id, type: 'out-return',
+        localBookId: book.id, amount: book.amount, isLoan: false, id, type: 'Devolucion Editorial',
       });
       id = uuidv4();
     }

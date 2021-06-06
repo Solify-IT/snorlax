@@ -4,7 +4,7 @@ type Movement = CommonType & {
   localBookId: string;
   amount: number;
   isLoan: boolean;
-  type: 'in-return'|'in-buy'|'out-sale'|'out-return'|'fix';
+  type: 'Devolucion cliente'|'Compra'|'Venta'|'Devolucion Editorial'|'Actualizar';
 };
 
 export type MovementInputData = Omit<Movement, 'id'>;
