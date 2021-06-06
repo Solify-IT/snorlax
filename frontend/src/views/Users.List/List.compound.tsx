@@ -27,6 +27,30 @@ const ListUsers: React.FC = () => {
     setIsLoading(false);
   }, [backend.users]);
 
+  const updateAfterDeleteUser = useCallback((id: string) => {
+    const indexOfDeleted = users.findIndex((user) => user.id === id);
+    if (indexOfDeleted !== -1) {
+      setUsers([
+        ...users.slice(0, indexOfDeleted),
+        ...users.slice(indexOfDeleted + 1),
+      ]);
+    }
+  }, [setUsers, users]);
+
+  const onFinishDrop = async (id: string) => {
+    setIsLoading(true);
+
+    const [res, err] = await backend.users.delete<any>(id);
+
+    if (err || !res) {
+      notification.error({ message: 'Ocurrió un error al eliminar usuaro!', description: 'Intentalo más tarde' });
+      return;
+    }
+
+    updateAfterDeleteUser(id);
+    notification.success({ message: 'Eliminacion completada exitosamente' });
+    setIsLoading(false);
+  };
   useEffect(() => {
     setTitles({
       title: 'Lista de usuarios',
@@ -43,7 +67,11 @@ const ListUsers: React.FC = () => {
   }, [setTitles, history, fetchUsers]);
 
   return (
-    <ListView users={users} loading={isLoading} />
+    <ListView
+      users={users}
+      loading={isLoading}
+      onFinishDrop={onFinishDrop}
+    />
   );
 };
 
