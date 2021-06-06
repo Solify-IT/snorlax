@@ -10,6 +10,22 @@ export default class BookController {
     this.movementInteractor = movementInteractor;
   }
 
+  async getTodaySale(context: IContext): Promise<void> {
+    const {
+      date,
+    } = context.request.query;
+
+    const [sale, error] = await wrapError(
+      this.movementInteractor.getTodaySale(date),
+    );
+
+    if (error) {
+      context.next(error);
+      return;
+    }
+    context.response.status(200).json({ sale });
+  }
+
   async seeMovements(context: IContext): Promise<void> {
     const [movements, error] = await wrapError(
       this.movementInteractor.listAllmovements(),
@@ -28,6 +44,7 @@ export default class BookController {
       localBookId,
       amount,
       isLoan,
+      total,
       type,
     } = context.request.body;
 
@@ -35,6 +52,7 @@ export default class BookController {
       localBookId,
       amount,
       isLoan,
+      total,
       type,
     };
     const [id, error] = await wrapError(

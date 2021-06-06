@@ -43,6 +43,29 @@ const LocalBooksList: React.FC<Props> = ({
       width: 100,
     },
     {
+      title: 'Nombre Librería',
+      dataIndex: 'libraryName',
+      key: 'libraryName',
+      render: (libraryName: string) => (
+        <Typography.Text>
+
+          {libraryName}
+        </Typography.Text>
+      ),
+      width: 100,
+    },
+    {
+      title: 'Celular Librería',
+      dataIndex: 'libraryPhone',
+      key: 'libraryPhone',
+      render: (libraryPhone: string) => (
+        <Typography.Text>
+          {libraryPhone}
+        </Typography.Text>
+      ),
+      width: 100,
+    },
+    {
       title: 'Autores',
       dataIndex: 'author',
       key: 'author',

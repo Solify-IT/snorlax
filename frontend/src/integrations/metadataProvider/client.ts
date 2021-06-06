@@ -20,6 +20,8 @@ const DEFAULT_CATALOGUE_ITEM: ExternalBook = {
   subCategory: '',
   distribuitor: '',
   synopsis: '',
+  libraryName: '',
+  libraryPhone: '',
   pages: 0,
 };
 
@@ -61,6 +63,8 @@ export default class Client {
           area: item.volumeInfo.categories ? item.volumeInfo.categories.join(', ') : '',
           unitaryCost: item.saleInfo && item.saleInfo.listPrice ? item.saleInfo.listPrice.amount || '' : '',
           synopsis: item.volumeInfo.description || '',
+          libraryName: item.volumeInfo.libraryName || '',
+          libraryPhone: item.volumeInfo.libraryPhone || '',
         });
       });
     }

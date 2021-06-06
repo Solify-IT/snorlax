@@ -2,7 +2,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { v4 as uuidv4 } from 'uuid';
 import {
-  Book, BOOK_TABLE_NAME, CATALOGUE_TABLE_NAME, LocalBook, LocalBookInput, Movement,
+  Book, BOOK_TABLE_NAME, CATALOGUE_TABLE_NAME, LIBRARY_TABLE_NAME,
+  LocalBook, LocalBookInput, Movement,
   MOVEMENT_TABLE_NAME,
 } from 'src/domain/model';
 import { IBookRepository } from 'src/usecases';
@@ -23,12 +24,16 @@ export default class BookRepository extends BaseRepository implements IBookRepos
 
     // Case Library not null isbn not null
     if (isbn != null && libraryId == null) {
+      // eslint-disable-next-line no-param-reassign
+      isbn = `%${isbn}%`;
       valuesQuery1 = [(page - 1) * perPage, perPage, isbn];
       valuesQuery2 = [isbn];
     }
 
     // Case Library not null isbn not null
     if (isbn != null && libraryId != null) {
+      // eslint-disable-next-line no-param-reassign
+      isbn = `%${isbn}%`;
       valuesQuery1 = [(page - 1) * perPage, perPage, libraryId, isbn];
       valuesQuery2 = [libraryId, isbn];
     }
@@ -42,15 +47,19 @@ export default class BookRepository extends BaseRepository implements IBookRepos
           b.created_at as local_book_created_at,
           c.created_at as catalogue_created_at,
           b.updated_at as local_book_updated_at,
-          c.updated_at as catalogue_updated_at
+          c.updated_at as catalogue_updated_at,
+          l.name as library_name,
+          l.phone_number as library_phone
         FROM
           ${BOOK_TABLE_NAME} as b,
-          ${CATALOGUE_TABLE_NAME} as c
+          ${CATALOGUE_TABLE_NAME} as c,
+          ${LIBRARY_TABLE_NAME} as l
         WHERE
           c.isbn = b.isbn
+          AND l.id = b.library_id
           AND price > 0 ${isbn == null && libraryId != null ? ' AND library_id = $3' : ''} 
-          ${isbn != null && libraryId == null ? ' AND b.isbn = $3' : ''}
-          ${isbn != null && libraryId != null ? ' AND library_id = $3  AND b.isbn = $4' : ''}
+          ${isbn != null && libraryId == null ? ' AND (b.isbn ILIKE $3 OR c.author ILIKE $3 OR c.title ILIKE $3)' : ''}
+          ${isbn != null && libraryId != null ? ' AND library_id = $3  AND (b.isbn ILIKE $4 OR c.author ILIKE $4 OR c.title ILIKE $4)' : ''}
         OFFSET $1 LIMIT $2`,
         valuesQuery1,
       ),
@@ -87,7 +96,7 @@ export default class BookRepository extends BaseRepository implements IBookRepos
     let id = uuidv4();
     for (const book of saleData.books) {
       this.datastore.insert<Movement>(MOVEMENT_TABLE_NAME, {
-        localBookId: book.id, amount: book.amount, isLoan: false, id, type: 'Venta',
+        localBookId: book.id, amount: book.amount, isLoan: false, total: book.total, id, type: 'Venta',
       });
       id = uuidv4();
     }
@@ -97,7 +106,7 @@ export default class BookRepository extends BaseRepository implements IBookRepos
     let id = uuidv4();
     for (const book of returnData.books) {
       this.datastore.insert<Movement>(MOVEMENT_TABLE_NAME, {
-        localBookId: book.id, amount: book.amount, isLoan: false, id, type: 'Devolucion Editorial',
+        localBookId: book.id, amount: book.amount, isLoan: false, total: 0, id, type: 'Devolucion Editorial',
       });
       id = uuidv4();
     }

@@ -12,6 +12,11 @@ import Search from 'antd/lib/input/Search';
 import React from 'react';
 import { Book } from 'src/@types';
 import formatISBN from 'src/utils/isbn';
+import {
+  AggregatedSale,
+} from 'src/@types/movement';
+import Ticket from './Ticket';
+import TotalSale from './TotalSale';
 
 type ShoppingCartBook = { book: Book, amount: number };
 
@@ -23,10 +28,12 @@ interface Props {
   isLoading: boolean;
   total: number;
   onFinishSale(): Promise<void>;
+  ticketData: { libraryName: string, books: any, total: number } | null;
+  todaySale: Array<AggregatedSale>;
 }
 
 const ShoppingCart: React.FC<Props> = ({
-  books, fetchBook, updateAmount, remove, isLoading, total, onFinishSale,
+  books, fetchBook, updateAmount, remove, isLoading, total, onFinishSale, ticketData, todaySale,
 }) => {
   const columns = [
     {
@@ -80,25 +87,16 @@ const ShoppingCart: React.FC<Props> = ({
 
   const onSearch = (value?: string) => value && fetchBook(value);
 
-  const onSearchChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-    const newVal = e.target.value;
-    if (newVal.length !== 13) {
-      return;
-    }
-
-    fetchBook(newVal);
-  };
-
   return (
     <>
+      <TotalSale sales={todaySale} />
       <Search
         allowClear
         enterButton="Añadir"
         size="large"
-        placeholder="Ingresa el ISBN del libro a vender"
+        placeholder="Ingresa el ISBN, Autor o titulo del libro a vender"
         onSearch={onSearch}
         loading={isLoading}
-        onChange={onSearchChange}
         style={{ margin: '12px 0 24px 0' }}
         autoFocus
       />
@@ -143,6 +141,7 @@ const ShoppingCart: React.FC<Props> = ({
           </span>
         </Col>
       </Row>
+      {ticketData != null ? <Ticket ticketData={ticketData} /> : null}
     </>
   );
 };
