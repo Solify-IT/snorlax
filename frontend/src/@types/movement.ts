@@ -7,6 +7,16 @@ type Movement = CommonType & {
   isLoan: boolean;
 };
 
+export type AggregatedSale = {
+  fecha: string;
+  totalCount: string;
+  total: string;
+};
+
+export type TodaySale = {
+  sale: Array<AggregatedSale>;
+};
+
 export type MovementInputData = Omit<Movement, 'id'>;
 
 export const MOVEMENT_TABLE_NAME = 'movements';

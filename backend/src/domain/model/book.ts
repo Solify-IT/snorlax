@@ -15,6 +15,7 @@ export type LocalBookInput = Omit<LocalBook, 'library'>;
 export type SaleInput = {
   id: string,
   amount: number,
+  total: number,
 };
 
 export type ReturnInput = {

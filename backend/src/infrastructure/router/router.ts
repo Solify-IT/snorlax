@@ -107,6 +107,11 @@ export default class Router {
         request, response, next, logger: controller.logger,
       });
     });
+    app.get('/todaySale', middleware, async (request, response, next) => {
+      await controller.movements.getTodaySale({
+        request, response, next, logger: controller.logger,
+      });
+    });
 
     app.post('/libraries', async (request, response, next) => {
       await controller.libraries.createLibrary({
