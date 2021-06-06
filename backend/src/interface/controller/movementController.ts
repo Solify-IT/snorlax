@@ -10,6 +10,22 @@ export default class BookController {
     this.movementInteractor = movementInteractor;
   }
 
+  async getTodaySale(context: IContext): Promise<void> {
+    const {
+      date,
+    } = context.request.query;
+
+    const [sale, error] = await wrapError(
+      this.movementInteractor.getTodaySale(date),
+    );
+
+    if (error) {
+      context.next(error);
+      return;
+    }
+    context.response.status(200).json({ sale });
+  }
+
   async registerMovement(context: IContext): Promise<void> {
     const {
       localBookId,

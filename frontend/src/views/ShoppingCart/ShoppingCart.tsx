@@ -13,6 +13,7 @@ import React from 'react';
 import { Book } from 'src/@types';
 import formatISBN from 'src/utils/isbn';
 import Ticket from './Ticket';
+import TotalSale from './TotalSale';
 
 type ShoppingCartBook = { book: Book, amount: number };
 
@@ -86,6 +87,7 @@ const ShoppingCart: React.FC<Props> = ({
 
   return (
     <>
+      <TotalSale />
       <Search
         allowClear
         enterButton="Añadir"

@@ -22,7 +22,6 @@ export default class Router {
       );
     });
 
-
     app.patch('/books/:id', middleware, async (request, response, next) => {
       await controller.books.updateBook(
         {
@@ -97,6 +96,11 @@ export default class Router {
 
     app.get('/libraries', middleware, async (request, response, next) => {
       await controller.libraries.listAll({
+        request, response, next, logger: controller.logger,
+      });
+    });
+    app.get('/todaySale', middleware, async (request, response, next) => {
+      await controller.movements.getTodaySale({
         request, response, next, logger: controller.logger,
       });
     });
