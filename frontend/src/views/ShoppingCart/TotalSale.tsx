@@ -38,12 +38,12 @@ const TotalSale: React.FC<Props> = ({
         </Col>
         <Col span={8}>
           <Card title="Cantidad de libros" bordered={false}>
-            {sales[0]? sales[0].totalCount : 0}
+            {sales[0] ? sales[0].totalCount : 0}
           </Card>
         </Col>
       </Row>
     </div>
-  ) 
-  };
+  );
+};
 
 export default TotalSale;
