@@ -25,11 +25,7 @@ const ShoppingCart: React.FC = () => {
   const [sales, setSales] = useState<Array<AggregatedSale>>([]);
   const fetchTodaySale = useCallback(
     async () => {
-      const now = new Date(Date.now());
-      const year = now.getUTCFullYear();
-      const month = (now.getMonth() + 1) < 10 ? `0${(now.getMonth() + 1).toString()}` : (now.getMonth() + 1).toString();
-      const day = now.getUTCDate() < 10 ? `0${now.getUTCDate()}` : now.getUTCDate().toString();
-      const [res] = await backend.todaySale.getAllObject(`date=${year}-${month}-${day}`);
+      const [res] = await backend.todaySale.getAllObject(`date=${Date.now()}`);
       if (res != null) {
         setSales(res.data.sale);
       }

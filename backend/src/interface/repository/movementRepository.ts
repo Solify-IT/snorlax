@@ -27,12 +27,18 @@ export default class MovementRepository extends BaseRepository implements IMovem
     return result;
   }
 
-  async getTodaySale(date: any):Promise<any> {
+  async getTodaySale(ts: number):Promise<any> {
+    const date = new Date(ts);
+    const year = date.getUTCFullYear();
+    const month = (date.getMonth() + 1) < 10 ? `0${(date.getMonth() + 1).toString()}` : (date.getMonth() + 1).toString();
+    const day = date.getUTCDate() < 10 ? `0${date.getUTCDate()}` : date.getUTCDate().toString();
+    const parsedDate = `${year}-${month}-${day}`;
+
     return this.datastore.get<string>(`
     SELECT to_char(movements.created_at,'YYYY-MM-DD') as fecha, sum(movements.amount) as total_count,
     sum(movements.amount * CAST(movements.total AS int)) as total
     FROM movements
-    WHERE movements.type = 'Venta' and to_char(movements.created_at,'YYYY-MM-DD') = '${date}'
+    WHERE movements.type = 'Venta' and to_char(movements.created_at,'YYYY-MM-DD') = '${parsedDate}'
     GROUP BY fecha
     ORDER BY fecha
     `);

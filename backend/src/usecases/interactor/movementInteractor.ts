@@ -13,8 +13,8 @@ export default class MovementInteractor {
     this.logger = logger;
   }
 
-  async getTodaySale(date: any): Promise<any> {
-    return this.movementRepository.getTodaySale(date);
+  async getTodaySale(ts: number): Promise<any> {
+    return this.movementRepository.getTodaySale(ts);
   }
 
   async listAllmovements(): Promise<Movement[]> {
