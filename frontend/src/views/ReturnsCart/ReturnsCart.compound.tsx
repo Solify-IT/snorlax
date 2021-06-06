@@ -143,7 +143,7 @@ const ReturnsCart: React.FC = () => {
       remove={remove}
       isLoading={isLoading}
       total={total}
-      onFinishSale={onFinishReturn}
+      onFinishReturn={onFinishReturn}
     />
   );
 };
