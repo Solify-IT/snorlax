@@ -1,8 +1,7 @@
-import { Button, notification } from 'antd';
+import { notification } from 'antd';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Movement } from 'src/@types';
-import { NEW_USER } from 'src/Components/Router/routes';
 import useNavigation from 'src/hooks/navigation';
 import { useBackend } from 'src/integrations/backend';
 import ListMovement from './Movement';
@@ -29,14 +28,6 @@ const ListMovements: React.FC = () => {
   useEffect(() => {
     setTitles({
       title: 'Lista de movimientos',
-      extra: [
-        <Button
-          type="primary"
-          onClick={() => history.push(NEW_USER)}
-        >
-          Nuevo usuario
-        </Button>,
-      ],
     });
     fetchMovements();
   }, [setTitles, history, fetchMovements]);

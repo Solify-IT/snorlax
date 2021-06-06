@@ -20,8 +20,8 @@ const ListView: React.FC<Props> = ({ movements, loading }) => {
       key: 'typ',
       filters: [
         {
-          text: 'Devolucion Cliente',
-          value: 'Devolucion Cliente',
+          text: 'Devolucion cliente',
+          value: 'Devolucion cliente',
         },
         {
           text: 'Compra',
