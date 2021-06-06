@@ -76,6 +76,10 @@ export default class UserInteractor {
     return this.userRepository.getUser(id);
   }
 
+  async dropUser(id: string): Promise<StoredUser[]> {
+    return this.userRepository.dropUser(id);
+  }
+
   async signIn(token: string): Promise<string> {
     const decoded = await this.firebase.auth().verifyIdToken(token);
 

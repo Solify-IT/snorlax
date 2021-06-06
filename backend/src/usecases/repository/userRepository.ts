@@ -8,4 +8,5 @@ export default interface IUserRepository {
   listUsers(): Promise<StoredUser[]>;
   getUser(id:string): Promise<StoredUser[]>;
   findOneOrNullByEmail(email: string): Promise<Maybe<User>>;
+  dropUser(id:string): Promise<StoredUser[]>;
 }
