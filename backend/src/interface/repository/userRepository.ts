@@ -159,4 +159,8 @@ export default class UserRepository extends BaseRepository implements IUserRepos
       ...userData,
     });
   }
+
+  async dropUser(id: string):Promise<StoredUser[]> {
+    return this.datastore.get(`DELETE FROM ${USER_TABLE_NAME} WHERE id = '${id}' `);
+  }
 }

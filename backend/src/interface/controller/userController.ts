@@ -123,9 +123,26 @@ export default class UserController {
   async getUser(context: IContext): Promise<void> {
     const {
       id,
-    } = context.request.query;
+    } = context.request.params;
     const [users, error] = await wrapError(
       this.userInteractor.getUser(
+        id as string,
+      ),
+    );
+
+    if (error) {
+      context.next(error);
+      return;
+    }
+    context.response.status(200).json({ users });
+  }
+
+  async dropUser(context: IContext): Promise<void> {
+    const {
+      id,
+    } = context.request.params;
+    const [users, error] = await wrapError(
+      this.userInteractor.dropUser(
         id as string,
       ),
     );
