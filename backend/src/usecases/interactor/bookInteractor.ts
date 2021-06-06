@@ -151,7 +151,7 @@ export default class BookInteractor {
           isbn: existing.isbn,
           libraryId: existing.libraryId,
           price: existing.price,
-          amount: existing.amount - book.amount,
+          amount: Number.parseInt(existing.amount as unknown as string, 10) - book.amount,
         }, false);
         modified.books.push(book);
       } catch (e) {
@@ -179,7 +179,7 @@ export default class BookInteractor {
           isbn: existing.isbn,
           libraryId: existing.libraryId,
           price: existing.price,
-          amount: existing.amount + book.amount,
+          amount: Number.parseInt(existing.amount as unknown as string, 10) + book.amount,
         }, false);
         modified.books.push(book);
       } catch (e) {
