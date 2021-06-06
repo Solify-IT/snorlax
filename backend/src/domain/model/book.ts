@@ -21,6 +21,7 @@ export type SaleInput = {
 export type ReturnInput = {
   id: string,
   amount: number,
+  total:number,
 };
 
 export type SaleMovementInput = {
