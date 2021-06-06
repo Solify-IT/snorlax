@@ -14,6 +14,9 @@ import { Book } from 'src/@types';
 import formatISBN from 'src/utils/isbn';
 import Ticket from './Ticket';
 import TotalSale from './TotalSale';
+import {
+  AggregatedSale
+} from 'src/@types/movement';
 
 type ShoppingCartBook = { book: Book, amount: number };
 
@@ -26,10 +29,11 @@ interface Props {
   total: number;
   onFinishSale(): Promise<void>;
   ticketData: { libraryName: string, books: any, total: number } | null;
+  todaySale: Array<AggregatedSale>;
 }
 
 const ShoppingCart: React.FC<Props> = ({
-  books, fetchBook, updateAmount, remove, isLoading, total, onFinishSale, ticketData
+  books, fetchBook, updateAmount, remove, isLoading, total, onFinishSale, ticketData, todaySale
 }) => {
   const columns = [
     {
@@ -87,7 +91,7 @@ const ShoppingCart: React.FC<Props> = ({
 
   return (
     <>
-      <TotalSale />
+      <TotalSale sales={todaySale} />
       <Search
         allowClear
         enterButton="Añadir"

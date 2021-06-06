@@ -44,6 +44,7 @@ export default class BookController {
       localBookId,
       amount,
       isLoan,
+      total,
       type,
     } = context.request.body;
 
@@ -51,6 +52,7 @@ export default class BookController {
       localBookId,
       amount,
       isLoan,
+      total,
       type,
     };
     const [id, error] = await wrapError(

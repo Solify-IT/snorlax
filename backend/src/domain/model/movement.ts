@@ -4,6 +4,7 @@ type Movement = CommonType & {
   localBookId: string;
   amount: number;
   isLoan: boolean;
+  total:number;
   type: 'Devolucion cliente'|'Compra'|'Venta'|'Devolucion Editorial'|'Actualizar';
 };
 

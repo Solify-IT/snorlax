@@ -22,17 +22,18 @@ export default class BookRepository extends BaseRepository implements IBookRepos
     let valuesQuery1 = [(page - 1) * perPage, perPage, libraryId];
     let valuesQuery2 = [libraryId];
 
-   
     // Case Library not null isbn not null
     if (isbn != null && libraryId == null) {
-      isbn = "%" + isbn + "%";
+      // eslint-disable-next-line no-param-reassign
+      isbn = `%${isbn}%`;
       valuesQuery1 = [(page - 1) * perPage, perPage, isbn];
       valuesQuery2 = [isbn];
     }
 
     // Case Library not null isbn not null
     if (isbn != null && libraryId != null) {
-      isbn =  "%" + isbn + "%";
+      // eslint-disable-next-line no-param-reassign
+      isbn = `%${isbn}%`;
       console.log(isbn);
       valuesQuery1 = [(page - 1) * perPage, perPage, libraryId, isbn];
       valuesQuery2 = [libraryId, isbn];
@@ -96,7 +97,7 @@ export default class BookRepository extends BaseRepository implements IBookRepos
     let id = uuidv4();
     for (const book of saleData.books) {
       this.datastore.insert<Movement>(MOVEMENT_TABLE_NAME, {
-        localBookId: book.id, amount: book.amount, isLoan: false, id, type: 'Venta',
+        localBookId: book.id, amount: book.amount, isLoan: false, total: book.total, id, type: 'Venta',
       });
       id = uuidv4();
     }
@@ -106,7 +107,7 @@ export default class BookRepository extends BaseRepository implements IBookRepos
     let id = uuidv4();
     for (const book of returnData.books) {
       this.datastore.insert<Movement>(MOVEMENT_TABLE_NAME, {
-        localBookId: book.id, amount: book.amount, isLoan: false, id, type: 'Devolucion Editorial',
+        localBookId: book.id, amount: book.amount, isLoan: false, total: 0, id, type: 'Devolucion Editorial',
       });
       id = uuidv4();
     }

@@ -28,20 +28,11 @@ export default class MovementRepository extends BaseRepository implements IMovem
   }
 
   async getTodaySale(date: any):Promise<any> {
-    console.log(date);
-    console.log(`
-    SELECT to_char(movements.created_at,'YYYY-MM-DD') as fecha, count(movements.created_at) as total_count,
-       sum(local_books.price) as total
-    FROM ${MOVEMENT_TABLE_NAME},local_books
-    WHERE local_books.id = movements.local_book_id AND movements.type = 'out-sale' and to_char(movements.created_at,'YYYY-MM-DD') = '${date}'
-    GROUP BY fecha
-    ORDER BY fecha
-    `);
     return this.datastore.get<string>(`
-    SELECT to_char(movements.created_at,'YYYY-MM-DD') as fecha, count(movements.created_at) as total_count,
-       sum(local_books.price) as total
-    FROM ${MOVEMENT_TABLE_NAME},local_books
-    WHERE local_books.id = movements.local_book_id AND movements.type = 'out-sale' and to_char(movements.created_at,'YYYY-MM-DD') = '${date}'
+    SELECT to_char(movements.created_at,'YYYY-MM-DD') as fecha, sum(movements.amount) as total_count,
+    sum(movements.amount * CAST(movements.total AS int)) as total
+    FROM movements
+    WHERE movements.type = 'Venta' and to_char(movements.created_at,'YYYY-MM-DD') = '${date}'
     GROUP BY fecha
     ORDER BY fecha
     `);

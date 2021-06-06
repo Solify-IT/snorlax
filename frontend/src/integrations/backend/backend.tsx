@@ -1,8 +1,11 @@
 import React from 'react';
 import { AxiosRequestConfig } from 'axios';
 import {
-  BookFormType, Catalogue, Library, LocalBook, Movement,
+  BookFormType, Catalogue, Library, LocalBook, Movement
 } from 'src/@types';
+import {
+  TodaySale
+} from 'src/@types/movement';
 import {
   BACKEND_MAIN_EP,
   BOOKS_ROOT,
@@ -12,6 +15,7 @@ import {
   MOVEMENTS_ROOT,
   USERS_ROOT_ID,
   LIBRARIES_ROOT_ID,
+  TODAY_SALE,
 } from 'src/settings';
 import User, { UserInput } from 'src/@types/user';
 import useAuth from 'src/hooks/auth';
@@ -36,6 +40,8 @@ export class Backend {
   catalogue: CRUD<Catalogue, unknown, unknown>;
 
   movements: CRUD<Movement, unknown, unknown>;
+
+  todaySale: CRUD<TodaySale, unknown, unknown>;
 
   public constructor(rootEndpoint: string, config?: AxiosRequestConfig) {
     this.rootEndpoint = rootEndpoint;
@@ -62,6 +68,9 @@ export class Backend {
     );
     this.movements = new CRUD(
       `${this.rootEndpoint}${MOVEMENTS_ROOT}`, config,
+    );
+    this.todaySale = new CRUD(
+      `${this.rootEndpoint}${TODAY_SALE}`, config,
     );
   }
 }

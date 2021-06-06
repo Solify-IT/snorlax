@@ -1,3 +1,4 @@
+import { TODAY_SALE } from 'src/settings';
 import CommonType from './common';
 
 type Movement = CommonType & {
@@ -5,6 +6,16 @@ type Movement = CommonType & {
   amount: number;
   type:string;
   isLoan: boolean;
+};
+
+export type AggregatedSale = {
+  fecha: string;
+  totalCount: string;
+  total: string;
+};
+
+export type TodaySale = {
+  sale: Array<AggregatedSale>;
 };
 
 export type MovementInputData = Omit<Movement, 'id'>;
