@@ -43,8 +43,11 @@ export class Backend {
 
   todaySale: CRUD<TodaySale, unknown, unknown>;
 
+  config?: AxiosRequestConfig;
+
   public constructor(rootEndpoint: string, config?: AxiosRequestConfig) {
     this.rootEndpoint = rootEndpoint;
+    this.config = config;
     this.books = new CRUD(
       `${this.rootEndpoint}${BOOKS_ROOT}`, config,
     );

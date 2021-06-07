@@ -5,6 +5,8 @@ import {
 } from 'src/domain/model';
 import { Maybe } from 'src/@types';
 import { SaleMovementInput, ReturnMovementInput } from 'src/domain/model/book';
+import { InventoryCSV } from 'src/domain/model/catalogue';
+import User from 'src/domain/model/user';
 import { IBookRepository } from '..';
 import { UnknownError } from '../errors';
 import InvalidDataError from '../errors/invalidDataError';
@@ -133,6 +135,32 @@ export default class BookInteractor {
     }
 
     await this.bookRepository.registerBooksSell(modified);
+  }
+
+  async registerBookInventory(
+    user: User,
+    records: InventoryCSV[],
+  ): Promise<void> {
+    await this.catalogueInteractor.registerCatalogueBatch(records);
+    const inventory = await this.bookRepository.registerBookInventory(user, records);
+    const books = await this.bookRepository.findByIDsNoType(inventory.ids);
+    const movementsOperations: any[] = [];
+
+    const sortedRecords = inventory.ids
+      .map((id) => inventory.updatedRecords.find((record) => record.id === id));
+    const sortedBooks = inventory.ids
+      .map((id) => books.find((book) => book.id === id));
+
+    sortedRecords.forEach((record, index) => {
+      movementsOperations.push(this.movementInteractor.registerMovement({
+        localBookId: sortedBooks[index].id,
+        amount: Number.parseInt(record?.EXISTENCIA ?? '0', 10),
+        isLoan: true,
+        total: sortedBooks[index].price,
+        type: 'Compra',
+      }));
+    });
+    await Promise.all(movementsOperations);
   }
 
   async registerBooksReturnEditorial(

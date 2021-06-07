@@ -4,10 +4,15 @@ export const SIGN_IN = '/sign-in';
 export const FORGOT_PASSWORD = '/recover-password';
 
 export const INVENTORY = '/inventario';
+export const INVENTORYRELOAD = '/inventario';
+
 export const SALES_POINT = '/punto-de-venta';
 export const RETURNS = `${SALES_POINT}/devoluciones`;
 export const RETURNSCLIENT = `${SALES_POINT}/devolucionescliente`;
 export const MOVEMENTS = `${SALES_POINT}/movimientos`;
+
+export const toInventoryList = (
+) => `${INVENTORYRELOAD}`;
 
 export const ADMIN = '/admin';
 
