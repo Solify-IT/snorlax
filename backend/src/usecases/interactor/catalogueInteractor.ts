@@ -40,6 +40,10 @@ export default class CatalogueInteractor {
 
     const operations: any[] = [];
     recordsNotFoundInCatalogue.forEach((record) => {
+      let url = record.URL;
+      if (!url) {
+        url = 'https://images.vexels.com/media/users/3/194604/isolated/preview/96aa09d59cda8a3f112bada160a1d383-icono-plano-de-libro-de-texto-escolar-by-vexels.png';
+      }
       operations.push(this.catalogueRepository.registerCatalogue({
         title: record.TITULO,
         isbn: record.ISBN,
@@ -53,7 +57,7 @@ export default class CatalogueInteractor {
         provider: record.PROVEEDOR,
         type: record.TIPO_PRODUCTO,
         coverType: '',
-        coverImageUrl: record.URL,
+        coverImageUrl: url,
         subCategory: record.SUBCATEGORIA,
         distribuitor: record.DISTRIBUIDOR,
         synopsis: record.SINOPSIS,
