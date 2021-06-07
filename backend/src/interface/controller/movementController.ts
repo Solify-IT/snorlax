@@ -1,7 +1,12 @@
 import { wrapError } from 'src/@types';
 import MovementInteractor from 'src/usecases/interactor/movementInteractor';
-import { MovementInputData } from 'src/domain/model/movement';
+import { MovementInputData, ReportInput } from 'src/domain/model/movement';
+import { parse } from 'json2csv';
+import { v4 as uuidv4 } from 'uuid';
 import { IContext } from './context';
+
+const parserFields = ['fecha', 'typ', 'totalCount', 'units', 'total'];
+const csvParserFields = { fields: parserFields, quote: '' };
 
 export default class BookController {
   movementInteractor: MovementInteractor;
@@ -39,6 +44,55 @@ export default class BookController {
     }
 
     context.response.status(200).json({ movements });
+  }
+
+  async ReportMovements(context: IContext): Promise<void> {
+    const {
+      fechaInitial,
+      fechaEnd,
+      type,
+    } = context.request.query;
+
+    const reportData: ReportInput = {
+      fechaInitial,
+      fechaEnd,
+      type,
+    };
+
+    const [movements, error] = await wrapError(
+      this.movementInteractor.reportMovementsFilter(reportData),
+    );
+
+    if (error) {
+      context.next(error);
+      return;
+    }
+
+    context.response.status(200).json({ movements });
+  }
+
+  async reportMovementsCSV(context: IContext): Promise<void> {
+    const {
+      fechaInitial,
+      fechaEnd,
+      type,
+    } = context.request.query;
+
+    const reportData: ReportInput = {
+      fechaInitial,
+      fechaEnd,
+      type,
+    };
+    try {
+      const movements = await this.movementInteractor.reportMovementsFilter(reportData);
+
+      const csv = parse(movements, csvParserFields);
+      context.response.header('Content-Type', 'text/csv');
+      context.response.attachment(`${uuidv4()}.csv`);
+      context.response.status(200).send(csv);
+    } catch (err) {
+      context.next(err);
+    }
   }
 
   async registerMovement(context: IContext): Promise<void> {

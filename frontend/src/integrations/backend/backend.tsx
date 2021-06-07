@@ -16,6 +16,7 @@ import {
   USERS_ROOT_ID,
   LIBRARIES_ROOT_ID,
   TODAY_SALE,
+  REPORTS_ROOT,
 } from 'src/settings';
 import User, { UserInput } from 'src/@types/user';
 import useAuth from 'src/hooks/auth';
@@ -42,6 +43,8 @@ export class Backend {
   movements: CRUD<Movement, unknown, unknown>;
 
   todaySale: CRUD<TodaySale, unknown, unknown>;
+
+  reports: CRUD<any, any, any>;
 
   config?: AxiosRequestConfig;
 
@@ -74,6 +77,9 @@ export class Backend {
     );
     this.todaySale = new CRUD(
       `${this.rootEndpoint}${TODAY_SALE}`, config,
+    );
+    this.reports = new CRUD(
+      `${this.rootEndpoint}${REPORTS_ROOT}`, config,
     );
   }
 }

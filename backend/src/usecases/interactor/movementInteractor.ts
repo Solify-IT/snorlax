@@ -1,4 +1,5 @@
 import { Movement, MovementInputData } from 'src/domain/model';
+import { ReportInput } from 'src/domain/model/movement';
 import { IMovementRepository } from '..';
 import { InvalidDataError } from '../errors';
 import { ILogger } from '../interfaces/logger';
@@ -15,6 +16,10 @@ export default class MovementInteractor {
 
   async getTodaySale(ts: number): Promise<any> {
     return this.movementRepository.getTodaySale(ts);
+  }
+
+  async reportMovementsFilter(movementData: ReportInput): Promise<Movement[]> {
+    return this.movementRepository.getMovementReport(movementData);
   }
 
   async listAllmovements(): Promise<Movement[]> {

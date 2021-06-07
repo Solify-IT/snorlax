@@ -7,3 +7,4 @@ export const LIBRARIES_ROOT_ID = '/libraries/id';
 export const CATALOGUE_ROOT = '/catalogue';
 export const MOVEMENTS_ROOT = '/movements';
 export const TODAY_SALE = '/todaySale';
+export const REPORTS_ROOT = '/reports';

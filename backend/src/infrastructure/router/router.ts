@@ -41,7 +41,7 @@ export default class Router {
       );
     });
 
-    app.post('/movements', async (request, response, next) => {
+    app.post('/movements', middleware, async (request, response, next) => {
       await controller.movements.registerMovement(
         {
           request, response, next, logger: controller.logger,
@@ -49,7 +49,23 @@ export default class Router {
       );
     });
 
-    app.get('/movements', async (request, response, next) => {
+    app.get('/reports', middleware, async (request, response, next) => {
+      await controller.movements.ReportMovements(
+        {
+          request, response, next, logger: controller.logger,
+        },
+      );
+    });
+
+    app.get('/reports/csv', middleware, async (request, response, next) => {
+      await controller.movements.reportMovementsCSV(
+        {
+          request, response, next, logger: controller.logger,
+        },
+      );
+    });
+
+    app.get('/movements', middleware, async (request, response, next) => {
       await controller.movements.seeMovements(
         {
           request, response, next, logger: controller.logger,
