@@ -1,6 +1,6 @@
 import { UploadOutlined } from '@ant-design/icons';
 import {
-  Button, Col, Descriptions, Form, notification, Row, Upload,
+  Button, Col, Form, notification, Row, Upload,
 } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
