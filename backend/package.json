@@ -51,6 +51,7 @@
     "typescript": "^4.2.3"
   },
   "dependencies": {
+    "@types/json2csv": "^5.0.2",
     "@types/module-alias": "^2.0.0",
     "@types/uuid": "^8.3.0",
     "axios": "^0.21.1",
@@ -63,6 +64,7 @@
     "factory.ts": "^0.5.1",
     "faker": "^5.5.2",
     "firebase-admin": "^9.6.0",
+    "json2csv": "^5.0.6",
     "lodash": "^4.17.21",
     "node-pg-migrate": "^5.9.0",
     "pg": "^8.5.1",

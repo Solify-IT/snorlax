@@ -9,9 +9,9 @@ type Movement = CommonType & {
 };
 
 export type ReportInput = {
-  fecha_initial: string,
-  fecha_end: string,
-  type: string,
+  fechaInitial: any;
+  fechaEnd: any;
+  type: any;
 };
 
 export type ReportMovementInput = {

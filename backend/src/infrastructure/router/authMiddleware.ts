@@ -5,7 +5,7 @@ import IUserRepository from 'src/usecases/repository/userRepository';
 const authMiddleware = (
   userRepository: IUserRepository,
 ) => async (req: Request, res: Response, next: NextFunction) => {
-  const token = req.headers.authorization;
+  const token: any = req.headers.authorization || req.query.token;
 
   if (!token) {
     res.sendStatus(401);
