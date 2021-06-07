@@ -1,6 +1,9 @@
 import { Application } from 'express';
+import multer from 'multer';
 import IAppController from 'src/interface/controller';
 import authMiddleware from './authMiddleware';
+
+const upload = multer({ dest: 'tmp/csv' });
 
 export default class Router {
   constructor(app: Application, controller: IAppController) {
@@ -24,6 +27,14 @@ export default class Router {
 
     app.patch('/books/:id', middleware, async (request, response, next) => {
       await controller.books.updateBook(
+        {
+          request, response, next, logger: controller.logger,
+        },
+      );
+    });
+
+    app.post('/books/inventory', middleware, upload.single('file'), async (request, response, next) => {
+      await controller.books.registerBookInventory(
         {
           request, response, next, logger: controller.logger,
         },

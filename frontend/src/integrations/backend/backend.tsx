@@ -46,8 +46,11 @@ export class Backend {
 
   reports: CRUD<any, any, any>;
 
+  config?: AxiosRequestConfig;
+
   public constructor(rootEndpoint: string, config?: AxiosRequestConfig) {
     this.rootEndpoint = rootEndpoint;
+    this.config = config;
     this.books = new CRUD(
       `${this.rootEndpoint}${BOOKS_ROOT}`, config,
     );
