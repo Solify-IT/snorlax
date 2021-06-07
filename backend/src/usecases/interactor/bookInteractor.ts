@@ -142,15 +142,21 @@ export default class BookInteractor {
     records: InventoryCSV[],
   ): Promise<void> {
     await this.catalogueInteractor.registerCatalogueBatch(records);
-    const ids = await this.bookRepository.registerBookInventory(user, records);
-    const books = await this.bookRepository.findByIDsNoType(ids);
+    const inventory = await this.bookRepository.registerBookInventory(user, records);
+    const books = await this.bookRepository.findByIDsNoType(inventory.ids);
     const movementsOperations: any[] = [];
-    books.forEach((book) => {
+
+    const sortedRecords = inventory.ids
+      .map((id) => inventory.updatedRecords.find((record) => record.id === id));
+    const sortedBooks = inventory.ids
+      .map((id) => books.find((book) => book.id === id));
+
+    sortedRecords.forEach((record, index) => {
       movementsOperations.push(this.movementInteractor.registerMovement({
-        localBookId: book.id,
-        amount: book.amount,
+        localBookId: sortedBooks[index].id,
+        amount: Number.parseInt(record?.EXISTENCIA ?? '0', 10),
         isLoan: true,
-        total: book.price,
+        total: sortedBooks[index].price,
         type: 'Compra',
       }));
     });

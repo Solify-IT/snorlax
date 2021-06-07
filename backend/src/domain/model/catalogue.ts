@@ -44,6 +44,7 @@ export type InventoryCSV = {
   PAGINAS: string;
   CONSGINA?: string;
   URL: string;
+  amount: number;
 };
 
 type Catalogue = CommonType & CatalogueInputData;

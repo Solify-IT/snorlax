@@ -9,9 +9,12 @@ export interface IBookRepository {
   findByISBN(isbn: string): Promise<LocalBook[]>;
   findById(id: string): Promise<Maybe<LocalBook>>;
   registerBook(bookData: Omit<LocalBookInput, 'id'>): Promise<LocalBook['id']>;
+  registerBookWithID(bookData: LocalBookInput): Promise<LocalBook['id']>;
   updateBook(bookdata: LocalBookInput): Promise<LocalBook>;
   registerBooksSell(saleData: SaleMovementInput): Promise<void>;
-  registerBookInventory(user: User, records: InventoryCSV[]): Promise<string[]>;
+  registerBookInventory(
+    user: User, records: InventoryCSV[]
+  ): Promise<{ ids: string[], updatedRecords: InventoryCSV[] }>;
   registerBooksReturnEditorial(returnData: ReturnMovementInput): Promise<void>;
   findByIDsNoType(ids: string[]): Promise<any[]>;
   registerBooksReturnClient(returnData: ReturnMovementInput): Promise<void>;

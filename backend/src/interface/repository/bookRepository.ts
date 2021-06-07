@@ -106,7 +106,17 @@ export default class BookRepository extends BaseRepository implements IBookRepos
     return result;
   }
 
-  async registerBookInventory(user: User, records: InventoryCSV[]): Promise<string[]> {
+  async registerBookWithID(bookData: LocalBookInput): Promise<string> {
+    const result = await this.datastore.insert<LocalBookInput>(
+      BOOK_TABLE_NAME, bookData,
+    );
+
+    return result;
+  }
+
+  async registerBookInventory(
+    user: User, records: InventoryCSV[],
+  ): Promise<{ ids: string[], updatedRecords: InventoryCSV[] }> {
     const recordIdsSQL = records.map((record) => `'${record.ISBN}'`).join(', ');
     // Search for ISBNs in DB
     const isbnsFoundInLibrary = await this.datastore.get<any>(
@@ -114,30 +124,36 @@ export default class BookRepository extends BaseRepository implements IBookRepos
     );
 
     const recordsFoundInLibrary: InventoryCSV[] = [];
-    const recordsNotFoundInLibrary: InventoryCSV[] = [];
+    let recordsNotFoundInLibrary: InventoryCSV[] = [];
     records.forEach((record) => {
       const found = isbnsFoundInLibrary.find((element) => element.isbn === record.ISBN);
       if (found !== undefined) {
-        const newAmount = (parseInt(record.EXISTENCIA, 10) + parseInt(found.amount, 10));
+        const newAmount = parseInt(record.EXISTENCIA, 10) + parseInt(found.amount, 10);
         recordsFoundInLibrary
           .push({
             ...record,
             id: found.id,
-            EXISTENCIA: newAmount.toString(),
+            amount: newAmount,
           });
       } else {
-        recordsNotFoundInLibrary.push(record);
+        recordsNotFoundInLibrary.push({
+          ...record,
+          amount: parseInt(record.EXISTENCIA, 10),
+        });
       }
     });
 
     // Insert into local_books the recordsNotFoundInLibrary
     const insertOperations: Promise<string>[] = [];
+    recordsNotFoundInLibrary = recordsNotFoundInLibrary
+      .map((el) => ({ ...el, id: uuidv4() }));
     recordsNotFoundInLibrary.forEach((record) => {
-      insertOperations.push(this.registerBook({
+      insertOperations.push(this.registerBookWithID({
+        id: record.id,
         isbn: record.ISBN,
         price: Number.parseFloat(record.PRECIO),
         libraryId: user.libraryId,
-        amount: Number.parseInt(record.EXISTENCIA, 10),
+        amount: record.amount,
       }));
     });
 
@@ -149,16 +165,19 @@ export default class BookRepository extends BaseRepository implements IBookRepos
         isbn: record.ISBN,
         price: Number.parseFloat(record.PRECIO),
         libraryId: user.libraryId,
-        amount: Number.parseInt(record.EXISTENCIA, 10),
+        amount: record.amount,
       }));
     });
     await Promise.all(updateOperations);
     const inserts = await Promise.all(insertOperations);
 
-    return [
-      ...recordsFoundInLibrary.map((record) => record.id as string),
-      ...inserts,
-    ];
+    return {
+      ids: [
+        ...recordsFoundInLibrary.map((record) => record.id as string),
+        ...inserts,
+      ],
+      updatedRecords: [...recordsFoundInLibrary, ...recordsNotFoundInLibrary],
+    };
   }
 
   async registerBooksSell(saleData: SaleMovementInput): Promise<void> {
