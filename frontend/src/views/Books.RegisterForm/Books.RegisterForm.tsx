@@ -1,12 +1,13 @@
+import { UploadOutlined } from '@ant-design/icons';
 import {
-  Button, Col, Form, notification, Row,
+  Button, Col, Descriptions, Form, notification, Row, Upload,
 } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { BookFormType, Catalogue, ExternalBook } from 'src/@types';
 import BookForm from 'src/Components/Book.Form';
 import PossibleBooks from 'src/Components/PossibleBooks';
-import { toBookDetail } from 'src/Components/Router/routes';
+import { toBookDetail, toInventoryList } from 'src/Components/Router/routes';
 import useAuth from 'src/hooks/auth';
 import useNavigation from 'src/hooks/navigation';
 import { useBackend } from 'src/integrations/backend';
@@ -101,10 +102,40 @@ const RegisterForm: React.FC = () => {
   const onISBNChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedISBN(event.target.value);
   };
+  function onChange(info: any) {
+    if (info.file.status !== 'uploading') {
+      console.log(info.file, info.fileList);
+    }
+    if (info.file.status === 'done') {
+      notification.success({
+        message: 'El archivo se subio con exito',
+      });
+      history.push(toInventoryList());
+      
+    } else if (info.file.status === 'error') {
+      notification.error({ message: 'El archivo no se subio con Éxito ' });
+
+    }
+  };
 
   return (
+    <div>
+      <Upload 
+          name="file"
+          action={`${backend.rootEndpoint}/books/inventory`}
+          headers={{
+            authorization: backend.config?.headers?.Authorization,
+          }}
+          onChange={onChange}
+        >
+          <Button icon={<UploadOutlined />}>Selecciona .CSV de libros proporcionado por la RELI</Button>
+        </Upload>
+      
+      
     <Row>
+      
       <Col span={12}>
+        
         <BookForm
           onFinish={onFinish}
           onFinishFailed={onFinishFailed}
@@ -123,6 +154,7 @@ const RegisterForm: React.FC = () => {
         <PossibleBooks setSelected={setSelected} isbn={selectedISBN || ''} />
       </Col>
     </Row>
+    </div>
   );
 };
 
