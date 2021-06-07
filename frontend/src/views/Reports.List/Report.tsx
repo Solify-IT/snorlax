@@ -141,8 +141,9 @@ const ListView: React.FC<Props> = ({ movements, loading, onFetchMovements }) => 
           </Form.Item>
         </Form>
         <Button
-          href={`${backend.rootEndpoint}/reports/csv?fechaInitial=${dateRanges[0].unix() * 1000}&fechaEnd=${dateRanges[1].unix() * 1000}&type=${type}`}
+          href={`${backend.rootEndpoint}/reports/csv?fechaInitial=${dateRanges[0].unix() * 1000}&fechaEnd=${dateRanges[1].unix() * 1000}&type=${type}&token=${backend.config?.headers?.Authorization}`}
           type="link"
+          target="_blank"
         >
           Download CSV
         </Button>
