@@ -1,21 +1,24 @@
 import { notification } from 'antd';
+import { Moment } from 'moment';
 import React, { useCallback, useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
 import { Movement } from 'src/@types';
 import useNavigation from 'src/hooks/navigation';
 import { useBackend } from 'src/integrations/backend';
 import ListReport from './Report';
 
 const ListReports: React.FC = () => {
-  const history = useHistory();
   const { setTitles } = useNavigation();
   const backend = useBackend();
   const [movements, setMovements] = useState<Movement[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  const fetchMovements = useCallback(async () => {
+  const fetchMovements = useCallback(async (range: [Moment, Moment], type: string) => {
     setIsLoading(true);
-    const [result, error] = await backend.movements.getAll<{ movements: Movement[] }>();
+    const [result, error] = await backend
+      .reports
+      .getAllObject<{ movements: Movement[] }>(
+      `fechaInitial=${range[0].unix() * 1000}&fechaEnd=${range[1].unix() * 1000}&type=${type}`,
+    );
 
     if (error || !result) {
       notification.error({ message: 'Ocurrió un error al cargar los movimientos!', description: 'Intentalo más tarde' });
@@ -27,13 +30,12 @@ const ListReports: React.FC = () => {
 
   useEffect(() => {
     setTitles({
-      title: 'Lista de movimientos',
+      title: 'Reportes de movimientos',
     });
-    fetchMovements();
-  }, [setTitles, history, fetchMovements]);
+  }, [setTitles]);
 
   return (
-    <ListReport movements={movements} loading={isLoading} />
+    <ListReport movements={movements} loading={isLoading} onFetchMovements={fetchMovements} />
   );
 };
 
