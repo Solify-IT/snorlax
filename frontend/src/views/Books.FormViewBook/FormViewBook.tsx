@@ -41,8 +41,8 @@ const FormViewBook: React.FC<Props> = ({ book }) => {
         <Typography.Title type="secondary" level={4}>{book.author}</Typography.Title>
         <Space direction="vertical">
           <BookDetail name="Isbn" value={book.isbn} />
-          <BookDetail name="Price" value={book.price} />
-          <BookDetail name="Autors" value={book.author} />
+          <BookDetail name="Precio" value={book.price} />
+          <BookDetail name="Autores" value={book.author} />
           <BookDetail name="Sinópis" value={book.synopsis} />
           <BookDetail name="Editorial" value={book.editoral} />
           <BookDetail name="Área" value={book.area} />
