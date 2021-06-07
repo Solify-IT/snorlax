@@ -6,7 +6,7 @@ export default class CRUD<T = any, C = any, U = any> extends Api {
   );
 
   public getAllObject = <A = T>(filter: string = '') => this.get<A>(
-    `/${filter !== '' ? '?' : ''}${filter || ''}`,
+    `${filter !== '' ? '?' : ''}${filter || ''}`,
   );
 
   // TODO: Create new class to separate this method, since it is just used for establishments

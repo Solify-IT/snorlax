@@ -8,6 +8,7 @@ import {
   LIST_LOCAL_BOOKS,
   LIST_USERS,
   MOVEMENTS,
+  REPORTS,
   RETURNS,
   RETURNSCLIENT,
   SALES_POINT,
@@ -58,7 +59,7 @@ const SideMenu: React.FC<{ goTo(path: string): () => void }> = ({ goTo }) => {
           <Menu.SubMenu key="reports" title="Reportes">
             <Menu.Item
               key="reports:movimientos"
-              onClick={goTo(MOVEMENTS)}
+              onClick={goTo(REPORTS)}
             >
               Reportes movimientos
             </Menu.Item>

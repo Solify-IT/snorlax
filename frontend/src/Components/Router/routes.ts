@@ -8,6 +8,7 @@ export const SALES_POINT = '/punto-de-venta';
 export const RETURNS = `${SALES_POINT}/devoluciones`;
 export const RETURNSCLIENT = `${SALES_POINT}/devolucionescliente`;
 export const MOVEMENTS = `${SALES_POINT}/movimientos`;
+export const REPORTS = `${SALES_POINT}/reportes`;
 
 export const ADMIN = '/admin';
 
