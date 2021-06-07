@@ -42,6 +42,7 @@ export class Backend {
   movements: CRUD<Movement, unknown, unknown>;
 
   todaySale: CRUD<TodaySale, unknown, unknown>;
+
   config?: AxiosRequestConfig;
 
   public constructor(rootEndpoint: string, config?: AxiosRequestConfig) {

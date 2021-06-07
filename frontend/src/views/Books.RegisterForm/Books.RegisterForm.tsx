@@ -103,57 +103,53 @@ const RegisterForm: React.FC = () => {
     setSelectedISBN(event.target.value);
   };
   function onChange(info: any) {
-    if (info.file.status !== 'uploading') {
-      console.log(info.file, info.fileList);
-    }
     if (info.file.status === 'done') {
       notification.success({
         message: 'El archivo se subio con exito',
       });
       history.push(toInventoryList());
-      
     } else if (info.file.status === 'error') {
       notification.error({ message: 'El archivo no se subio con Éxito ' });
-
     }
-  };
+  }
 
   return (
     <div>
-      <Upload 
-          name="file"
-          action={`${backend.rootEndpoint}/books/inventory`}
-          headers={{
-            authorization: backend.config?.headers?.Authorization,
-          }}
-          onChange={onChange}
-        >
-          <Button icon={<UploadOutlined />}>Selecciona .CSV de libros proporcionado por la RELI</Button>
-        </Upload>
-      
-      
-    <Row>
-      
-      <Col span={12}>
-        
-        <BookForm
-          onFinish={onFinish}
-          onFinishFailed={onFinishFailed}
-          onISBNChange={onISBNChange}
-          form={form}
-          initialState={
+      <Upload
+        name="file"
+        action={`${backend.rootEndpoint}/books/inventory`}
+        headers={{
+          authorization: backend.config?.headers?.Authorization,
+        }}
+        onChange={onChange}
+      >
+        <Button icon={<UploadOutlined />}>
+          Selecciona .CSV de libros proporcionado por la RELI
+        </Button>
+      </Upload>
+
+      <Row>
+
+        <Col span={12}>
+
+          <BookForm
+            onFinish={onFinish}
+            onFinishFailed={onFinishFailed}
+            onISBNChange={onISBNChange}
+            form={form}
+            initialState={
             selected.selected
               ? { ...selected.selected, price: INITIAL_STATE.price, amount: INITIAL_STATE.amount }
               : INITIAL_STATE
           }
-          isLoading={isLoading}
-          isManualInsert={selected.type === 'external' || !selected.selected}
-        />
-      </Col>
-      <Col style={{ position: 'relative' }} span={12}>
-        <PossibleBooks setSelected={setSelected} isbn={selectedISBN || ''} />
-      </Col>
-    </Row>
+            isLoading={isLoading}
+            isManualInsert={selected.type === 'external' || !selected.selected}
+          />
+        </Col>
+        <Col style={{ position: 'relative' }} span={12}>
+          <PossibleBooks setSelected={setSelected} isbn={selectedISBN || ''} />
+        </Col>
+      </Row>
     </div>
   );
 };

@@ -12,7 +12,7 @@ export const RETURNSCLIENT = `${SALES_POINT}/devolucionescliente`;
 export const MOVEMENTS = `${SALES_POINT}/movimientos`;
 
 export const toInventoryList = (
-  ) => `${INVENTORYRELOAD}`;
+) => `${INVENTORYRELOAD}`;
 
 export const ADMIN = '/admin';
 

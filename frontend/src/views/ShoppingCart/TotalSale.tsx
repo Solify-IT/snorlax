@@ -25,6 +25,7 @@ const TotalSale: React.FC<Props> = ({
     }}
     >
       <Row gutter={16}>
+
         <Col span={8}>
           <Card title="Fecha" bordered={false}>
             {sales[0] ? sales[0].fecha : fallbackDate}
