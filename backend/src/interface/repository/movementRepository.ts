@@ -1,6 +1,7 @@
 import {
   Movement, MovementInputData, MOVEMENT_TABLE_NAME, BOOK_TABLE_NAME,
 } from 'src/domain/model';
+import { ReportMovementInput } from 'src/domain/model/movement';
 import { IMovementRepository } from 'src/usecases';
 import { v4 as uuidv4 } from 'uuid';
 import BaseRepository from './BaseRepository';
@@ -18,6 +19,16 @@ export default class MovementRepository extends BaseRepository implements IMovem
   }
 
   async registerMovement(movementData: MovementInputData): Promise<Movement['id']> {
+    const id = uuidv4();
+
+    const result = await this.datastore.insert<Movement>(MOVEMENT_TABLE_NAME, {
+      ...movementData, id,
+    });
+
+    return result;
+  }
+
+  async getMovementReport(movementData: ReportMovementInput): Promise<any> {
     const id = uuidv4();
 
     const result = await this.datastore.insert<Movement>(MOVEMENT_TABLE_NAME, {

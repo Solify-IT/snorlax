@@ -32,28 +32,38 @@ const SideMenu: React.FC<{ goTo(path: string): () => void }> = ({ goTo }) => {
         </Menu.SubMenu>
       )}
       {pathname.includes(SALES_POINT) && (
-        <Menu.SubMenu key="actions" title="Acciones">
-          <Menu.Item
-            key="actions:movements"
-            onClick={goTo(MOVEMENTS)}
-          >
-            Movimientos
-          </Menu.Item>
-          <Menu.Item
-            key="actions:devolutions editorial"
-            onClick={goTo(RETURNS)}
-          >
-            Devoluciones
-            Editorial
-          </Menu.Item>
-          <Menu.Item
-            key="actions:devolutions client"
-            onClick={goTo(RETURNSCLIENT)}
-          >
-            Devoluciones
-            Cliente
-          </Menu.Item>
-        </Menu.SubMenu>
+        <>
+          <Menu.SubMenu key="actions" title="Acciones">
+            <Menu.Item
+              key="actions:movements"
+              onClick={goTo(MOVEMENTS)}
+            >
+              Movimientos
+            </Menu.Item>
+            <Menu.Item
+              key="actions:devolutions editorial"
+              onClick={goTo(RETURNS)}
+            >
+              Devoluciones
+              Editorial
+            </Menu.Item>
+            <Menu.Item
+              key="actions:devolutions client"
+              onClick={goTo(RETURNSCLIENT)}
+            >
+              Devoluciones
+              Cliente
+            </Menu.Item>
+          </Menu.SubMenu>
+          <Menu.SubMenu key="reports" title="Reportes">
+            <Menu.Item
+              key="reports:movimientos"
+              onClick={goTo(MOVEMENTS)}
+            >
+              Reportes movimientos
+            </Menu.Item>
+          </Menu.SubMenu>
+        </>
       )}
       {pathname.includes(ADMIN) && (
         <>
