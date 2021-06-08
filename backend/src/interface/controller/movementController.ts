@@ -35,8 +35,11 @@ export default class BookController {
   }
 
   async seeMovements(context: IContext): Promise<void> {
+    const {
+      libraryId,
+    } = context.request.query;
     const [movements, error] = await wrapError(
-      this.movementInteractor.listAllmovements(),
+      this.movementInteractor.listAllmovements(libraryId as string),
     );
 
     if (error) {
