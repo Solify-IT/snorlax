@@ -8,7 +8,7 @@ import { useBackend } from 'src/integrations/backend';
 import ListMovement from './Movement';
 
 const ListMovements: React.FC = () => {
-  const { user, getHomeForRole } = useAuth();
+  const { user } = useAuth();
   const history = useHistory();
   const { setTitles } = useNavigation();
   const backend = useBackend();
