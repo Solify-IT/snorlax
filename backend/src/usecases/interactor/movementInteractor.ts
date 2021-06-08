@@ -14,8 +14,8 @@ export default class MovementInteractor {
     this.logger = logger;
   }
 
-  async getTodaySale(ts: number): Promise<any> {
-    return this.movementRepository.getTodaySale(ts);
+  async getTodaySale(ts: number, libraryId: string): Promise<any> {
+    return this.movementRepository.getTodaySale(ts, libraryId);
   }
 
   async reportMovementsFilter(movementData: ReportInput): Promise<Movement[]> {

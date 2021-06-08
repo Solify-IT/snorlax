@@ -18,12 +18,13 @@ export default class BookController {
   async getTodaySale(context: IContext): Promise<void> {
     const {
       date,
+      libraryId,
     } = context.request.query;
 
     const ts = Number.parseInt(date as string, 10);
 
     const [sale, error] = await wrapError(
-      this.movementInteractor.getTodaySale(ts),
+      this.movementInteractor.getTodaySale(ts, libraryId as string),
     );
 
     if (error) {

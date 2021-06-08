@@ -25,7 +25,7 @@ const ShoppingCart: React.FC = () => {
   const [sales, setSales] = useState<Array<AggregatedSale>>([]);
   const fetchTodaySale = useCallback(
     async () => {
-      const [res] = await backend.todaySale.getAllObject(`date=${Date.now()}`);
+      const [res] = await backend.todaySale.getAllObject(`date=${Date.now()}&libraryId=${user?.libraryId}`);
       if (res != null) {
         setSales(res.data.sale);
       }
