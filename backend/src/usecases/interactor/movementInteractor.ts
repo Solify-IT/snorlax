@@ -22,8 +22,8 @@ export default class MovementInteractor {
     return this.movementRepository.getMovementReport(movementData);
   }
 
-  async listAllmovements(): Promise<Movement[]> {
-    return this.movementRepository.listAllMovements();
+  async listAllmovements(libraryId: string): Promise<Movement[]> {
+    return this.movementRepository.listAllMovements(libraryId);
   }
 
   async registerMovement(data: MovementInputData): Promise<Movement['id']> {
