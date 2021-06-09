@@ -35,7 +35,7 @@ const NavHeader: React.FC<{ goTo(path: string): () => void }> = ({ goTo }) => {
       <Menu style={{ position: 'relative' }} theme="dark" mode="horizontal" selectedKeys={selectedKeys}>
 
         <Menu.Item style={{ position: 'absolute', left: '0' }} disabled>
-          <img src={Logo} style={{ width: '100px' }}  alt="logo"/>
+          <img src={Logo} style={{ width: '100px' }} alt="logo" />
         </Menu.Item>
         {user && (isAdmin(user) || isAlmacenista(user) || isLibrero(user)) && (
 
