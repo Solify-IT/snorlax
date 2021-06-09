@@ -99,7 +99,7 @@ const ListView: React.FC<Props> = ({ movements, loading, onFetchMovements }) => 
       >
         <Form
           form={form}
-          name="registerLibrary"
+          name="getReport"
           onFinish={onFinish}
           onFinishFailed={onFinishFailed}
           size="large"
@@ -145,7 +145,7 @@ const ListView: React.FC<Props> = ({ movements, loading, onFetchMovements }) => 
           type="link"
           target="_blank"
         >
-          Download CSV
+          Descargar reeporte en csv
         </Button>
       </div>
       <Table
