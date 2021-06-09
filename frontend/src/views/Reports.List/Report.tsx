@@ -7,6 +7,7 @@ import React, { useState } from 'react';
 import { Movement } from 'src/@types';
 import moment, { Moment } from 'moment';
 import { useBackend } from 'src/integrations/backend';
+import useAuth from 'src/hooks/auth';
 
 const { RangePicker } = DatePicker;
 
@@ -61,11 +62,6 @@ const columns = [
     key: 'units',
   },
   {
-    title: 'Cantidad',
-    dataIndex: 'units',
-    key: 'units',
-  },
-  {
     title: 'Total',
     dataIndex: 'total',
     key: 'total',
@@ -73,6 +69,7 @@ const columns = [
 ];
 
 const ListView: React.FC<Props> = ({ movements, loading, onFetchMovements }) => {
+  const { user } = useAuth();
   const backend = useBackend();
   const { Option } = Select;
   const [isFormLoading] = useState(false);
@@ -94,7 +91,7 @@ const ListView: React.FC<Props> = ({ movements, loading, onFetchMovements }) => 
   function onChangeDates(dates: any) {
     setDateRanges(dates);
   }
-
+  console.log(`${backend.rootEndpoint}/reports/csv?fechaInitial=${dateRanges[0].unix() * 1000}&fechaEnd=${dateRanges[1].unix() * 1000}&type=${type}&desglosado=no&libraryId=${user?.libraryId}&token=${backend.config?.headers?.Authorization}`);
   return (
     <>
       <div style={{
@@ -141,12 +138,12 @@ const ListView: React.FC<Props> = ({ movements, loading, onFetchMovements }) => 
               type="primary"
               htmlType="submit"
             >
-              Solicitar Reporte
+              Generar Reporte
             </Button>
           </Form.Item>
         </Form>
         <Button
-          href={`${backend.rootEndpoint}/reports/csv?fechaInitial=${dateRanges[0].unix() * 1000}&fechaEnd=${dateRanges[1].unix() * 1000}&type=${type}&token=${backend.config?.headers?.Authorization}`}
+          href={`${backend.rootEndpoint}/reports/csv?fechaInitial=${dateRanges[0].unix() * 1000}&fechaEnd=${dateRanges[1].unix() * 1000}&type=${type}&desglosado=no&libraryId=${user?.libraryId}&token=${backend.config?.headers?.Authorization}`}
           type="link"
           target="_blank"
         >

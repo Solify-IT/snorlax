@@ -8,6 +8,9 @@ import { IContext } from './context';
 const parserFields = ['fecha', 'typ', 'totalCount', 'units', 'total'];
 const csvParserFields = { fields: parserFields, quote: '' };
 
+const parserFieldsDaily = ['fecha', 'typ', 'units', 'total', 'isbn', 'title', 'provider', 'editorial'];
+const csvParserFieldsDaily = { fields: parserFieldsDaily, quote: '' };
+
 export default class BookController {
   movementInteractor: MovementInteractor;
 
@@ -55,12 +58,16 @@ export default class BookController {
       fechaInitial,
       fechaEnd,
       type,
+      desglosado,
+      libraryId,
     } = context.request.query;
 
     const reportData: ReportInput = {
       fechaInitial,
       fechaEnd,
       type,
+      desglosado,
+      libraryId,
     };
 
     const [movements, error] = await wrapError(
@@ -80,17 +87,26 @@ export default class BookController {
       fechaInitial,
       fechaEnd,
       type,
+      desglosado,
+      libraryId,
     } = context.request.query;
 
     const reportData: ReportInput = {
       fechaInitial,
       fechaEnd,
       type,
+      desglosado,
+      libraryId,
     };
     try {
       const movements = await this.movementInteractor.reportMovementsFilter(reportData);
-
-      const csv = parse(movements, csvParserFields);
+      console.log(desglosado);
+      let csv;
+      if (desglosado === 'si') {
+        csv = parse(movements, csvParserFieldsDaily);
+      } else {
+        csv = parse(movements, csvParserFields);
+      }
       context.response.header('Content-Type', 'text/csv');
       context.response.attachment(`${uuidv4()}.csv`);
       context.response.status(200).send(csv);
