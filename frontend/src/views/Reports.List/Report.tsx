@@ -91,7 +91,6 @@ const ListView: React.FC<Props> = ({ movements, loading, onFetchMovements }) => 
   function onChangeDates(dates: any) {
     setDateRanges(dates);
   }
-  console.log(`${backend.rootEndpoint}/reports/csv?fechaInitial=${dateRanges[0].unix() * 1000}&fechaEnd=${dateRanges[1].unix() * 1000}&type=${type}&desglosado=no&libraryId=${user?.libraryId}&token=${backend.config?.headers?.Authorization}`);
   return (
     <>
       <div style={{

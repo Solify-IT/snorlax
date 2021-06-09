@@ -100,7 +100,6 @@ export default class BookController {
     };
     try {
       const movements = await this.movementInteractor.reportMovementsFilter(reportData);
-      console.log(desglosado);
       let csv;
       if (desglosado === 'si') {
         csv = parse(movements, csvParserFieldsDaily);
