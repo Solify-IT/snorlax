@@ -61,6 +61,11 @@ const columns = [
     key: 'units',
   },
   {
+    title: 'Cantidad',
+    dataIndex: 'units',
+    key: 'units',
+  },
+  {
     title: 'Total',
     dataIndex: 'total',
     key: 'total',

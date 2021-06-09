@@ -61,6 +61,21 @@ import {
       key: 'units',
     },
     {
+      title: 'Proveedor',
+      dataIndex: 'provider',
+      key: 'provider',
+    },
+    {
+      title: 'Título',
+      dataIndex: 'title',
+      key: 'title',
+    },
+    {
+      title: 'ISBN',
+      dataIndex: 'isbn',
+      key: 'isbn',
+    },
+    {
       title: 'Total',
       dataIndex: 'total',
       key: 'total',
