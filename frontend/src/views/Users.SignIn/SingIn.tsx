@@ -15,7 +15,7 @@ import useNavigation from 'src/hooks/navigation';
 import { useBackend } from 'src/integrations/backend';
 import Firebase from 'src/integrations/firebase/firebase';
 import { FORGOT_PASSWORD } from 'src/Components/Router/routes';
-import Logo from 'src/images/ReliBooksLogoBlu.png';
+import Logo from 'src/images/ReliBooks_logo_blu.png';
 import styles from './SignIn.styles.module.css';
 
 export const ADMIN_ROLE_NAME = 'Admin';

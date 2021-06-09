@@ -52,14 +52,29 @@ const columns = [
     onFilter: (value: any, record: any) => record.typ === value,
   },
   {
-    title: 'Registros',
-    dataIndex: 'totalCount',
-    key: 'totalCount',
-  },
-  {
     title: 'Cantidad',
     dataIndex: 'units',
     key: 'units',
+  },
+  {
+    title: 'Proveedor',
+    dataIndex: 'provider',
+    key: 'provider',
+  },
+  {
+    title: 'Título',
+    dataIndex: 'title',
+    key: 'title',
+  },
+  {
+    title: 'ISBN',
+    dataIndex: 'isbn',
+    key: 'isbn',
+  },
+  {
+    title: 'Editorial',
+    dataIndex: 'editorial',
+    key: 'editorial',
   },
   {
     title: 'Total',
@@ -91,6 +106,7 @@ const ListView: React.FC<Props> = ({ movements, loading, onFetchMovements }) => 
   function onChangeDates(dates: any) {
     setDateRanges(dates);
   }
+
   return (
     <>
       <div style={{
@@ -142,7 +158,7 @@ const ListView: React.FC<Props> = ({ movements, loading, onFetchMovements }) => 
           </Form.Item>
         </Form>
         <Button
-          href={`${backend.rootEndpoint}/reports/csv?fechaInitial=${dateRanges[0].unix() * 1000}&fechaEnd=${dateRanges[1].unix() * 1000}&type=${type}&desglosado=no&libraryId=${user?.libraryId}&token=${backend.config?.headers?.Authorization}`}
+          href={`${backend.rootEndpoint}/reports/csv?fechaInitial=${dateRanges[0].unix() * 1000}&fechaEnd=${dateRanges[1].unix() * 1000}&type=${type}&desglosado=si&libraryId=${user?.libraryId}&token=${backend.config?.headers?.Authorization}`}
           type="link"
           target="_blank"
         >

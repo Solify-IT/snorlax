@@ -94,7 +94,7 @@ const ShoppingCart: React.FC<Props> = ({
         allowClear
         enterButton="Añadir"
         size="large"
-        placeholder="Ingresa el ISBN, Autor o titulo del libro a vender"
+        placeholder="Ingresa el ISBN, autor o título del libro a vender"
         onSearch={onSearch}
         loading={isLoading}
         style={{ margin: '12px 0 24px 0' }}

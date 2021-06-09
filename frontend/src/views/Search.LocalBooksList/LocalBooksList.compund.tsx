@@ -68,7 +68,7 @@ const LocalBooksList: React.FC = () => {
         allowClear
         enterButton="Buscar"
         size="large"
-        placeholder="Ingresa el ISBN,autor o titulo a buscar"
+        placeholder="Ingresa el ISBN, autor o título a buscar"
         onSearch={onSearch}
         loading={isLoading}
         value={isbn}

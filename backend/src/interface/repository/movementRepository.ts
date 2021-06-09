@@ -8,15 +8,6 @@ import BaseRepository from './BaseRepository';
 
 export default class MovementRepository extends BaseRepository implements IMovementRepository {
   listAllMovements(libraryId: string): Promise<Movement[]> {
-    console.log(`SELECT to_char(${MOVEMENT_TABLE_NAME}.created_at,'YYYY-MM-DD HH-MI-SS') as fecha ,${MOVEMENT_TABLE_NAME}.type as typ,
-    count(${MOVEMENT_TABLE_NAME}.created_at) as total_count,
-    sum(${MOVEMENT_TABLE_NAME}.amount) as units,
-    sum(${MOVEMENT_TABLE_NAME}.amount * CAST(${MOVEMENT_TABLE_NAME}.total AS int)) as total
-   FROM ${MOVEMENT_TABLE_NAME} ,${BOOK_TABLE_NAME} 
-   WHERE ${BOOK_TABLE_NAME}.id = ${MOVEMENT_TABLE_NAME}.local_book_id and
-   movements.local_book_id = local_books.id and local_books.library_id = '${libraryId}'
-   GROUP BY fecha,typ
-   ORDER BY fecha desc`);
     return this.datastore.get(`SELECT to_char(${MOVEMENT_TABLE_NAME}.created_at,'YYYY-MM-DD HH-MI-SS') as fecha ,${MOVEMENT_TABLE_NAME}.type as typ,
     count(${MOVEMENT_TABLE_NAME}.created_at) as total_count,
     sum(${MOVEMENT_TABLE_NAME}.amount) as units,
@@ -50,18 +41,29 @@ export default class MovementRepository extends BaseRepository implements IMovem
     month = (date.getMonth() + 1) < 10 ? `0${(date.getMonth() + 1).toString()}` : (date.getMonth() + 1).toString();
     day = date.getUTCDate() < 10 ? `0${date.getUTCDate()}` : date.getUTCDate().toString();
     const parsedEndDate = `${year}-${month}-${day}`;
-
+    let dateHours = '';
+    if (movementData.desglosado === 'si') {
+      dateHours = 'YYYY-MM-DD HH-MI-SS';
+    } else {
+      dateHours = 'YYYY-MM-DD';
+    }
     return this.datastore.get(`
       SELECT
-        to_char(${MOVEMENT_TABLE_NAME}.created_at,'YYYY-MM-DD') as fecha,
+        to_char(${MOVEMENT_TABLE_NAME}.created_at,'${dateHours}') as fecha,
         ${MOVEMENT_TABLE_NAME}.type as typ,
         count(${MOVEMENT_TABLE_NAME}.created_at) as total_count,
         sum(${MOVEMENT_TABLE_NAME}.amount) as units,
-        sum(${MOVEMENT_TABLE_NAME}.amount * CAST(${MOVEMENT_TABLE_NAME}.total AS int)) as total
-      FROM ${MOVEMENT_TABLE_NAME} 
-      WHERE ${MOVEMENT_TABLE_NAME}.type='${movementData.type}' AND to_char(${MOVEMENT_TABLE_NAME}.created_at,'YYYY-MM-DD') between '${parsedInitialDate}' and '${parsedEndDate}'
-      GROUP BY 1, 2
-      ORDER BY fecha desc
+        sum(${MOVEMENT_TABLE_NAME}.amount * CAST(${MOVEMENT_TABLE_NAME}.total AS int)) as total,
+        local_books.isbn as isbn,
+        catalogue.title as title,
+        catalogue.provider as provider,
+        catalogue.editoral as editorial
+        FROM ${MOVEMENT_TABLE_NAME} ,local_books, catalogue
+        WHERE local_books.id = movements.local_book_id and local_books.isbn = catalogue.isbn and 
+        local_books.library_id = '${movementData.libraryId}' and
+        movements.type='${movementData.type}' AND to_char(movements.created_at,'YYYY-MM-DD') between '${parsedInitialDate}' and '${parsedEndDate}'
+        GROUP BY fecha,typ,local_books.isbn,catalogue.provider,catalogue.editoral,catalogue.title 
+        ORDER BY fecha, catalogue.provider desc
     `);
   }
 

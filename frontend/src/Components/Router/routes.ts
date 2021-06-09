@@ -11,6 +11,7 @@ export const RETURNS = `${SALES_POINT}/devoluciones`;
 export const RETURNSCLIENT = `${SALES_POINT}/devolucionescliente`;
 export const MOVEMENTS = `${SALES_POINT}/movimientos`;
 export const REPORTS = `${SALES_POINT}/reportes`;
+export const REPORTSDAILY = `${SALES_POINT}/reportesdiario`;
 
 export const toInventoryList = (
 ) => `${INVENTORYRELOAD}`;
