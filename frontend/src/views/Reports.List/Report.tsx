@@ -136,7 +136,7 @@ const ListView: React.FC<Props> = ({ movements, loading, onFetchMovements }) => 
               type="primary"
               htmlType="submit"
             >
-              Registrar Libreria
+              Solicitar Reporte
             </Button>
           </Form.Item>
         </Form>
