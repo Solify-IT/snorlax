@@ -9,6 +9,7 @@ import {
   LIST_USERS,
   MOVEMENTS,
   REPORTS,
+  REPORTSDAILY,
   RETURNS,
   RETURNSCLIENT,
   SALES_POINT,
@@ -62,6 +63,12 @@ const SideMenu: React.FC<{ goTo(path: string): () => void }> = ({ goTo }) => {
               onClick={goTo(REPORTS)}
             >
               Reportes movimientos
+            </Menu.Item>
+            <Menu.Item
+              key="reportsdaily:movimientos"
+              onClick={goTo(REPORTSDAILY)}
+            >
+              Reportes desglosados
             </Menu.Item>
           </Menu.SubMenu>
         </>

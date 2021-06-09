@@ -145,7 +145,7 @@ const ListView: React.FC<Props> = ({ movements, loading, onFetchMovements }) => 
           type="link"
           target="_blank"
         >
-          Descargar reeporte en csv
+          Descargar reporte en csv
         </Button>
       </div>
       <Table

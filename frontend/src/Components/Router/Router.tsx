@@ -28,6 +28,7 @@ import HOME, {
   MOVEMENTS,
   RETURNSCLIENT,
   REPORTS,
+  REPORTSDAILY,
 } from './routes';
 
 const RegisterFormView = React.lazy(() => import('src/views/Books.RegisterForm'));
@@ -47,6 +48,7 @@ const ReturnCart = React.lazy(() => import('src/views/ReturnsCart'));
 const ListMovements = React.lazy(() => import('src/views/Movements.List'));
 const ReturnClient = React.lazy(() => import('src/views/ReturnsClient'));
 const ReportsMovements = React.lazy(() => import('src/views/Reports.List'));
+const ReportsDailyMovements = React.lazy(() => import('src/views/ReportsDaily.List'));
 
 const Router: React.FC = () => {
   const { user: currUser, getHomeForRole } = useAuth();
@@ -173,6 +175,13 @@ const Router: React.FC = () => {
             hasAccess={(user) => isAdmin(user) || isLibrero(user) || isCajero(user)}
           >
             <ReportsMovements />
+          </PrivateRoute>
+          <PrivateRoute
+            exact
+            path={REPORTSDAILY}
+            hasAccess={(user) => isAdmin(user) || isLibrero(user) || isCajero(user)}
+          >
+            <ReportsDailyMovements />
           </PrivateRoute>
           <Route>
             {currUser
