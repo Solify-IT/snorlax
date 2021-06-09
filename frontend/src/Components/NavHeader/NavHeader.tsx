@@ -1,16 +1,16 @@
 import { LogoutOutlined, UserOutlined } from '@ant-design/icons';
 import { Layout, Menu } from 'antd';
 import React, { useEffect, useMemo, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import useAuth from 'src/hooks/auth';
 import {
   isAdmin, isAlmacenista, isCajero, isLibrero,
 } from 'src/utils/auth';
 import { SHOW_RETURNS_CART_NAV, SHOW_SHOPPING_CART_NAV } from 'src/utils/featureToggles';
+import Logo from 'src/images/ReliBooks_logo_wht.png';
 import {
   INVENTORY, SALES_POINT, ADMIN, menuItemKeys, LIST_LOCAL_BOOKS, LIBRARIES,
 } from '../Router/routes';
-import Logo from 'src/images/ReliBooks_logo_wht.png';
 
 const { Header } = Layout;
 
@@ -34,9 +34,9 @@ const NavHeader: React.FC<{ goTo(path: string): () => void }> = ({ goTo }) => {
       <div className="logo" />
       <Menu style={{ position: 'relative' }} theme="dark" mode="horizontal" selectedKeys={selectedKeys}>
 
-      <Menu.Item style={{position: 'absolute', left: '0' }}  disabled>
-        <img src={Logo}  style={{ width: '100px'}}/>
-       </Menu.Item>
+        <Menu.Item style={{ position: 'absolute', left: '0' }} disabled>
+          <img src={Logo} style={{ width: '100px' }}  alt="logo"/>
+        </Menu.Item>
         {user && (isAdmin(user) || isAlmacenista(user) || isLibrero(user)) && (
 
           <Menu.Item key={`header-${itemKeys.intentory}`} onClick={goTo(LIST_LOCAL_BOOKS)}>
@@ -55,11 +55,11 @@ const NavHeader: React.FC<{ goTo(path: string): () => void }> = ({ goTo }) => {
           </Menu.Item>
         )}
         {user && (
-          <Menu.Item icon={<UserOutlined /> } style={{ position: 'absolute', right: '20' }} disabled>
+          <Menu.Item icon={<UserOutlined />} style={{ position: 'absolute', right: '20' }} disabled>
             {user.name}
           </Menu.Item>
         )}
-       
+
         {user && (
           <Menu.Item icon={<LogoutOutlined />} style={{ position: 'absolute', right: '0' }} key="logout" onClick={logOut}>
             Cerrar Sesión
