@@ -8,15 +8,6 @@ import BaseRepository from './BaseRepository';
 
 export default class MovementRepository extends BaseRepository implements IMovementRepository {
   listAllMovements(libraryId: string): Promise<Movement[]> {
-    console.log(`SELECT to_char(${MOVEMENT_TABLE_NAME}.created_at,'YYYY-MM-DD HH-MI-SS') as fecha ,${MOVEMENT_TABLE_NAME}.type as typ,
-    count(${MOVEMENT_TABLE_NAME}.created_at) as total_count,
-    sum(${MOVEMENT_TABLE_NAME}.amount) as units,
-    sum(${MOVEMENT_TABLE_NAME}.amount * CAST(${MOVEMENT_TABLE_NAME}.total AS int)) as total
-   FROM ${MOVEMENT_TABLE_NAME} ,${BOOK_TABLE_NAME} 
-   WHERE ${BOOK_TABLE_NAME}.id = ${MOVEMENT_TABLE_NAME}.local_book_id and
-   movements.local_book_id = local_books.id and local_books.library_id = '${libraryId}'
-   GROUP BY fecha,typ
-   ORDER BY fecha desc`);
     return this.datastore.get(`SELECT to_char(${MOVEMENT_TABLE_NAME}.created_at,'YYYY-MM-DD HH-MI-SS') as fecha ,${MOVEMENT_TABLE_NAME}.type as typ,
     count(${MOVEMENT_TABLE_NAME}.created_at) as total_count,
     sum(${MOVEMENT_TABLE_NAME}.amount) as units,
