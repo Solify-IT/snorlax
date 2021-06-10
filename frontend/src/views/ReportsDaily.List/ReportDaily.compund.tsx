@@ -7,7 +7,7 @@ import useNavigation from 'src/hooks/navigation';
 import { useBackend } from 'src/integrations/backend';
 import ListReport from './Report';
 
-const ListReports: React.FC = () => {
+const ListDailyReports: React.FC = () => {
   const { user } = useAuth();
   const { setTitles } = useNavigation();
   const backend = useBackend();
@@ -19,7 +19,7 @@ const ListReports: React.FC = () => {
     const [result, error] = await backend
       .reports
       .getAllObject<{ movements: Movement[] }>(
-      `fechaInitial=${range[0].unix() * 1000}&fechaEnd=${range[1].unix() * 1000}&type=${type}&desglosado=no&libraryId=${user?.libraryId}`,
+      `fechaInitial=${range[0].unix() * 1000}&fechaEnd=${range[1].unix() * 1000}&type=${type}&desglosado=si&libraryId=${user?.libraryId}`,
     );
 
     if (error || !result) {
@@ -32,7 +32,7 @@ const ListReports: React.FC = () => {
 
   useEffect(() => {
     setTitles({
-      title: 'Reportes de movimientos',
+      title: 'Reportes de movimientos Desglosado',
     });
   }, [setTitles]);
 
@@ -41,4 +41,4 @@ const ListReports: React.FC = () => {
   );
 };
 
-export default ListReports;
+export default ListDailyReports;
