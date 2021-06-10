@@ -4,15 +4,30 @@ import {
 } from '@react-pdf/renderer';
 
 interface Props {
-  ticketData: { libraryName: string, books: any, total: number };
+  ticketData: { libraryName: string, books: any, total: number, state:string,
+    celular:string, correo:string, ciudad:string, nombre:string,fecha:string };
 }
 
 const ReportDocument: React.FC<Props> = ({ ticketData }) => (
   <Document>
     <Page size="A4">
       <View style={{ display: 'flex', flexDirection: 'column', padding: '10px' }}>
-        <View style={{ textAlign: 'center', marginTop: 16, marginBottom: 16 }}>
-          <Text>{ticketData.libraryName}</Text>
+        <View style={{ textAlign: 'center', marginTop: 8, marginBottom: 8 }}>
+        </View>
+        <View style={{ textAlign: 'center', marginTop: 8, marginBottom: 8 }}>
+          <Text>{ticketData.state}</Text>
+        </View>
+        <View style={{ textAlign: 'center', marginTop: 8, marginBottom: 8 }}>
+          <Text>{ticketData.ciudad}</Text>
+        </View>
+        <View style={{ textAlign: 'center', marginTop: 8, marginBottom: 8 }}>
+          <Text>{ticketData.correo}</Text>
+        </View>
+        <View style={{ textAlign: 'center', marginTop: 8, marginBottom: 8 }}>
+          <Text>{ticketData.celular}</Text>
+        </View>
+        <View style={{ textAlign: 'center', marginTop: 8, marginBottom: 8 }}>
+          <Text>{ticketData.fecha}</Text>
         </View>
 
         <View style={{
@@ -42,6 +57,9 @@ const ReportDocument: React.FC<Props> = ({ ticketData }) => (
             Total: $
             {ticketData.total}
           </Text>
+        </View>
+        <View style={{ textAlign: 'center', marginTop: 16, marginBottom: 16 }}>
+          <Text>Atendio: {ticketData.nombre}</Text>
         </View>
       </View>
     </Page>
