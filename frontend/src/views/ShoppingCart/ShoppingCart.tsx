@@ -28,7 +28,8 @@ interface Props {
   isLoading: boolean;
   total: number;
   onFinishSale(): Promise<void>;
-  ticketData: { libraryName: string, books: any, total: number } | null;
+  ticketData: { libraryName: string, books: any, total: number, state: string,
+    celular:string, correo:string, ciudad:string, nombre:string, fecha:string } | null;
   todaySale: Array<AggregatedSale>;
 }
 

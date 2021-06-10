@@ -21,7 +21,8 @@ const ShoppingCart: React.FC = () => {
   const backend = useBackend();
   const [isLoading, setIsLoading] = useState(false);
   const [ticketData, setTicketData] = useState<{
-    libraryName: string, books: any, total: number } | null>(null);
+    libraryName: string, books: any, total: number, state:string,
+    celular:string, correo:string, ciudad:string, nombre:string, fecha:string } | null>(null);
   const [sales, setSales] = useState<Array<AggregatedSale>>([]);
   const fetchTodaySale = useCallback(
     async () => {
@@ -148,7 +149,18 @@ const ShoppingCart: React.FC = () => {
 
     fetchTodaySale();
     notification.success({ message: 'Venta completada exitosamente' });
-    setTicketData({ libraryName: user.library.name, books: [...books], total });
+    const utc = new Date().toJSON().slice(0, 10).replace(/-/g, '/');
+    setTicketData({
+      libraryName: user.library.name,
+      books: [...books],
+      total,
+      state: user.library.state,
+      celular: user.library.phoneNumber,
+      correo: user.library.email,
+      ciudad: user.library.city,
+      nombre: user.name,
+      fecha: utc,
+    });
     setBooks([]);
     setIsLoading(false);
   };
