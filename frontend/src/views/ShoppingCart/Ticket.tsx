@@ -14,6 +14,9 @@ const ReportDocument: React.FC<Props> = ({ ticketData }) => (
       <View style={{ display: 'flex', flexDirection: 'column', padding: '10px' }}>
         <View style={{ textAlign: 'center', marginTop: 8, marginBottom: 8 }} />
         <View style={{ textAlign: 'center', marginTop: 8, marginBottom: 8 }}>
+          <Text>{ticketData.libraryName}</Text>
+        </View>
+        <View style={{ textAlign: 'center', marginTop: 8, marginBottom: 8 }}>
           <Text>{ticketData.state}</Text>
         </View>
         <View style={{ textAlign: 'center', marginTop: 8, marginBottom: 8 }}>
